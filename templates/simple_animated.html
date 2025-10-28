@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Animated Battle</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #1a1a2e;
+            color: #d4af37;
+            font-family: Arial, sans-serif;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            height: calc(100vh - 40px);
+        }
+        
+        .canvas-container {
+            background: #2c3e50;
+            border-radius: 10px;
+            position: relative;
+        }
+        
+        #battleCanvas {
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+        }
+        
+        .info-panel {
+            background: #16213e;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-y: auto;
+        }
+        
+        .status {
+            margin-bottom: 20px;
+        }
+        
+        .status h3 {
+            color: #d4af37;
+            margin-bottom: 10px;
+        }
+        
+        .button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            background: #1a1a2e;
+            color: #d4af37;
+            border: 2px solid #d4af37;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .button:hover {
+            background: #d4af37;
+            color: #1a1a2e;
+        }
+        
+        .log {
+            height: 200px;
+            overflow-y: auto;
+            background: #0f0f0f;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            line-height: 1.3;
+        }
+        
+        .connection {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            background: rgba(0,0,0,0.7);
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+        
+        .connected { color: #4ade80; }
+        .disconnected { color: #ef4444; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="canvas-container">
+            <canvas id="battleCanvas"></canvas>
+            <div class="connection" id="connection">Connecting...</div>
+        </div>
+        
+        <div class="info-panel">
+            <div class="status">
+                <h3>📊 Battle Status</h3>
+                <div>Turn: <span id="turn">1</span></div>
+                <div>Phase: <span id="phase">Deploy</span></div>
+                <div>Empire Units: <span id="empire">0</span></div>
+                <div>Orc Units: <span id="orcs">0</span></div>
+            </div>
+            
+            <div class="controls">
+                <h3>🎮 Controls</h3>
+                <button class="button" onclick="startBattle()">⚔️ Start Battle</button>
+                <button class="button" onclick="resetBattle()">🔄 Reset</button>
+                <button class="button" onclick="fetchData()">📡 Refresh</button>
+            </div>
+            
+            <div class="battle-log">
+                <h3>📜 Battle Log</h3>
+                <div class="log" id="log"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let canvas, ctx;
+        let battleData = {};
+        let socket;
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initCanvas();
+            initSocket();
+            fetchData();
+            startAnimationLoop();
+            log('🎬 Simple animated interface loaded');
+        });
+        
+        function initCanvas() {
+            canvas = document.getElementById('battleCanvas');
+            ctx = canvas.getContext('2d');
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+        }
+        
+        function resizeCanvas() {
+            const container = canvas.parentElement;
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+        }
+        
+        function initSocket() {
+            socket = io();
+            
+            socket.on('connect', function() {
+                updateConnection('connected');
+                log('🔗 Connected to server');
+            });
+            
+            socket.on('disconnect', function() {
+                updateConnection('disconnected');
+                log('❌ Disconnected');
+            });
+            
+            socket.on('battle_update', function(data) {
+                log('📥 Battle update received');
+                updateBattleData(data);
+            });
+        }
+        
+        function startAnimationLoop() {
+            function animate() {
+                drawBattlefield();
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+        
+        function drawBattlefield() {
+            // Clear canvas
+            ctx.fillStyle = '#2c3e50';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw grid
+            ctx.strokeStyle = 'rgba(139, 69, 19, 0.3)';
+            ctx.lineWidth = 1;
+            
+            const gridSize = 50;
+            for (let x = 0; x < canvas.width; x += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            for (let y = 0; y < canvas.height; y += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+            
+            // Draw units
+            if (battleData.units) {
+                battleData.units.forEach(unit => {
+                    drawUnit(unit);
+                });
+            }
+        }
+        
+        function drawUnit(unit) {
+            const x = (unit.position[0] / 500) * canvas.width;
+            const y = (unit.position[1] / 500) * canvas.height;
+            const size = 20;
+            
+            // Unit color
+            const color = unit.faction === 'nuln' ? '#1e40af' : '#16a34a';
+            
+            // Draw unit
+            ctx.fillStyle = unit.is_alive ? color : '#666';
+            ctx.fillRect(x - size/2, y - size/2, size, size);
+            
+            // Border
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(x - size/2, y - size/2, size, size);
+            
+            // Models count
+            ctx.fillStyle = '#fff';
+            ctx.font = '12px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(unit.models || '?', x, y + 4);
+        }
+        
+        function updateBattleData(data) {
+            battleData = data;
+            
+            // Update UI
+            document.getElementById('turn').textContent = data.turn || 1;
+            document.getElementById('phase').textContent = (data.phase || 'Deploy').substring(0, 10);
+            
+            // Count units
+            let empireCount = 0, orcCount = 0;
+            if (data.units) {
+                data.units.forEach(unit => {
+                    if (unit.is_alive) {
+                        if (unit.faction === 'nuln') empireCount++;
+                        if (unit.faction === 'orcs') orcCount++;
+                    }
+                });
+            }
+            document.getElementById('empire').textContent = empireCount;
+            document.getElementById('orcs').textContent = orcCount;
+            
+            // Update log
+            if (data.battle_log) {
+                updateLog(data.battle_log.slice(-10)); // Last 10 entries
+            }
+        }
+        
+        function updateLog(entries) {
+            const logEl = document.getElementById('log');
+            logEl.innerHTML = '';
+            entries.forEach(entry => {
+                const div = document.createElement('div');
+                div.textContent = entry;
+                logEl.appendChild(div);
+            });
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+        
+        function updateConnection(status) {
+            const conn = document.getElementById('connection');
+            conn.className = `connection ${status}`;
+            conn.textContent = status === 'connected' ? '🟢 Connected' : '🔴 Disconnected';
+        }
+        
+        function log(message) {
+            const logEl = document.getElementById('log');
+            const div = document.createElement('div');
+            div.textContent = new Date().toLocaleTimeString() + ' - ' + message;
+            logEl.appendChild(div);
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+        
+        // Battle controls
+        function startBattle() {
+            log('⚔️ Starting battle...');
+            fetch('/api/start_battle', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    log(data.success ? '✅ Battle started' : '❌ Failed to start');
+                })
+                .catch(error => log(`❌ Error: ${error.message}`));
+        }
+        
+        function resetBattle() {
+            log('🔄 Resetting...');
+            fetch('/api/reset_battle', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    log(data.success ? '✅ Reset complete' : '❌ Reset failed');
+                    if (data.success) fetchData();
+                })
+                .catch(error => log(`❌ Error: ${error.message}`));
+        }
+        
+        function fetchData() {
+            log('📡 Fetching data...');
+            fetch('/api/battle_state')
+                .then(response => response.json())
+                .then(data => {
+                    log('✅ Data received');
+                    updateBattleData(data);
+                })
+                .catch(error => log(`❌ Error: ${error.message}`));
+        }
+        
+        // Auto-refresh
+        setInterval(fetchData, 3000);
+    </script>
+</body>
+</html> 

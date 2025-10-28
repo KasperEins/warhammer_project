@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚔️ Warhammer: The Old World ⚔️</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/battle.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Uncial+Antiqua&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="game-container">
+        <!-- Header -->
+        <header class="game-header">
+            <h1 class="game-title">⚔️ WARHAMMER: THE OLD WORLD ⚔️</h1>
+            <div class="turn-info">
+                <div class="turn-display">
+                    <span class="turn-label">Turn:</span>
+                    <span id="current-turn" class="turn-number">1</span>
+                </div>
+                <div class="phase-display">
+                    <span class="phase-label">Phase:</span>
+                    <span id="current-phase" class="phase-name">Setup</span>
+                </div>
+                <div class="player-display">
+                    <span class="player-label">Active Player:</span>
+                    <span id="current-player" class="player-name">Empire</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Game Area -->
+        <div class="game-main">
+            <!-- Left Panel - Army Information -->
+            <div class="left-panel">
+                <div class="army-panel empire-panel">
+                    <h3 class="army-title">🛡️ EMPIRE FORCES</h3>
+                    <div id="empire-units" class="unit-list">
+                        <!-- Empire units will be populated here -->
+                    </div>
+                </div>
+                
+                <div class="army-panel orc-panel">
+                    <h3 class="army-title">⚔️ ORC FORCES</h3>
+                    <div id="orc-units" class="unit-list">
+                        <!-- Orc units will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Center - Battlefield Canvas -->
+            <div class="battlefield-container">
+                <canvas id="battlefield" width="1200" height="800"></canvas>
+                <div class="battlefield-overlay">
+                    <div id="unit-tooltip" class="unit-tooltip">
+                        <strong>Unit Details:</strong><br>
+                        <span id="tooltip-name">Empire Halberdiers</span><br>
+                        Models: <span id="tooltip-models">20</span>/<span id="tooltip-max">20</span><br>
+                        Formation: <span id="tooltip-formation">Deep (5x4)</span><br>
+                        <br>
+                        <strong>Statistics:</strong><br>
+                        M: <span id="tooltip-movement">4</span>"
+                        WS: <span id="tooltip-ws">3</span>
+                        BS: <span id="tooltip-bs">3</span><br>
+                        S: <span id="tooltip-strength">3</span>
+                        T: <span id="tooltip-toughness">3</span>
+                        W: <span id="tooltip-wounds">1</span><br>
+                        A: <span id="tooltip-attacks">1</span>
+                        Ld: <span id="tooltip-leadership">7</span>
+                        AS: <span id="tooltip-armor">5+</span><br>
+                        <span id="tooltip-range" style="display: none;">Range: <span id="tooltip-range-value">24</span>"</span>
+                        <br>
+                        <div id="tooltip-special-rules" style="margin-top: 8px;">
+                            <strong>Special Rules:</strong><br>
+                            <div id="special-standard" style="display: none;">🏴 Standard Bearer (+1 CR)</div>
+                            <div id="special-musician" style="display: none;">🎺 Musician (Rally bonus)</div>
+                            <div id="special-armor-piercing" style="display: none;">⚡ Armor Piercing</div>
+                            <div id="special-frenzy" style="display: none;">😤 Frenzy (+1 Attack when charging)</div>
+                            <div id="special-fast-cavalry" style="display: none;">🐎 Fast Cavalry</div>
+                            <div id="special-lance" style="display: none;">🏹 Lance Formation</div>
+                            <div id="special-fear" style="display: none; color: #aa44aa;">😰 Fear (Enemies -1 to hit)</div>
+                            <div id="special-terror" style="display: none; color: #cc2222;">💀 Terror (Enemies may flee!)</div>
+                            <div id="special-immune-fear" style="display: none; color: #44aa44;">🛡️ Immune to Fear</div>
+                            <div id="special-stubborn" style="display: none; color: #6666aa;">🗿 Stubborn (Unmodified Ld)</div>
+                            <div id="special-regeneration" style="display: none; color: #22cc22;">🩹 Regeneration</div>
+                            <div id="special-fleeing" style="display: none; color: #ff6666;">💨 FLEEING</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel - Battle Log & Controls -->
+            <div class="right-panel">
+                <div class="controls-panel">
+                    <h3 class="panel-title">⚡ BATTLE CONTROLS</h3>
+                    <div class="control-buttons">
+                        <button id="new-battle-btn" class="control-btn primary">🎲 New Battle</button>
+                        <button id="start-battle-btn" class="control-btn success">▶️ Start Battle</button>
+                        <button id="pause-battle-btn" class="control-btn warning">⏸️ Pause</button>
+                        <button id="next-turn-btn" class="control-btn secondary">⏭️ Next Turn</button>
+                    </div>
+                </div>
+
+                <div class="battle-log-panel">
+                    <h3 class="panel-title">📜 BATTLE CHRONICLE</h3>
+                    <div id="battle-log" class="battle-log">
+                        <div class="log-entry welcome">Welcome to the Old World...</div>
+                    </div>
+                </div>
+
+                <div class="phase-guide-panel">
+                    <h3 class="panel-title">📋 PHASE GUIDE</h3>
+                    <div class="phase-list">
+                        <div class="phase-item" data-phase="Movement">
+                            <span class="phase-icon">🏃</span>
+                            <span class="phase-text">Movement</span>
+                        </div>
+                        <div class="phase-item" data-phase="Shooting">
+                            <span class="phase-icon">🏹</span>
+                            <span class="phase-text">Shooting</span>
+                        </div>
+                        <div class="phase-item" data-phase="Charges">
+                            <span class="phase-icon">🐎</span>
+                            <span class="phase-text">Charges</span>
+                        </div>
+                        <div class="phase-item" data-phase="Combat">
+                            <span class="phase-icon">⚔️</span>
+                            <span class="phase-text">Combat</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="game-footer">
+            <div class="connection-status">
+                <span id="connection-indicator" class="status-indicator">🔴</span>
+                <span id="connection-text">Connecting...</span>
+            </div>
+            <div class="game-info">
+                <span>Warhammer: The Old World • Epic Battles Await</span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h2 class="loading-text">Preparing for Battle...</h2>
+            <p class="loading-subtitle">Assembling armies and setting the battlefield</p>
+        </div>
+    </div>
+
+    <!-- Socket.IO -->
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
+    <!-- Main Game Script -->
+    <script src="{{ url_for('static', filename='js/battle.js') }}"></script>
+</body>
+</html> 

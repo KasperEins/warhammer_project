@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warhammer: Battle Viewer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #2c3e50;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .container {
+            display: flex;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .battlefield {
+            background: #228b22;
+            border: 3px solid #d4af37;
+            border-radius: 10px;
+            position: relative;
+            width: 800px;
+            height: 600px;
+        }
+        
+        #battleCanvas {
+            width: 100%;
+            height: 100%;
+            border-radius: 7px;
+            display: block;
+        }
+        
+        .sidebar {
+            width: 350px;
+            background: rgba(0,0,0,0.7);
+            border-radius: 10px;
+            padding: 20px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .controls {
+            margin-bottom: 20px;
+        }
+        
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        button:hover {
+            background: #2980b9;
+        }
+        
+        .section {
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+        }
+        
+        .section h3 {
+            margin: 0 0 10px 0;
+            color: #f39c12;
+        }
+        
+        .unit-list {
+            font-size: 12px;
+            line-height: 1.4;
+        }
+        
+        .unit-item {
+            margin: 3px 0;
+            padding: 2px;
+        }
+        
+        .empire { color: #3498db; }
+        .orc { color: #27ae60; }
+        .combat { background: rgba(231, 76, 60, 0.3); }
+        .fleeing { color: #e74c3c; }
+        
+        .battle-log {
+            height: 150px;
+            overflow-y: auto;
+            background: rgba(0,0,0,0.5);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 11px;
+            line-height: 1.3;
+        }
+        
+        .combat-log { color: #ff6b6b; font-weight: bold; }
+        .destroy-log { color: #ff4757; background: rgba(255, 71, 87, 0.2); }
+        .charge-log { color: #ffa502; font-weight: bold; }
+        .magic-log { color: #3742fa; font-style: italic; }
+        
+        .status-bar {
+            text-align: center;
+            padding: 10px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center; color: #f39c12;">🏰 WARHAMMER: THE OLD WORLD BATTLE 🏰</h1>
+    
+    <div class="container">
+        <div class="battlefield">
+            <canvas id="battleCanvas" width="800" height="600"></canvas>
+        </div>
+        
+        <div class="sidebar">
+            <div class="controls">
+                <button onclick="startBattle()">⚔️ Start Battle</button>
+                <button onclick="resetBattle()">🔄 Reset</button>
+            </div>
+            
+            <div class="status-bar">
+                <div>Turn: <span id="turn">-</span> | Phase: <span id="phase">-</span></div>
+                <div>Player: <span id="player">-</span></div>
+            </div>
+            
+            <div class="section">
+                <h3>🔵 Empire Forces</h3>
+                <div id="empireUnits" class="unit-list">Loading...</div>
+            </div>
+            
+            <div class="section">
+                <h3>🟢 Orc Forces</h3>
+                <div id="orcUnits" class="unit-list">Loading...</div>
+            </div>
+            
+            <div class="section">
+                <h3>📜 Battle Log</h3>
+                <div id="battleLog" class="battle-log">Waiting for battle to start...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple, clean JavaScript for battle visualization
+        let canvas, ctx;
+        let socket;
+        let battleData = null;
+        
+        // Initialize everything
+        function init() {
+            canvas = document.getElementById('battleCanvas');
+            ctx = canvas.getContext('2d');
+            
+            // Set actual canvas size
+            canvas.width = 800;
+            canvas.height = 600;
+            
+            drawBackground();
+            
+            // Connect to server
+            socket = io();
+            socket.on('connect', () => console.log('🌐 Connected to server'));
+            socket.on('battle_update', updateBattle);
+            
+            // Start polling for updates - more frequent for better real-time feel
+            setInterval(fetchBattleState, 1000); // Poll every 1 second instead of 2
+            fetchBattleState();
+        }
+        
+        function drawBackground() {
+            // Clear and draw grass field
+            ctx.fillStyle = '#2d5016';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Add proper battlefield grid - every 50 pixels represents ~6 inches
+            ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+            ctx.lineWidth = 1;
+            
+            // Draw grid every 50 pixels (more tactical scale)
+            for (let x = 50; x < canvas.width; x += 50) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            
+            for (let y = 50; y < canvas.height; y += 50) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+            
+            // Add deployment zone markers
+            ctx.strokeStyle = 'rgba(212, 175, 55, 0.5)';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            
+            // Empire deployment zone (bottom)
+            ctx.strokeRect(0, canvas.height - 150, canvas.width, 150);
+            ctx.fillStyle = 'rgba(52, 152, 219, 0.1)';
+            ctx.fillRect(0, canvas.height - 150, canvas.width, 150);
+            
+            // Orc deployment zone (top)
+            ctx.strokeRect(0, 0, canvas.width, 150);
+            ctx.fillStyle = 'rgba(39, 174, 96, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, 150);
+            
+            ctx.setLineDash([]);
+            
+            // Add center line
+            ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height/2);
+            ctx.lineTo(canvas.width, canvas.height/2);
+            ctx.stroke();
+            
+            // Add a simple hill in center for tactical interest
+            ctx.fillStyle = '#8b4513';
+            ctx.beginPath();
+            ctx.ellipse(canvas.width/2, canvas.height/2, 60, 40, 0, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            ctx.fillStyle = 'white';
+            ctx.font = '10px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Hill', canvas.width/2, canvas.height/2);
+        }
+        
+        function drawUnit(unit) {
+            if (!unit.is_alive || unit.models <= 0) return;
+            
+            // FIXED coordinate mapping based on actual backend data
+            // Backend uses coordinates like [150, 458] in a ~500x500 field
+            // Map this to our 800x600 canvas with proper margins
+            const x = (unit.position[0] / 500) * (canvas.width - 100) + 50;
+            const y = (unit.position[1] / 500) * (canvas.height - 100) + 50;
+            
+            // Unit colors - brighter for better visibility
+            const color = unit.faction === 'nuln' ? '#3498db' : '#27ae60';
+            const outlineColor = unit.faction === 'nuln' ? '#2980b9' : '#229954';
+            
+            // Unit size based on model count (more realistic scaling)
+            const baseSize = Math.max(12, Math.min(unit.models * 1.5 + 8, 35));
+            
+            // Draw unit shadow for depth
+            ctx.fillStyle = 'rgba(0,0,0,0.3)';
+            ctx.beginPath();
+            if (unit.formation === 'deep') {
+                ctx.fillRect(x - baseSize/4 + 2, y - baseSize/2 + 2, baseSize/2, baseSize);
+            } else if (unit.formation === 'wide') {
+                ctx.fillRect(x - baseSize/2 + 2, y - baseSize/4 + 2, baseSize, baseSize/2);
+            } else {
+                ctx.arc(x + 2, y + 2, baseSize/2, 0, 2 * Math.PI);
+                ctx.fill();
+            }
+            
+            // Draw unit base with better styling
+            ctx.fillStyle = color;
+            ctx.strokeStyle = unit.in_combat ? '#e74c3c' : outlineColor;
+            ctx.lineWidth = unit.in_combat ? 4 : 2;
+            
+            // Draw shape based on formation
+            ctx.beginPath();
+            if (unit.formation === 'deep') {
+                // Tall rectangle for deep formation
+                ctx.rect(x - baseSize/4, y - baseSize/2, baseSize/2, baseSize);
+            } else if (unit.formation === 'wide') {
+                // Wide rectangle for wide formation
+                ctx.rect(x - baseSize/2, y - baseSize/4, baseSize, baseSize/2);
+            } else {
+                // Circle for skirmish
+                ctx.arc(x, y, baseSize/2, 0, 2 * Math.PI);
+            }
+            ctx.fill();
+            ctx.stroke();
+            
+            // Add combat indicator (pulsing red border)
+            if (unit.in_combat) {
+                ctx.strokeStyle = '#ff4444';
+                ctx.lineWidth = 6;
+                ctx.globalAlpha = 0.6;
+                ctx.stroke();
+                ctx.globalAlpha = 1.0;
+            }
+            
+            // Draw model count (larger and more visible)
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 3;
+            ctx.strokeText(unit.models.toString(), x, y + 4);
+            ctx.fillText(unit.models.toString(), x, y + 4);
+            
+            // Draw unit name (abbreviated, better positioning)
+            ctx.font = '11px Arial';
+            ctx.fillStyle = color;
+            let name = unit.name.length > 12 ? unit.name.substring(0, 9) + '...' : unit.name;
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 2;
+            ctx.strokeText(name, x, y + baseSize/2 + 18);
+            ctx.fillText(name, x, y + baseSize/2 + 18);
+            
+            // Health bar if damaged (more prominent)
+            if (unit.casualties > 0) {
+                const barWidth = 45;
+                const barHeight = 6;
+                const health = unit.models / (unit.models + unit.casualties);
+                
+                // Background
+                ctx.fillStyle = '#333';
+                ctx.fillRect(x - barWidth/2, y - baseSize/2 - 16, barWidth, barHeight);
+                
+                // Health
+                ctx.fillStyle = health > 0.6 ? '#27ae60' : health > 0.3 ? '#f39c12' : '#e74c3c';
+                ctx.fillRect(x - barWidth/2, y - baseSize/2 - 16, barWidth * health, barHeight);
+                
+                // Border
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = 1;
+                ctx.strokeRect(x - barWidth/2, y - baseSize/2 - 16, barWidth, barHeight);
+            }
+            
+            // Add facing indicator (small arrow)
+            if (unit.facing !== undefined) {
+                const arrowLength = baseSize/2 + 8;
+                const arrowX = x + Math.cos(unit.facing * Math.PI / 180) * arrowLength;
+                const arrowY = y + Math.sin(unit.facing * Math.PI / 180) * arrowLength;
+                
+                ctx.strokeStyle = '#ffff00';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+                ctx.lineTo(arrowX, arrowY);
+                ctx.stroke();
+                
+                // Arrow head
+                ctx.fillStyle = '#ffff00';
+                ctx.beginPath();
+                ctx.arc(arrowX, arrowY, 3, 0, 2 * Math.PI);
+                ctx.fill();
+            }
+        }
+        
+        function updateBattle(data) {
+            battleData = data;
+            redrawBattle();
+        }
+        
+        function redrawBattle() {
+            if (!battleData) return;
+            
+            // Clear and redraw background
+            drawBackground();
+            
+            // Draw all units
+            if (battleData.units) {
+                battleData.units.forEach(unit => drawUnit(unit));
+            }
+            
+            // Update UI
+            updateUI();
+        }
+        
+        function updateUI() {
+            if (!battleData) return;
+            
+            // Update status
+            document.getElementById('turn').textContent = battleData.turn || '-';
+            document.getElementById('phase').textContent = battleData.phase || '-';
+            document.getElementById('player').textContent = battleData.active_player || '-';
+            
+            // Update unit lists
+            const empireUnits = battleData.units ? battleData.units.filter(u => u.faction === 'nuln' && u.is_alive) : [];
+            const orcUnits = battleData.units ? battleData.units.filter(u => u.faction === 'orc' && u.is_alive) : [];
+            
+            document.getElementById('empireUnits').innerHTML = empireUnits.map(u => 
+                `<div class="unit-item empire ${u.in_combat ? 'combat' : ''} ${u.is_fleeing ? 'fleeing' : ''}">
+                    <strong>${u.name.substring(0, 20)}</strong><br>
+                    📍 ${u.models} models @ [${u.position[0]}, ${u.position[1]}]<br>
+                    ${u.in_combat ? '⚔️ IN COMBAT' : ''} ${u.is_fleeing ? '💨 FLEEING' : ''}
+                    ${u.casualties > 0 ? `💔 ${u.casualties} casualties` : ''}
+                </div>`
+            ).join('');
+            
+            document.getElementById('orcUnits').innerHTML = orcUnits.map(u => 
+                `<div class="unit-item orc ${u.in_combat ? 'combat' : ''} ${u.is_fleeing ? 'fleeing' : ''}">
+                    <strong>${u.name.substring(0, 20)}</strong><br>
+                    📍 ${u.models} models @ [${u.position[0]}, ${u.position[1]}]<br>
+                    ${u.in_combat ? '⚔️ IN COMBAT' : ''} ${u.is_fleeing ? '💨 FLEEING' : ''}
+                    ${u.casualties > 0 ? `💔 ${u.casualties} casualties` : ''}
+                </div>`
+            ).join('');
+            
+            // Enhanced battle log with more details
+            if (battleData.battle_log) {
+                const logDiv = document.getElementById('battleLog');
+                const recentLogs = battleData.battle_log.slice(-12); // Show more entries
+                logDiv.innerHTML = recentLogs.map(log => {
+                    // Color code different types of events
+                    let className = '';
+                    if (log.includes('⚔️') || log.includes('COMBAT')) className = 'combat-log';
+                    else if (log.includes('💥') || log.includes('destroys')) className = 'destroy-log';
+                    else if (log.includes('⚡') || log.includes('CHARGE')) className = 'charge-log';
+                    else if (log.includes('🔮') || log.includes('MAGIC')) className = 'magic-log';
+                    
+                    return `<div class="${className}">${log}</div>`;
+                }).join('');
+                logDiv.scrollTop = logDiv.scrollHeight;
+            }
+        }
+        
+        function fetchBattleState() {
+            fetch('/api/battle_state')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('📡 Battle state:', data);
+                    updateBattle(data);
+                })
+                .catch(error => {
+                    console.error('❌ Error:', error);
+                });
+        }
+        
+        function startBattle() {
+            fetch('/api/start_battle', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('⚔️ Battle started');
+                    fetchBattleState();
+                })
+                .catch(error => console.error('❌ Start error:', error));
+        }
+        
+        function resetBattle() {
+            fetch('/api/reset_battle', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('🔄 Battle reset');
+                    fetchBattleState();
+                })
+                .catch(error => console.error('❌ Reset error:', error));
+        }
+        
+        // Start everything when page loads
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html> 
