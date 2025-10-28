@@ -495,6 +495,75 @@ class WebBattle(OldWorldBattle):
             self.emit_battle_update('turn_complete')
             return True  # Battle continues
 
+    def check_victory(self) -> bool:
+        """Check victory conditions using authentic Old World rules"""
+        p1_alive = any(u.player == 1 and u.is_alive() for u in self.units)
+        p2_alive = any(u.player == 2 and u.is_alive() for u in self.units)
+        
+        # Immediate victory - army eliminated
+        if not p1_alive:
+            print("\n🏆 ORC FORCES VICTORY! (Army Eliminated)")
+            self.add_log("🏆 ORC FORCES VICTORY! (Army Eliminated)")
+            return False
+        elif not p2_alive:
+            print("\n🏆 EMPIRE FORCES VICTORY! (Army Eliminated)")
+            self.add_log("🏆 EMPIRE FORCES VICTORY! (Army Eliminated)")
+            return False
+        
+        # Game ends after 6 turns - count victory points
+        if self.turn > 6:
+            vp_p1, vp_p2 = self.calculate_victory_points()
+            print(f"\n⏰ BATTLE ENDS AFTER 6 TURNS!")
+            print(f"📊 VICTORY POINTS:")
+            print(f"   Empire: {vp_p1} VP")
+            print(f"   Orcs: {vp_p2} VP")
+            self.add_log(f"⏰ BATTLE ENDS AFTER 6 TURNS!")
+            self.add_log(f"Empire: {vp_p1} VP | Orcs: {vp_p2} VP")
+            
+            if vp_p1 > vp_p2:
+                print(f"\n🏆 EMPIRE VICTORY! (+{vp_p1 - vp_p2} VP)")
+                self.add_log(f"🏆 EMPIRE VICTORY!")
+            elif vp_p2 > vp_p1:
+                print(f"\n🏆 ORC VICTORY! (+{vp_p2 - vp_p1} VP)")
+                self.add_log(f"🏆 ORC VICTORY!")
+            else:
+                print(f"\n🤝 HONORABLE DRAW! (Tied at {vp_p1} VP each)")
+                self.add_log(f"🤝 HONORABLE DRAW!")
+            return False
+        
+        return True
+    
+    def calculate_victory_points(self) -> tuple:
+        """Calculate victory points earned by each player"""
+        vp_p1 = 0  # Points earned by Player 1 (Empire)
+        vp_p2 = 0  # Points earned by Player 2 (Orcs)
+        
+        for unit in self.units:
+            if unit.points_cost == 0:
+                continue  # Skip units without point values
+                
+            if unit.player == 1:  # Empire unit
+                # Player 2 (Orcs) gets VP for casualties inflicted
+                casualties = unit.starting_models - unit.models
+                if casualties > 0:
+                    casualty_percentage = casualties / unit.starting_models
+                    if casualty_percentage >= 1.0:  # Completely destroyed
+                        vp_p2 += unit.points_cost
+                    elif casualty_percentage >= 0.5:  # Half or more destroyed
+                        vp_p2 += unit.points_cost // 2
+                        
+            elif unit.player == 2:  # Orc unit
+                # Player 1 (Empire) gets VP for casualties inflicted
+                casualties = unit.starting_models - unit.models
+                if casualties > 0:
+                    casualty_percentage = casualties / unit.starting_models
+                    if casualty_percentage >= 1.0:  # Completely destroyed
+                        vp_p1 += unit.points_cost
+                    elif casualty_percentage >= 0.5:  # Half or more destroyed
+                        vp_p1 += unit.points_cost // 2
+        
+        return vp_p1, vp_p2
+
     def get_to_hit_score(self, attacker_ws: int, defender_ws: int) -> int:
         """Authentic WS vs WS to-hit chart from Warhammer: The Old World"""
         if attacker_ws >= defender_ws * 2:
