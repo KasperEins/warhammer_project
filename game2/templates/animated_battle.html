@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warhammer: The Old World - Animated Battle</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cinzel+Decorative:wght@400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Cinzel', serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #d4af37;
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 15px 0;
+            background: linear-gradient(90deg, #1a1a2e, #16213e, #1a1a2e);
+            border-bottom: 3px solid #d4af37;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 100;
+        }
+        
+        .title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            background: linear-gradient(45deg, #d4af37, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Main battle interface */
+        .battle-interface {
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            height: calc(100vh - 80px);
+            gap: 10px;
+            padding: 10px;
+        }
+        
+        /* Battle canvas container */
+        .battle-canvas-container {
+            position: relative;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        }
+        
+        #battleCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            cursor: crosshair;
+        }
+        
+        /* Battle phase indicator */
+        .phase-indicator {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            color: #1a1a2e;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            z-index: 10;
+            animation: phaseGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes phaseGlow {
+            from { box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
+            to { box-shadow: 0 4px 20px rgba(255, 215, 0, 0.6); }
+        }
+        
+        /* Turn indicator */
+        .turn-indicator {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(26, 26, 46, 0.9);
+            color: #d4af37;
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 2px solid #d4af37;
+            font-weight: bold;
+            z-index: 10;
+        }
+        
+        /* Right panel */
+        .control-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        /* Battle status */
+        .battle-status {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border-radius: 10px;
+            padding: 15px;
+            border: 2px solid #d4af37;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        
+        .battle-status h3 {
+            font-family: 'Cinzel Decorative', serif;
+            color: #d4af37;
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        
+        .status-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        
+        .status-item {
+            text-align: center;
+            padding: 8px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 6px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        
+        .status-label {
+            font-size: 0.8rem;
+            color: #c0c0c0;
+            margin-bottom: 3px;
+        }
+        
+        .status-value {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #d4af37;
+        }
+        
+        /* Battle controls */
+        .battle-controls {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border-radius: 10px;
+            padding: 15px;
+            border: 2px solid #d4af37;
+        }
+        
+        .battle-controls h3 {
+            font-family: 'Cinzel Decorative', serif;
+            color: #d4af37;
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        
+        .button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            background: linear-gradient(135deg, #16213e, #1a1a2e);
+            color: #d4af37;
+            border: 2px solid #d4af37;
+            border-radius: 8px;
+            font-family: 'Cinzel', serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+        }
+        
+        .button:hover {
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            color: #1a1a2e;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(212, 175, 55, 0.3);
+        }
+        
+        .button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Battle log */
+        .battle-log {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border-radius: 10px;
+            padding: 15px;
+            border: 2px solid #d4af37;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .battle-log h3 {
+            font-family: 'Cinzel Decorative', serif;
+            color: #d4af37;
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        
+        .log-content {
+            flex: 1;
+            overflow-y: auto;
+            background: rgba(0,0,0,0.3);
+            border-radius: 6px;
+            padding: 10px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            font-size: 0.8rem;
+            line-height: 1.3;
+        }
+        
+        .log-entry {
+            margin-bottom: 3px;
+            padding: 2px 0;
+        }
+        
+        .log-entry.combat {
+            color: #ff6b6b;
+        }
+        
+        .log-entry.magic {
+            color: #a855f7;
+        }
+        
+        .log-entry.movement {
+            color: #3b82f6;
+        }
+        
+        .log-entry.shooting {
+            color: #f59e0b;
+        }
+        
+        /* Animations */
+        @keyframes explode {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.8; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+        
+        @keyframes magic {
+            0% { transform: scale(0) rotate(0deg); opacity: 0; }
+            50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
+            100% { transform: scale(0) rotate(360deg); opacity: 0; }
+        }
+        
+        @keyframes charge {
+            0% { transform: translateX(0); }
+            50% { transform: translateX(10px) scale(1.1); }
+            100% { transform: translateX(0); }
+        }
+        
+        /* Connection status */
+        .connection-status {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            background: rgba(26, 26, 46, 0.9);
+            color: #d4af37;
+            padding: 5px 10px;
+            border-radius: 15px;
+            border: 1px solid #d4af37;
+            font-size: 0.8rem;
+            z-index: 10;
+        }
+        
+        .connection-status.connected {
+            color: #4ade80;
+            border-color: #4ade80;
+        }
+        
+        .connection-status.disconnected {
+            color: #ef4444;
+            border-color: #ef4444;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="title">WARHAMMER: THE OLD WORLD - ANIMATED BATTLE</h1>
+    </div>
+    
+    <div class="battle-interface">
+        <div class="battle-canvas-container">
+            <canvas id="battleCanvas"></canvas>
+            <div class="phase-indicator" id="phaseIndicator">DEPLOYMENT</div>
+            <div class="turn-indicator" id="turnIndicator">Turn 1</div>
+            <div class="connection-status" id="connectionStatus">Connecting...</div>
+        </div>
+        
+        <div class="control-panel">
+            <div class="battle-status">
+                <h3>⚔️ Battle Status</h3>
+                <div class="status-grid">
+                    <div class="status-item">
+                        <div class="status-label">Empire</div>
+                        <div class="status-value" id="empireCount">0</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-label">Orcs</div>
+                        <div class="status-value" id="orcCount">0</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-label">Turn</div>
+                        <div class="status-value" id="currentTurn">1</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-label">Phase</div>
+                        <div class="status-value" id="currentPhase">Deploy</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="battle-controls">
+                <h3>🎮 Controls</h3>
+                <button class="button" id="startBtn" onclick="startBattle()">⚔️ Start Battle</button>
+                <button class="button" id="resetBtn" onclick="resetBattle()">🔄 Reset</button>
+                <button class="button" onclick="toggleAnimation()">🎬 Toggle Animation</button>
+                <button class="button" onclick="zoomToggle()">🔍 Zoom</button>
+            </div>
+            
+            <div class="battle-log">
+                <h3>📜 Battle Chronicle</h3>
+                <div class="log-content" id="battleLog"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let canvas, ctx;
+        let battleState = {};
+        let animations = [];
+        let particles = [];
+        let camera = { x: 0, y: 0, zoom: 1 };
+        let animationEnabled = true;
+        let lastTime = 0;
+        let socket;
+        
+        // Animation and visual constants
+        const COLORS = {
+            empire: '#1e40af',
+            orcs: '#16a34a',
+            terrain: '#8b4513',
+            explosion: '#ff4444',
+            magic: '#a855f7',
+            arrow: '#fbbf24'
+        };
+        
+        const UNIT_SIZE = 24;
+        const ANIMATION_SPEED = 0.016; // 60 FPS target
+        
+        // Initialize everything when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCanvas();
+            initializeSocket();
+            startAnimationLoop();
+            addLogEntry('🎬 Animated battle interface initialized');
+        });
+        
+        // Canvas initialization
+        function initializeCanvas() {
+            canvas = document.getElementById('battleCanvas');
+            ctx = canvas.getContext('2d');
+            
+            // Set canvas size
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            
+            // Mouse events
+            canvas.addEventListener('click', handleCanvasClick);
+            canvas.addEventListener('mousemove', handleCanvasMouseMove);
+            
+            // Draw initial state
+            drawBattlefield();
+        }
+        
+        function resizeCanvas() {
+            const container = canvas.parentElement;
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+            
+            // Adjust camera for new size
+            camera.x = canvas.width / 2;
+            camera.y = canvas.height / 2;
+        }
+        
+        // Socket.IO initialization
+        function initializeSocket() {
+            socket = io();
+            
+            socket.on('connect', function() {
+                updateConnectionStatus('connected');
+                addLogEntry('🔗 Connected to battle server');
+                fetchBattleState();
+            });
+            
+            socket.on('disconnect', function() {
+                updateConnectionStatus('disconnected');
+                addLogEntry('❌ Connection lost');
+            });
+            
+            socket.on('battle_update', function(data) {
+                console.log('📥 Battle update received:', data);
+                updateBattleState(data);
+            });
+        }
+        
+        // Main animation loop
+        function startAnimationLoop() {
+            function animate(currentTime) {
+                const deltaTime = (currentTime - lastTime) / 1000;
+                lastTime = currentTime;
+                
+                if (animationEnabled) {
+                    updateAnimations(deltaTime);
+                    updateParticles(deltaTime);
+                }
+                
+                drawBattlefield();
+                drawUnits();
+                drawAnimations();
+                drawParticles();
+                drawUI();
+                
+                requestAnimationFrame(animate);
+            }
+            requestAnimationFrame(animate);
+        }
+        
+        // Battle state management
+        function updateBattleState(data) {
+            const oldState = { ...battleState };
+            battleState = data;
+            
+            // Update UI elements
+            updateStatusDisplay();
+            updateBattleLog(data.battle_log || []);
+            
+            // Detect and animate changes
+            if (oldState.units && data.units) {
+                detectBattleEvents(oldState.units, data.units);
+            }
+        }
+        
+        function updateStatusDisplay() {
+            // Count alive units
+            let empireCount = 0, orcCount = 0;
+            if (battleState.units) {
+                battleState.units.forEach(unit => {
+                    if (unit.is_alive) {
+                        if (unit.faction === 'nuln') empireCount++;
+                        if (unit.faction === 'orcs') orcCount++;
+                    }
+                });
+            }
+            
+            document.getElementById('empireCount').textContent = empireCount;
+            document.getElementById('orcCount').textContent = orcCount;
+            document.getElementById('currentTurn').textContent = battleState.turn || 1;
+            document.getElementById('currentPhase').textContent = (battleState.phase || 'Deploy').substring(0, 8);
+            document.getElementById('phaseIndicator').textContent = battleState.phase || 'DEPLOYMENT';
+            document.getElementById('turnIndicator').textContent = `Turn ${battleState.turn || 1}`;
+        }
+        
+        // Battle event detection and animation
+        function detectBattleEvents(oldUnits, newUnits) {
+            // Check for unit deaths (create explosion animations)
+            oldUnits.forEach((oldUnit, index) => {
+                const newUnit = newUnits[index];
+                if (oldUnit && newUnit && oldUnit.is_alive && !newUnit.is_alive) {
+                    createExplosionAnimation(newUnit.position[0], newUnit.position[1]);
+                    addLogEntry(`💀 ${newUnit.name} destroyed!`, 'combat');
+                }
+                
+                // Check for movement
+                if (oldUnit && newUnit && oldUnit.is_alive && newUnit.is_alive) {
+                    const moved = oldUnit.position[0] !== newUnit.position[0] || 
+                                oldUnit.position[1] !== newUnit.position[1];
+                    if (moved) {
+                        createMovementAnimation(oldUnit.position, newUnit.position, index);
+                    }
+                }
+            });
+        }
+        
+        // Animation creation functions
+        function createExplosionAnimation(x, y) {
+            animations.push({
+                type: 'explosion',
+                x: x,
+                y: y,
+                time: 0,
+                duration: 1.0,
+                size: UNIT_SIZE
+            });
+            
+            // Create explosion particles
+            for (let i = 0; i < 20; i++) {
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: (Math.random() - 0.5) * 200,
+                    vy: (Math.random() - 0.5) * 200,
+                    color: COLORS.explosion,
+                    life: 1.0,
+                    decay: 2.0
+                });
+            }
+        }
+        
+        function createMagicAnimation(x, y) {
+            animations.push({
+                type: 'magic',
+                x: x,
+                y: y,
+                time: 0,
+                duration: 1.5,
+                size: UNIT_SIZE * 2
+            });
+            
+            // Magic particles
+            for (let i = 0; i < 15; i++) {
+                particles.push({
+                    x: x + (Math.random() - 0.5) * 50,
+                    y: y + (Math.random() - 0.5) * 50,
+                    vx: (Math.random() - 0.5) * 100,
+                    vy: (Math.random() - 0.5) * 100,
+                    color: COLORS.magic,
+                    life: 1.5,
+                    decay: 1.0
+                });
+            }
+        }
+        
+        function createMovementAnimation(fromPos, toPos, unitIndex) {
+            animations.push({
+                type: 'movement',
+                fromX: fromPos[0],
+                fromY: fromPos[1],
+                toX: toPos[0],
+                toY: toPos[1],
+                time: 0,
+                duration: 0.8,
+                unitIndex: unitIndex
+            });
+        }
+        
+        // Animation update functions
+        function updateAnimations(deltaTime) {
+            animations = animations.filter(anim => {
+                anim.time += deltaTime;
+                return anim.time < anim.duration;
+            });
+        }
+        
+        function updateParticles(deltaTime) {
+            particles = particles.filter(particle => {
+                particle.x += particle.vx * deltaTime;
+                particle.y += particle.vy * deltaTime;
+                particle.life -= particle.decay * deltaTime;
+                return particle.life > 0;
+            });
+        }
+        
+        // Drawing functions
+        function drawBattlefield() {
+            // Clear canvas
+            ctx.fillStyle = '#2c3e50';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw terrain grid
+            ctx.strokeStyle = 'rgba(139, 69, 19, 0.3)';
+            ctx.lineWidth = 1;
+            
+            const gridSize = 50 * camera.zoom;
+            const offsetX = camera.x % gridSize;
+            const offsetY = camera.y % gridSize;
+            
+            for (let x = offsetX; x < canvas.width; x += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            
+            for (let y = offsetY; y < canvas.height; y += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+        }
+        
+        function drawUnits() {
+            if (!battleState.units) return;
+            
+            battleState.units.forEach((unit, index) => {
+                let x = unit.position[0] + camera.x;
+                let y = unit.position[1] + camera.y;
+                
+                // Check for movement animation
+                const moveAnim = animations.find(a => a.type === 'movement' && a.unitIndex === index);
+                if (moveAnim) {
+                    const progress = Math.min(moveAnim.time / moveAnim.duration, 1);
+                    const eased = easeInOutCubic(progress);
+                    x = moveAnim.fromX + (moveAnim.toX - moveAnim.fromX) * eased + camera.x;
+                    y = moveAnim.fromY + (moveAnim.toY - moveAnim.fromY) * eased + camera.y;
+                }
+                
+                const size = UNIT_SIZE * camera.zoom;
+                const color = unit.faction === 'nuln' ? COLORS.empire : COLORS.orcs;
+                
+                // Unit body
+                ctx.fillStyle = unit.is_alive ? color : '#444';
+                ctx.fillRect(x - size/2, y - size/2, size, size);
+                
+                // Unit border
+                ctx.strokeStyle = unit.is_alive ? '#fff' : '#666';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(x - size/2, y - size/2, size, size);
+                
+                // Unit models count
+                ctx.fillStyle = '#fff';
+                ctx.font = `${Math.floor(12 * camera.zoom)}px Arial`;
+                ctx.textAlign = 'center';
+                ctx.fillText(unit.models || '?', x, y + 4);
+                
+                // Health bar for damaged units
+                if (unit.is_alive && unit.wounds_taken > 0) {
+                    const barWidth = size;
+                    const barHeight = 4;
+                    const healthRatio = Math.max(0, 1 - (unit.wounds_taken / unit.wounds));
+                    
+                    ctx.fillStyle = '#444';
+                    ctx.fillRect(x - barWidth/2, y - size/2 - 8, barWidth, barHeight);
+                    
+                    ctx.fillStyle = healthRatio > 0.5 ? '#4ade80' : healthRatio > 0.25 ? '#fbbf24' : '#ef4444';
+                    ctx.fillRect(x - barWidth/2, y - size/2 - 8, barWidth * healthRatio, barHeight);
+                }
+            });
+        }
+        
+        function drawAnimations() {
+            animations.forEach(anim => {
+                const progress = anim.time / anim.duration;
+                const x = anim.x + camera.x;
+                const y = anim.y + camera.y;
+                
+                ctx.save();
+                
+                switch (anim.type) {
+                    case 'explosion':
+                        const explosionSize = anim.size * (1 + progress * 2);
+                        const explosionAlpha = 1 - progress;
+                        
+                        ctx.globalAlpha = explosionAlpha;
+                        ctx.fillStyle = COLORS.explosion;
+                        ctx.beginPath();
+                        ctx.arc(x, y, explosionSize, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        // Explosion ring
+                        ctx.strokeStyle = '#ff8800';
+                        ctx.lineWidth = 3;
+                        ctx.beginPath();
+                        ctx.arc(x, y, explosionSize * 0.8, 0, Math.PI * 2);
+                        ctx.stroke();
+                        break;
+                        
+                    case 'magic':
+                        const magicSize = anim.size * Math.sin(progress * Math.PI);
+                        const magicAlpha = Math.sin(progress * Math.PI);
+                        
+                        ctx.globalAlpha = magicAlpha;
+                        ctx.fillStyle = COLORS.magic;
+                        ctx.translate(x, y);
+                        ctx.rotate(progress * Math.PI * 4);
+                        
+                        // Magic star
+                        ctx.beginPath();
+                        for (let i = 0; i < 8; i++) {
+                            const angle = (i * Math.PI) / 4;
+                            const radius = i % 2 === 0 ? magicSize : magicSize * 0.5;
+                            const px = Math.cos(angle) * radius;
+                            const py = Math.sin(angle) * radius;
+                            if (i === 0) ctx.moveTo(px, py);
+                            else ctx.lineTo(px, py);
+                        }
+                        ctx.closePath();
+                        ctx.fill();
+                        break;
+                }
+                
+                ctx.restore();
+            });
+        }
+        
+        function drawParticles() {
+            particles.forEach(particle => {
+                ctx.save();
+                ctx.globalAlpha = particle.life;
+                ctx.fillStyle = particle.color;
+                ctx.beginPath();
+                ctx.arc(particle.x + camera.x, particle.y + camera.y, 3, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            });
+        }
+        
+        function drawUI() {
+            // Additional UI elements can be drawn here
+        }
+        
+        // Utility functions
+        function easeInOutCubic(t) {
+            return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+        }
+        
+        // Event handlers
+        function handleCanvasClick(event) {
+            const rect = canvas.getBoundingClientRect();
+            const x = (event.clientX - rect.left) - camera.x;
+            const y = (event.clientY - rect.top) - camera.y;
+            
+            // Check if clicked on a unit
+            if (battleState.units) {
+                battleState.units.forEach((unit, index) => {
+                    const distance = Math.sqrt(
+                        Math.pow(x - unit.position[0], 2) + 
+                        Math.pow(y - unit.position[1], 2)
+                    );
+                    
+                    if (distance < UNIT_SIZE) {
+                        addLogEntry(`👁️ Selected: ${unit.name}`, 'movement');
+                        // Could add unit selection logic here
+                    }
+                });
+            }
+            
+            // Create magic effect at click location
+            createMagicAnimation(x, y);
+        }
+        
+        function handleCanvasMouseMove(event) {
+            // Could add hover effects here
+        }
+        
+        // Battle control functions
+        function startBattle() {
+            addLogEntry('⚔️ Initiating epic battle...', 'combat');
+            
+            fetch('/api/start_battle', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        addLogEntry('🎺 Battle commenced!', 'combat');
+                        document.getElementById('startBtn').disabled = true;
+                    } else {
+                        addLogEntry('❌ Failed to start battle', 'combat');
+                    }
+                })
+                .catch(error => {
+                    addLogEntry(`❌ Error: ${error.message}`, 'combat');
+                });
+        }
+        
+        function resetBattle() {
+            addLogEntry('🔄 Resetting battlefield...', 'movement');
+            
+            fetch('/api/reset_battle', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        addLogEntry('✅ Battle reset', 'movement');
+                        document.getElementById('startBtn').disabled = false;
+                        animations = [];
+                        particles = [];
+                        fetchBattleState();
+                    }
+                })
+                .catch(error => {
+                    addLogEntry(`❌ Reset error: ${error.message}`, 'combat');
+                });
+        }
+        
+        function toggleAnimation() {
+            animationEnabled = !animationEnabled;
+            addLogEntry(`🎬 Animation ${animationEnabled ? 'enabled' : 'disabled'}`, 'movement');
+        }
+        
+        function zoomToggle() {
+            camera.zoom = camera.zoom === 1 ? 1.5 : camera.zoom === 1.5 ? 0.7 : 1;
+            addLogEntry(`🔍 Zoom: ${Math.round(camera.zoom * 100)}%`, 'movement');
+        }
+        
+        // Utility functions
+        function fetchBattleState() {
+            fetch('/api/battle_state')
+                .then(response => response.json())
+                .then(data => {
+                    updateBattleState(data);
+                })
+                .catch(error => {
+                    addLogEntry(`❌ State fetch error: ${error.message}`, 'combat');
+                });
+        }
+        
+        function updateConnectionStatus(status) {
+            const statusEl = document.getElementById('connectionStatus');
+            statusEl.className = `connection-status ${status}`;
+            statusEl.textContent = status === 'connected' ? '🟢 Connected' : '🔴 Disconnected';
+        }
+        
+        function updateBattleLog(logEntries) {
+            const logEl = document.getElementById('battleLog');
+            const recentEntries = logEntries.slice(-30); // Show last 30 entries
+            
+            logEl.innerHTML = '';
+            recentEntries.forEach(entry => {
+                addLogEntry(entry, getLogType(entry), false);
+            });
+            
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+        
+        function addLogEntry(message, type = '', shouldAutoDetectType = true) {
+            const logEl = document.getElementById('battleLog');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${shouldAutoDetectType ? getLogType(message) : type}`;
+            entry.textContent = message;
+            logEl.appendChild(entry);
+            logEl.scrollTop = logEl.scrollHeight;
+            
+            // Trigger animation based on log type
+            if (shouldAutoDetectType) {
+                triggerLogAnimation(message);
+            }
+        }
+        
+        function getLogType(message) {
+            if (message.includes('⚔️') || message.includes('💀') || message.includes('🗡️')) return 'combat';
+            if (message.includes('🔮') || message.includes('💥') || message.includes('⚡')) return 'magic';
+            if (message.includes('🚶') || message.includes('📍')) return 'movement';
+            if (message.includes('🏹') || message.includes('🎯')) return 'shooting';
+            return '';
+        }
+        
+        function triggerLogAnimation(message) {
+            // Create visual effects based on log message
+            if (message.includes('💥') && battleState.units) {
+                // Magic spell - create random magic animation
+                const randomUnit = battleState.units[Math.floor(Math.random() * battleState.units.length)];
+                if (randomUnit) {
+                    createMagicAnimation(randomUnit.position[0], randomUnit.position[1]);
+                }
+            }
+        }
+        
+        // Auto-refresh battle state
+        setInterval(fetchBattleState, 2000);
+    </script>
+</body>
+</html> 

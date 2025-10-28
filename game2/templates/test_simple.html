@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Battle Frontend</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <style>
+        body { 
+            margin: 20px; 
+            background: #1a1a2e; 
+            color: #d4af37; 
+            font-family: Arial, sans-serif; 
+        }
+        .container { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 20px; 
+        }
+        .panel { 
+            background: #16213e; 
+            padding: 20px; 
+            border-radius: 10px; 
+        }
+        button { 
+            background: #d4af37; 
+            color: #1a1a2e; 
+            border: none; 
+            padding: 10px 20px; 
+            margin: 5px; 
+            cursor: pointer; 
+            border-radius: 5px; 
+        }
+        #log { 
+            height: 300px; 
+            overflow-y: auto; 
+            background: #0f0f0f; 
+            padding: 10px; 
+            margin-top: 10px; 
+            font-size: 0.9rem; 
+        }
+        .status { color: #4ade80; }
+        .error { color: #ef4444; }
+        .data { color: #fbbf24; }
+        #canvas { 
+            width: 100%; 
+            height: 300px; 
+            background: #2c3e50; 
+            border-radius: 5px; 
+        }
+    </style>
+</head>
+<body>
+    <h1>🎬 Test Battle Frontend</h1>
+    
+    <div class="container">
+        <div class="panel">
+            <h3>📊 Status & Controls</h3>
+            <div>Connection: <span id="connection">Connecting...</span></div>
+            <div>Turn: <span id="turn">-</span></div>
+            <div>Phase: <span id="phase">-</span></div>
+            <div>Empire: <span id="empire">-</span> | Orcs: <span id="orcs">-</span></div>
+            
+            <div style="margin-top: 20px;">
+                <button onclick="testAPI()">🔧 Test API</button>
+                <button onclick="testSocket()">📡 Test Socket</button>
+                <button onclick="startBattle()">⚔️ Start Battle</button>
+                <button onclick="resetBattle()">🔄 Reset</button>
+                <button onclick="fetchData()">📥 Fetch Data</button>
+            </div>
+            
+            <div id="log"></div>
+        </div>
+        
+        <div class="panel">
+            <h3>🎨 Visual Test</h3>
+            <canvas id="canvas"></canvas>
+            <div style="margin-top: 10px;">
+                <button onclick="testCanvas()">🎯 Test Canvas</button>
+                <button onclick="clearCanvas()">🧹 Clear</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let socket;
+        let battleData = {};
+        let canvas, ctx;
+        
+        // Logging function
+        function log(message, type = 'status') {
+            const logEl = document.getElementById('log');
+            const time = new Date().toLocaleTimeString();
+            const div = document.createElement('div');
+            div.className = type;
+            div.textContent = `[${time}] ${message}`;
+            logEl.appendChild(div);
+            logEl.scrollTop = logEl.scrollHeight;
+            console.log(`[${type}] ${message}`);
+        }
+        
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', function() {
+            log('🚀 Initializing test frontend');
+            initCanvas();
+            initSocket();
+            fetchData();
+        });
+        
+        // Canvas setup
+        function initCanvas() {
+            canvas = document.getElementById('canvas');
+            ctx = canvas.getContext('2d');
+            canvas.width = canvas.clientWidth;
+            canvas.height = canvas.clientHeight;
+            log('✅ Canvas initialized');
+        }
+        
+        // Socket.IO setup
+        function initSocket() {
+            try {
+                socket = io();
+                
+                socket.on('connect', function() {
+                    document.getElementById('connection').textContent = '🟢 Connected';
+                    log('✅ Socket connected');
+                });
+                
+                socket.on('disconnect', function() {
+                    document.getElementById('connection').textContent = '🔴 Disconnected';
+                    log('❌ Socket disconnected', 'error');
+                });
+                
+                socket.on('battle_update', function(data) {
+                    log('📥 Battle update received via socket', 'data');
+                    updateDisplay(data);
+                });
+                
+                socket.on('connect_error', function(error) {
+                    log(`❌ Socket error: ${error}`, 'error');
+                });
+                
+            } catch (error) {
+                log(`❌ Socket init error: ${error}`, 'error');
+            }
+        }
+        
+        // Test functions
+        function testAPI() {
+            log('🔧 Testing API endpoints...');
+            
+            fetch('/api/battle_state')
+                .then(response => response.json())
+                .then(data => {
+                    log('✅ API test successful', 'status');
+                    log(`📊 Units: ${data.units ? data.units.length : 0}`, 'data');
+                })
+                .catch(error => {
+                    log(`❌ API test failed: ${error}`, 'error');
+                });
+        }
+        
+        function testSocket() {
+            if (socket && socket.connected) {
+                log('✅ Socket is connected', 'status');
+                socket.emit('test', 'Hello from frontend');
+            } else {
+                log('❌ Socket not connected', 'error');
+            }
+        }
+        
+        function testCanvas() {
+            log('🎯 Testing canvas drawing...');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw test pattern
+            ctx.fillStyle = '#1e40af';
+            ctx.fillRect(50, 50, 50, 50);
+            ctx.fillStyle = '#16a34a';
+            ctx.fillRect(150, 50, 50, 50);
+            
+            ctx.fillStyle = '#fff';
+            ctx.font = '14px Arial';
+            ctx.fillText('Empire', 55, 75);
+            ctx.fillText('Orcs', 160, 75);
+            
+            log('✅ Canvas test complete');
+        }
+        
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            log('🧹 Canvas cleared');
+        }
+        
+        // Battle controls
+        function startBattle() {
+            log('⚔️ Starting battle...');
+            fetch('/api/start_battle', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    log(data.success ? '✅ Battle started' : '❌ Battle start failed', 
+                        data.success ? 'status' : 'error');
+                })
+                .catch(error => log(`❌ Start error: ${error}`, 'error'));
+        }
+        
+        function resetBattle() {
+            log('🔄 Resetting battle...');
+            fetch('/api/reset_battle', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    log(data.success ? '✅ Battle reset' : '❌ Reset failed', 
+                        data.success ? 'status' : 'error');
+                    if (data.success) fetchData();
+                })
+                .catch(error => log(`❌ Reset error: ${error}`, 'error'));
+        }
+        
+        function fetchData() {
+            log('📡 Fetching battle data...');
+            fetch('/api/battle_state')
+                .then(response => response.json())
+                .then(data => {
+                    log('✅ Data fetched successfully', 'status');
+                    updateDisplay(data);
+                    drawUnits(data);
+                })
+                .catch(error => log(`❌ Fetch error: ${error}`, 'error'));
+        }
+        
+        function updateDisplay(data) {
+            battleData = data;
+            
+            // Update UI elements
+            document.getElementById('turn').textContent = data.turn || '-';
+            document.getElementById('phase').textContent = data.phase || '-';
+            
+            // Count units
+            let empireCount = 0, orcCount = 0;
+            if (data.units) {
+                data.units.forEach(unit => {
+                    if (unit.is_alive) {
+                        if (unit.faction === 'nuln') empireCount++;
+                        if (unit.faction === 'orcs') orcCount++;
+                    }
+                });
+            }
+            
+            document.getElementById('empire').textContent = empireCount;
+            document.getElementById('orcs').textContent = orcCount;
+            
+            log(`📊 Turn ${data.turn}, ${data.phase} - Empire: ${empireCount}, Orcs: ${orcCount}`, 'data');
+        }
+        
+        function drawUnits(data) {
+            if (!data.units) return;
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw simple unit representations
+            data.units.forEach((unit, index) => {
+                const x = 50 + (index % 10) * 25;
+                const y = 50 + Math.floor(index / 10) * 25;
+                
+                ctx.fillStyle = unit.faction === 'nuln' ? '#1e40af' : '#16a34a';
+                if (!unit.is_alive) ctx.fillStyle = '#666';
+                
+                ctx.fillRect(x, y, 20, 20);
+                
+                ctx.fillStyle = '#fff';
+                ctx.font = '10px Arial';
+                ctx.fillText(unit.models || '?', x + 5, y + 15);
+            });
+            
+            log(`🎨 Drew ${data.units.length} units on canvas`);
+        }
+        
+        // Auto-refresh
+        setInterval(fetchData, 5000);
+        
+        // Initial test
+        setTimeout(testAPI, 1000);
+    </script>
+</body>
+</html> 

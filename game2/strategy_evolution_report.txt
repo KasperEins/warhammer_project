@@ -1,0 +1,76 @@
+
+🤖 WARHAMMER: THE OLD WORLD - AI STRATEGY EVOLUTION REPORT
+=================================================================
+Generated: 2025-06-08 00:16:39
+
+📊 TRAINING OVERVIEW
+====================
+Total Episodes Completed: 10,000
+Total Strategies Learned: 9615
+Strategy Diversity Score: 1.000
+
+🎯 STRATEGIC PREFERENCES
+=========================
+Most Preferred Strategy: Artillery Strike
+
+Strategy Category Breakdown:
+  Aggressive  :  91.4% (87,851 uses)
+  Defensive   :   1.1% (1,013 uses)
+  Tactical    :   1.1% (1,035 uses)
+  Positional  :   6.5% (6,251 uses)
+
+🔄 ACTION EVOLUTION
+==================
+
+Early (0-25%):
+  Most Used Action: Mass Shooting
+  Action Diversity: 1.000
+  Total Actions: 24,037
+  Top Actions:
+    Artillery Strike:  83.0%
+    Mass Shooting  :   3.1%
+    Cavalry Charge :   2.6%
+
+Mid-Early (25-50%):
+  Most Used Action: Mass Shooting
+  Action Diversity: 1.000
+  Total Actions: 24,037
+  Top Actions:
+    Artillery Strike:  83.6%
+    Defensive Formation:   2.5%
+    Move South     :   2.2%
+
+Mid-Late (50-75%):
+  Most Used Action: Mass Shooting
+  Action Diversity: 1.000
+  Total Actions: 24,037
+  Top Actions:
+    Artillery Strike:  94.2%
+    Move NW        :   1.1%
+    Mass Shooting  :   1.0%
+
+Late (75-100%):
+  Most Used Action: Mass Shooting
+  Action Diversity: 1.000
+  Total Actions: 24,039
+  Top Actions:
+    Artillery Strike:  95.2%
+    Move NE        :   0.9%
+    Mass Shooting  :   0.7%
+
+🧠 LEARNING PHASES
+=================
+
+Exploration_Phase:
+  Episodes: 1,000
+  Average Score: 478.8
+  Description: Initial random exploration and basic learning
+
+📈 KEY INSIGHTS
+==============
+  🔥 AI developed a highly aggressive playstyle, favoring direct combat
+  🎯 Artillery strikes emerged as the preferred tactical choice
+  🎲 AI maintained high strategic diversity throughout training
+
+=================================================================
+End of Report

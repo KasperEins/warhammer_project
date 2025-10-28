@@ -1,0 +1,924 @@
+{
+  "Black Orc Warboss": {
+    "name": "Black Orc Warboss",
+    "faction": "Orc & Goblin Tribes",
+    "category": "Character",
+    "troop_type": "Heavy Infantry",
+    "stats": {
+      "movement": 4,
+      "weapon_skill": 7,
+      "ballistic_skill": 3,
+      "strength": 5,
+      "toughness": 5,
+      "wounds": 3,
+      "initiative": 6,
+      "attacks": 4,
+      "leadership": 9
+    },
+    "points_per_model": 135,
+    "min_unit_size": 1,
+    "max_unit_size": 1,
+    "special_rules": [
+      "Choppas",
+      "Quell Impetuosity",
+      "Immune to Psychology"
+    ],
+    "default_equipment": [
+      "Choppa",
+      "Heavy Armour"
+    ]
+  },
+  "Black Orc Bigboss": {
+    "name": "Black Orc Bigboss",
+    "faction": "Orc & Goblin Tribes",
+    "category": "Character",
+    "troop_type": "Heavy Infantry",
+    "stats": {
+      "movement": 4,
+      "weapon_skill": 6,
+      "ballistic_skill": 3,
+      "strength": 4,
+      "toughness": 5,
+      "wounds": 2,
+      "initiative": 5,
+      "attacks": 3,
+      "leadership": 8
+    },
+    "points_per_model": 75,
+    "min_unit_size": 1,
+    "max_unit_size": 1,
+    "special_rules": [
+      "Choppas",
+      "Quell Impetuosity"
+    ],
+    "default_equipment": [
+      "Choppa",
+      "Heavy Armour"
+    ]
+  },
+  "Orc Warboss": {
+    "name": "Orc Warboss",
+    "faction": "Orc & Goblin Tribes",
+    "category": "Character",
+    "troop_type": "Heavy Infantry",
+    "stats": {
+      "movement": 4,
+      "weapon_skill": 6,
+      "ballistic_skill": 3,
+      "strength": 5,
+      "toughness": 5,
+      "wounds": 3,
+      "initiative": 5,
+      "attacks": 4,
+      "leadership": 8
+    },
+    "points_per_model": 110,
+    "min_unit_size": 1,
+    "max_unit_size": 1,
+    "special_rules": [
+      "Choppas",
+      "Impetuous"
+    ],
+    "default_equipment": [
+      "Choppa",
+      "Light Armour"
+    ]
+  },
+  "Orc Bigboss": {
+    "name": "Orc Bigboss",
+    "faction": "Orc & Goblin Tribes",
+    "category": "Character",
+    "troop_type": "Heavy Infantry",
+    "stats": {
+      "movement": 4,
+      "weapon_skill": 5,
+      "ballistic_skill": 3,
+      "strength": 4,
+      "toughness": 5,
+      "wounds": 2,
+      "initiative": 4,
+      "attacks": 3,
+      "leadership": 7
+    },
+    "points_per_model": 55,
+    "min_unit_size": 1,
+    "max_unit_size": 1,
+    "special_rules": [
+      "Choppas",
+      "Impetuous"
+    ],
+    "default_equipment": [
+      "Choppa",
+      "Light Armour"
+    ]
+  },
+  "Orc Weirdnob": {
+    "name": "Orc Weirdnob",
+    "faction": "Orc & Goblin Tribes",
+    "category": "Character",
+    "troop_type": "Heavy Infantry",
+    "stats": {
+      "movement": 4,
+      "weapon_skill": 3,
+      "ballistic_skill": 3,
+      "strength": 4,
+      "toughness": 5,
+      "wounds": 3,
+      "initiative": 3,
+      "attacks": 1,
+      "leadership": 7
+    },
+    "points_per_model": 115,
+    "min_unit_size": 1,
+    "max_unit_size": 1,
+    "special_rules": [
+      "Wizard (Level 3)",
+      "Choppas",
+      "Lore of Da Big Waaagh!"
+    ],
+    "default_equipment": [
+      "Choppa"
+    ]
+  },
+  "Goblin Warboss": {
+    "name": "Goblin Warboss",
+    "faction": "Orc & Goblin Tribes",
+    "category": "Character",
+    "troop_type": "Regular Infantry",
+    "stats": {
+      "movement": 4,
+      "weapon_skill": 5,
+      "ballistic_skill": 4,
+      "strength": 4,
+      "toughness": 4,
+      "wounds": 3,
+      "initiative": 5,
+      "attacks": 4,
+      "leadership": 7
+    },
+    "points_per_model": 70,
+    "min_unit_size": 1,
+    "max_unit_size": 1,
+    "special_rules": [
+      "Fear of Elves"
+    ],
+    "default_equipment": [
+      "Choppa",
+      "Light Armour"
+    ]
+  },
+  "Orc Mob": {
+    "name": "Orc Mob",
+    "faction": "Orc & Goblin Tribes",
+    "category": "Core",
+    "troop_type": "Regular Infantry",
+    "stats": {
+      "movement": 4,
+      "weapon_skill": 3,
+      "ballistic_skill": 3,
+      "strength": 3,
+      "toughness": 4,
+      "wounds": 1,
+      "initiative": 2,
+      "attacks": 1,
+      "leadership": 7
+    },
+    "points_per_model": 7,
+    "min_unit_size": 10,
+    "max_unit_size": 40,
+    "special_rules": [
+      "Choppas",
+      "Impetuous",
+      "Warband"
+    ],
+    "default_equipment": [
+      "Choppa"
+    ]
+  },
+  "Goblin Mob": {
+    "name": "Goblin Mob",
+    "faction": "Orc & Goblin Tribes",
+    "category": "Core",
+    "troop_type": "Regular Infantry",
+    "stats": {
+      "movement": 4,
+      "weapon_skill": 2,
+      "ballistic_skill": 3,
+      "strength": 3,
+      "toughness": 3,
+      "wounds": 1,
+      "initiative": 2,
+      "attacks": 1,
+      "leadership": 5
+    },
+    "points_per_model": 4,
+    "min_unit_size": 10,
+    "max_unit_size": 40,
+    "special_rules": [
+      "Fear of Elves",
+      "Warband"
+    ],
+    "default_equipment": [
+      "Choppa"
+    ]
+  },
+  "Goblin Wolf Riders": {
+    "name": "Goblin Wolf Riders",
+    "faction": "Orc & Goblin Tribes",
+    "category": "Core",
+    "troop_type": "Light Cavalry",
+    "stats": {
+      "movement": 9,
+      "weapon_skill": 2,
+      "ballistic_skill": 3,
+      "strength": 3,
+      "toughness": 3,
+      "wounds": 1,
+      "initiative": 3,
+      "attacks": 1,
+      "leadership": 6
+    },
+    "points_per_model": 10,
+    "min_unit_size": 5,
+    "max_unit_size": 20,
+    "special_rules": [
+      "Fear of Elves",
+      "Fire & Flee",
+      "Chariot Runners"
+    ],
+    "default_equipment": [
+      "Choppa",
+      "Giant Wolf"
+    ]
+  },
+  "Night Goblin Mob": {
+    "name": "Night Goblin Mob",
+    "faction": "Orc & Goblin Tribes",
+    "category": "Core",
+    "troop_type": "Regular Infantry",
+    "stats": {
+      "movement": 4,
+      "weapon_skill": 2,
+      "ballistic_skill": 3,
+      "strength": 3,
+      "toughness": 3,
+      "wounds": 1,
+      "initiative": 3,
+      "attacks": 1,
+      "leadership": 5
+    },
+    "points_per_model": 5,
+    "min_unit_size": 10,
+    "max_unit_size": 40,
+    "special_rules": [
+      "Fear of Elves",
+      "Warband"
+    ],
+    "default_equipment": [
+      "Choppa"
+    ]
+  },
+  "Black Orc Mob": {
+    "name": "Black Orc Mob",
+    "faction": "Orc & Goblin Tribes",
+    "category": "Special",
+    "troop_type": "Heavy Infantry",
+    "stats": {
+      "movement": 4,
+      "weapon_skill": 4,
+      "ballistic_skill": 3,
+      "strength": 4,
+      "toughness": 4,
+      "wounds": 1,
+      "initiative": 3,
+      "attacks": 1,
+      "leadership": 8
+    },
+    "points_per_model": 12,
+    "min_unit_size": 10,
+    "max_unit_size": 30,
+    "special_rules": [
+      "Choppas",
+      "Immune to Psychology",
+      "Ignore Panic"
+    ],
+    "default_equipment": [
+      "Choppa",
+      "Heavy Armour"
+    ]
+  },
+  "Common Troll Mob": {
+    "name": "Common Troll Mob",
+    "faction": "Orc & Goblin Tribes",
+    "category": "Special",
+    "troop_type": "Monstrous Infantry",
+    "stats": {
+      "movement": 6,
+      "weapon_skill": 3,
+      "ballistic_skill": 1,
+      "strength": 5,
+      "toughness": 4,
+      "wounds": 3,
+      "initiative": 2,
+      "attacks": 3,
+      "leadership": 4
+    },
+    "points_per_model": 45,
+    "min_unit_size": 3,
+    "max_unit_size": 9,
+    "special_rules": [
+      "Stupidity",
+      "Regeneration (5+)",
+      "Troll Vomit",
+      "Fear"
+    ],
+    "default_equipment": [
+      "Claws and Fangs"
+    ]
+  },
+  "Orc Boar Boys": {
+    "name": "Orc Boar Boys",
+    "faction": "Orc & Goblin Tribes",
+    "category": "Special",
+    "troop_type": "Heavy Cavalry",
+    "stats": {
+      "movement": 7,
+      "weapon_skill": 3,
+      "ballistic_skill": 3,
+      "strength": 3,
+      "toughness": 4,
+      "wounds": 1,
+      "initiative": 2,
+      "attacks": 1,
+      "leadership": 7
+    },
+    "points_per_model": 19,
+    "min_unit_size": 5,
+    "max_unit_size": 20,
+    "special_rules": [
+      "Choppas",
+      "Impetuous",
+      "Furious Charge",
+      "Tusker Charge"
+    ],
+    "default_equipment": [
+      "Choppa",
+      "Light Armour",
+      "War Boar"
+    ]
+  },
+  "Giant": {
+    "name": "Giant",
+    "faction": "Orc & Goblin Tribes",
+    "category": "Rare",
+    "troop_type": "Behemoth",
+    "stats": {
+      "movement": 6,
+      "weapon_skill": 3,
+      "ballistic_skill": 1,
+      "strength": 6,
+      "toughness": 6,
+      "wounds": 6,
+      "initiative": 2,
+      "attacks": 999,
+      "leadership": 10
+    },
+    "points_per_model": 175,
+    "min_unit_size": 1,
+    "max_unit_size": 1,
+    "special_rules": [
+      "Terror",
+      "Large Target",
+      "Stubborn",
+      "Pick Attack Table"
+    ],
+    "default_equipment": [
+      "Massive Clubs and Fists"
+    ]
+  },
+  "Arachnarok Spider": {
+    "name": "Arachnarok Spider",
+    "faction": "Orc & Goblin Tribes",
+    "category": "Rare",
+    "troop_type": "Behemoth",
+    "stats": {
+      "movement": 7,
+      "weapon_skill": 4,
+      "ballistic_skill": 0,
+      "strength": 5,
+      "toughness": 6,
+      "wounds": 7,
+      "initiative": 4,
+      "attacks": 6,
+      "leadership": 7
+    },
+    "points_per_model": 230,
+    "min_unit_size": 1,
+    "max_unit_size": 1,
+    "special_rules": [
+      "Terror",
+      "Large Target",
+      "Poisoned Attacks",
+      "Spider Shrine"
+    ],
+    "default_equipment": [
+      "Venomous Fangs",
+      "8 Goblin Crew"
+    ]
+  },
+  "Goblin Rock Lobber": {
+    "name": "Goblin Rock Lobber",
+    "faction": "Orc & Goblin Tribes",
+    "category": "Rare",
+    "troop_type": "War Machine",
+    "stats": {
+      "movement": 0,
+      "weapon_skill": 0,
+      "ballistic_skill": 0,
+      "strength": 0,
+      "toughness": 6,
+      "wounds": 4,
+      "initiative": 0,
+      "attacks": 0,
+      "leadership": 4
+    },
+    "points_per_model": 75,
+    "min_unit_size": 1,
+    "max_unit_size": 1,
+    "special_rules": [
+      "Stone Thrower",
+      "Guess Range"
+    ],
+    "default_equipment": [
+      "4 Goblin Crew"
+    ]
+  },
+  "Badlands Ogre Bulls": {
+    "name": "Badlands Ogre Bulls",
+    "faction": "Orc & Goblin Tribes",
+    "category": "Mercenary",
+    "troop_type": "Monstrous Infantry",
+    "stats": {
+      "movement": 6,
+      "weapon_skill": 3,
+      "ballistic_skill": 2,
+      "strength": 4,
+      "toughness": 4,
+      "wounds": 3,
+      "initiative": 2,
+      "attacks": 3,
+      "leadership": 7
+    },
+    "points_per_model": 33,
+    "min_unit_size": 3,
+    "max_unit_size": 9,
+    "special_rules": [
+      "Fear"
+    ],
+    "default_equipment": [
+      "Clubs"
+    ]
+  },
+  "General of the Empire": {
+    "name": "General of the Empire",
+    "faction": "City-State of Nuln",
+    "category": "Character",
+    "troop_type": "Regular Infantry",
+    "stats": {
+      "movement": 4,
+      "weapon_skill": 6,
+      "ballistic_skill": 5,
+      "strength": 4,
+      "toughness": 4,
+      "wounds": 3,
+      "initiative": 5,
+      "attacks": 3,
+      "leadership": 9
+    },
+    "points_per_model": 85,
+    "min_unit_size": 1,
+    "max_unit_size": 1,
+    "special_rules": [
+      "Inspiring Presence"
+    ],
+    "default_equipment": [
+      "Hand Weapon",
+      "Full Plate Armour"
+    ]
+  },
+  "Captain of the Empire": {
+    "name": "Captain of the Empire",
+    "faction": "City-State of Nuln",
+    "category": "Character",
+    "troop_type": "Regular Infantry",
+    "stats": {
+      "movement": 4,
+      "weapon_skill": 5,
+      "ballistic_skill": 5,
+      "strength": 4,
+      "toughness": 4,
+      "wounds": 2,
+      "initiative": 4,
+      "attacks": 2,
+      "leadership": 8
+    },
+    "points_per_model": 45,
+    "min_unit_size": 1,
+    "max_unit_size": 1,
+    "special_rules": [
+      "Inspiring Presence"
+    ],
+    "default_equipment": [
+      "Hand Weapon",
+      "Light Armour"
+    ]
+  },
+  "Empire Engineer": {
+    "name": "Empire Engineer",
+    "faction": "City-State of Nuln",
+    "category": "Character",
+    "troop_type": "Regular Infantry",
+    "stats": {
+      "movement": 4,
+      "weapon_skill": 3,
+      "ballistic_skill": 4,
+      "strength": 3,
+      "toughness": 3,
+      "wounds": 2,
+      "initiative": 3,
+      "attacks": 1,
+      "leadership": 7
+    },
+    "points_per_model": 45,
+    "min_unit_size": 1,
+    "max_unit_size": 1,
+    "special_rules": [
+      "Artillery Master",
+      "Big Guns Know No Fear"
+    ],
+    "default_equipment": [
+      "Hand Weapon"
+    ]
+  },
+  "Master Mage": {
+    "name": "Master Mage",
+    "faction": "City-State of Nuln",
+    "category": "Character",
+    "troop_type": "Regular Infantry",
+    "stats": {
+      "movement": 4,
+      "weapon_skill": 3,
+      "ballistic_skill": 3,
+      "strength": 3,
+      "toughness": 3,
+      "wounds": 2,
+      "initiative": 3,
+      "attacks": 1,
+      "leadership": 8
+    },
+    "points_per_model": 60,
+    "min_unit_size": 1,
+    "max_unit_size": 1,
+    "special_rules": [
+      "Wizard (Level 1)"
+    ],
+    "default_equipment": [
+      "Hand Weapon"
+    ]
+  },
+  "Nuln State Troops": {
+    "name": "Nuln State Troops",
+    "faction": "City-State of Nuln",
+    "category": "Core",
+    "troop_type": "Regular Infantry",
+    "stats": {
+      "movement": 4,
+      "weapon_skill": 3,
+      "ballistic_skill": 3,
+      "strength": 3,
+      "toughness": 3,
+      "wounds": 1,
+      "initiative": 3,
+      "attacks": 1,
+      "leadership": 7
+    },
+    "points_per_model": 5,
+    "min_unit_size": 10,
+    "max_unit_size": 40,
+    "special_rules": [
+      "State Troops"
+    ],
+    "default_equipment": [
+      "Hand Weapon",
+      "Light Armour"
+    ]
+  },
+  "Nuln Veteran State Troops": {
+    "name": "Nuln Veteran State Troops",
+    "faction": "City-State of Nuln",
+    "category": "Core",
+    "troop_type": "Regular Infantry",
+    "stats": {
+      "movement": 4,
+      "weapon_skill": 4,
+      "ballistic_skill": 3,
+      "strength": 3,
+      "toughness": 3,
+      "wounds": 1,
+      "initiative": 3,
+      "attacks": 1,
+      "leadership": 7
+    },
+    "points_per_model": 7,
+    "min_unit_size": 10,
+    "max_unit_size": 30,
+    "special_rules": [
+      "State Troops",
+      "Veteran"
+    ],
+    "default_equipment": [
+      "Hand Weapon",
+      "Light Armour"
+    ]
+  },
+  "Nuln Veteran Outriders": {
+    "name": "Nuln Veteran Outriders",
+    "faction": "City-State of Nuln",
+    "category": "Core",
+    "troop_type": "Light Cavalry",
+    "stats": {
+      "movement": 8,
+      "weapon_skill": 3,
+      "ballistic_skill": 4,
+      "strength": 3,
+      "toughness": 3,
+      "wounds": 1,
+      "initiative": 3,
+      "attacks": 1,
+      "leadership": 7
+    },
+    "points_per_model": 19,
+    "min_unit_size": 5,
+    "max_unit_size": 10,
+    "special_rules": [
+      "Fast Cavalry",
+      "Veteran Outriders"
+    ],
+    "default_equipment": [
+      "Repeater Handgun",
+      "Light Armour",
+      "Empire Warhorse"
+    ]
+  },
+  "Free Company Militia": {
+    "name": "Free Company Militia",
+    "faction": "City-State of Nuln",
+    "category": "Core",
+    "troop_type": "Regular Infantry",
+    "stats": {
+      "movement": 4,
+      "weapon_skill": 3,
+      "ballistic_skill": 3,
+      "strength": 3,
+      "toughness": 3,
+      "wounds": 1,
+      "initiative": 3,
+      "attacks": 1,
+      "leadership": 6
+    },
+    "points_per_model": 5,
+    "min_unit_size": 10,
+    "max_unit_size": 30,
+    "special_rules": [
+      "Militia"
+    ],
+    "default_equipment": [
+      "Hand Weapon"
+    ]
+  },
+  "Empire Greatswords": {
+    "name": "Empire Greatswords",
+    "faction": "City-State of Nuln",
+    "category": "Special",
+    "troop_type": "Heavy Infantry",
+    "stats": {
+      "movement": 4,
+      "weapon_skill": 4,
+      "ballistic_skill": 3,
+      "strength": 4,
+      "toughness": 3,
+      "wounds": 1,
+      "initiative": 4,
+      "attacks": 1,
+      "leadership": 8
+    },
+    "points_per_model": 12,
+    "min_unit_size": 10,
+    "max_unit_size": 30,
+    "special_rules": [
+      "Stubborn"
+    ],
+    "default_equipment": [
+      "Great Weapon",
+      "Full Plate Armour"
+    ]
+  },
+  "Empire Knights": {
+    "name": "Empire Knights",
+    "faction": "City-State of Nuln",
+    "category": "Special",
+    "troop_type": "Heavy Cavalry",
+    "stats": {
+      "movement": 7,
+      "weapon_skill": 4,
+      "ballistic_skill": 3,
+      "strength": 3,
+      "toughness": 3,
+      "wounds": 1,
+      "initiative": 3,
+      "attacks": 1,
+      "leadership": 8
+    },
+    "points_per_model": 20,
+    "min_unit_size": 5,
+    "max_unit_size": 15,
+    "special_rules": [
+      "Devastating Charge"
+    ],
+    "default_equipment": [
+      "Lance",
+      "Heavy Armour",
+      "Shield",
+      "Barded Warhorse"
+    ]
+  },
+  "Great Cannon": {
+    "name": "Great Cannon",
+    "faction": "City-State of Nuln",
+    "category": "Special",
+    "troop_type": "War Machine",
+    "stats": {
+      "movement": 0,
+      "weapon_skill": 0,
+      "ballistic_skill": 0,
+      "strength": 0,
+      "toughness": 6,
+      "wounds": 3,
+      "initiative": 0,
+      "attacks": 0,
+      "leadership": 7
+    },
+    "points_per_model": 125,
+    "min_unit_size": 1,
+    "max_unit_size": 1,
+    "special_rules": [
+      "Cannon",
+      "Guess Range",
+      "Multiple Wounds (D6)"
+    ],
+    "default_equipment": [
+      "3 Gun Crew"
+    ]
+  },
+  "Mortar": {
+    "name": "Mortar",
+    "faction": "City-State of Nuln",
+    "category": "Special",
+    "troop_type": "War Machine",
+    "stats": {
+      "movement": 0,
+      "weapon_skill": 0,
+      "ballistic_skill": 0,
+      "strength": 0,
+      "toughness": 5,
+      "wounds": 3,
+      "initiative": 0,
+      "attacks": 0,
+      "leadership": 7
+    },
+    "points_per_model": 95,
+    "min_unit_size": 1,
+    "max_unit_size": 1,
+    "special_rules": [
+      "Stone Thrower",
+      "Guess Range",
+      "No Line of Sight"
+    ],
+    "default_equipment": [
+      "3 Gun Crew"
+    ]
+  },
+  "Steam Tank": {
+    "name": "Steam Tank",
+    "faction": "City-State of Nuln",
+    "category": "Rare",
+    "troop_type": "Behemoth",
+    "stats": {
+      "movement": 4,
+      "weapon_skill": 0,
+      "ballistic_skill": 0,
+      "strength": 6,
+      "toughness": 7,
+      "wounds": 10,
+      "initiative": 0,
+      "attacks": 999,
+      "leadership": 8
+    },
+    "points_per_model": 285,
+    "min_unit_size": 1,
+    "max_unit_size": 1,
+    "special_rules": [
+      "Terror",
+      "Large Target",
+      "Steam Points",
+      "Unbreakable"
+    ],
+    "default_equipment": [
+      "Steam Cannon",
+      "Engineer Commander"
+    ]
+  },
+  "Helblaster Volley Gun": {
+    "name": "Helblaster Volley Gun",
+    "faction": "City-State of Nuln",
+    "category": "Rare",
+    "troop_type": "War Machine",
+    "stats": {
+      "movement": 0,
+      "weapon_skill": 0,
+      "ballistic_skill": 0,
+      "strength": 0,
+      "toughness": 6,
+      "wounds": 3,
+      "initiative": 0,
+      "attacks": 0,
+      "leadership": 7
+    },
+    "points_per_model": 120,
+    "min_unit_size": 1,
+    "max_unit_size": 1,
+    "special_rules": [
+      "Volley Gun",
+      "Multiple Shots",
+      "Misfire"
+    ],
+    "default_equipment": [
+      "3 Gun Crew"
+    ]
+  },
+  "Imperial Ogres": {
+    "name": "Imperial Ogres",
+    "faction": "City-State of Nuln",
+    "category": "Mercenary",
+    "troop_type": "Monstrous Infantry",
+    "stats": {
+      "movement": 6,
+      "weapon_skill": 3,
+      "ballistic_skill": 2,
+      "strength": 4,
+      "toughness": 4,
+      "wounds": 3,
+      "initiative": 2,
+      "attacks": 3,
+      "leadership": 7
+    },
+    "points_per_model": 38,
+    "min_unit_size": 3,
+    "max_unit_size": 6,
+    "special_rules": [
+      "Fear"
+    ],
+    "default_equipment": [
+      "Clubs"
+    ]
+  },
+  "Imperial Dwarfs": {
+    "name": "Imperial Dwarfs",
+    "faction": "City-State of Nuln",
+    "category": "Mercenary",
+    "troop_type": "Heavy Infantry",
+    "stats": {
+      "movement": 3,
+      "weapon_skill": 4,
+      "ballistic_skill": 3,
+      "strength": 3,
+      "toughness": 4,
+      "wounds": 1,
+      "initiative": 2,
+      "attacks": 1,
+      "leadership": 9
+    },
+    "points_per_model": 9,
+    "min_unit_size": 10,
+    "max_unit_size": 30,
+    "special_rules": [
+      "Resolute",
+      "Hatred (Orcs & Goblins)"
+    ],
+    "default_equipment": [
+      "Hand Weapon",
+      "Heavy Armour",
+      "Shield"
+    ]
+  }
+}

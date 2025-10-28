@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warhammer: The Old World - Epic Battle</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cinzel+Decorative:wght@400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Cinzel', serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #d4af37;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Medieval border decorations */
+        .ornamental-border {
+            border: 3px solid #d4af37;
+            border-image: linear-gradient(45deg, #d4af37, #ffd700, #b8860b) 1;
+            position: relative;
+        }
+        
+        .ornamental-border::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: -6px;
+            right: -6px;
+            bottom: -6px;
+            border: 1px solid #8b4513;
+            z-index: -1;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(90deg, #1a1a2e, #16213e, #1a1a2e);
+            border-bottom: 4px solid #d4af37;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        
+        .title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.8);
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #d4af37, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #c0c0c0;
+            font-weight: 400;
+            letter-spacing: 2px;
+        }
+        
+        /* Main content */
+        .main-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            padding: 20px;
+            height: calc(100vh - 160px);
+        }
+        
+        /* Battle area */
+        .battle-area {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
+        }
+        
+        .battle-field {
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at top, rgba(76, 175, 80, 0.1) 0%, transparent 50%),
+                linear-gradient(0deg, #3e2723 0%, #4e342e 30%, #5d4037 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Grid overlay */
+        .battle-field::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(212, 175, 55, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(212, 175, 55, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+        }
+        
+        /* Unit representation */
+        .unit {
+            position: absolute;
+            width: 40px;
+            height: 30px;
+            border-radius: 5px;
+            border: 2px solid;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .unit:hover {
+            transform: scale(1.1);
+            z-index: 10;
+        }
+        
+        .unit.nuln {
+            background: linear-gradient(135deg, #1565c0, #1976d2);
+            border-color: #0d47a1;
+            color: white;
+        }
+        
+        .unit.orcs {
+            background: linear-gradient(135deg, #388e3c, #4caf50);
+            border-color: #1b5e20;
+            color: white;
+        }
+        
+        .unit.dead {
+            opacity: 0.3;
+            filter: grayscale(100%);
+        }
+        
+        /* Right panel */
+        .control-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        /* Battle status */
+        .battle-status {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+        }
+        
+        .battle-status h3 {
+            font-family: 'Cinzel Decorative', serif;
+            color: #d4af37;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.3rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+        
+        .status-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .status-item {
+            text-align: center;
+            padding: 10px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        
+        .status-label {
+            font-size: 0.9rem;
+            color: #c0c0c0;
+            margin-bottom: 5px;
+        }
+        
+        .status-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #d4af37;
+        }
+        
+        /* Controls */
+        .battle-controls {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+        }
+        
+        .battle-controls h3 {
+            font-family: 'Cinzel Decorative', serif;
+            color: #d4af37;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.3rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+        
+        .button {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            color: #1a1a2e;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        
+        .button:hover {
+            background: linear-gradient(135deg, #ffd700, #ffeb3b);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+        }
+        
+        .button:active {
+            transform: translateY(0);
+        }
+        
+        .button:disabled {
+            background: #666;
+            color: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Battle log */
+        .battle-log {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border-radius: 15px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+        }
+        
+        .battle-log h3 {
+            font-family: 'Cinzel Decorative', serif;
+            color: #d4af37;
+            padding: 15px 20px 0;
+            text-align: center;
+            font-size: 1.3rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+        
+        .log-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px 20px 20px;
+            max-height: 300px;
+        }
+        
+        .log-entry {
+            padding: 8px 12px;
+            margin: 4px 0;
+            background: rgba(255,255,255,0.05);
+            border-radius: 6px;
+            border-left: 3px solid #d4af37;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .log-entry:nth-child(even) {
+            background: rgba(255,255,255,0.02);
+        }
+        
+        /* Scrollbar styling */
+        .log-content::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .log-content::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+        }
+        
+        .log-content::-webkit-scrollbar-thumb {
+            background: #d4af37;
+            border-radius: 4px;
+        }
+        
+        .log-content::-webkit-scrollbar-thumb:hover {
+            background: #ffd700;
+        }
+        
+        /* Unit tooltip */
+        .unit-tooltip {
+            position: absolute;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #d4af37;
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px solid #d4af37;
+            font-size: 0.85rem;
+            pointer-events: none;
+            z-index: 1000;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+            display: none;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 1200px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: 2fr 1fr;
+            }
+            
+            .control-panel {
+                flex-direction: row;
+                overflow-x: auto;
+            }
+            
+            .battle-status,
+            .battle-controls,
+            .battle-log {
+                min-width: 300px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .main-container {
+                padding: 10px;
+            }
+        }
+        
+        /* Animation effects */
+        @keyframes unitMove {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        .unit.moving {
+            animation: unitMove 0.5s ease-in-out;
+        }
+        
+        /* Battle phase indicators */
+        .phase-indicator {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            color: #1a1a2e;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="title">WARHAMMER: THE OLD WORLD</h1>
+        <p class="subtitle">Epic AI Battle Simulator</p>
+    </div>
+    
+    <div class="main-container">
+        <div class="battle-area ornamental-border">
+            <div class="battle-field" id="battleField">
+                <div class="phase-indicator" id="phaseIndicator">DEPLOYMENT</div>
+            </div>
+        </div>
+        
+        <div class="control-panel">
+            <div class="battle-status ornamental-border">
+                <h3>⚔️ Battle Status</h3>
+                <div class="status-grid">
+                    <div class="status-item">
+                        <div class="status-label">Turn</div>
+                        <div class="status-value" id="turnNumber">1</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-label">Phase</div>
+                        <div class="status-value" id="currentPhase">Deployment</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-label">Empire Units</div>
+                        <div class="status-value" id="empireUnits">0</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-label">Orc Units</div>
+                        <div class="status-value" id="orcUnits">0</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="battle-controls ornamental-border">
+                <h3>🎮 Battle Controls</h3>
+                <button class="button" id="startBtn" onclick="startBattle()">⚔️ Start Epic Battle</button>
+                <button class="button" id="resetBtn" onclick="resetBattle()">🔄 Reset Battle</button>
+                <button class="button" id="newBattleBtn" onclick="newBattle()">🆕 New Battle</button>
+            </div>
+            
+            <div class="battle-log ornamental-border">
+                <h3>📜 Battle Chronicle</h3>
+                <div class="log-content" id="battleLog">
+                    <div class="log-entry">⚔️ Welcome to the Old World battlefields...</div>
+                    <div class="log-entry">🏰 Armies are mustering for war!</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Unit tooltip -->
+    <div class="unit-tooltip" id="unitTooltip"></div>
+    
+    <script>
+        // Initialize Socket.IO connection
+        const socket = io();
+        
+        // Game state
+        let gameState = {};
+        let selectedUnit = null;
+        
+        // Socket event handlers
+        socket.on('connect', function() {
+            console.log('Connected to server');
+            addLogEntry('🔗 Connected to battle server');
+        });
+        
+        socket.on('disconnect', function() {
+            console.log('Disconnected from server');
+            addLogEntry('❌ Connection lost to battle server');
+        });
+        
+        socket.on('battle_update', function(data) {
+            console.log('Battle update received:', data);
+            updateBattleDisplay(data);
+        });
+        
+        // Battle control functions
+        function startBattle() {
+            addLogEntry('⚔️ Initiating battle sequence...');
+            fetch('/api/start_battle', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    addLogEntry('🎺 Battle has begun!');
+                    document.getElementById('startBtn').disabled = true;
+                } else {
+                    addLogEntry('❌ Failed to start battle');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                addLogEntry('❌ Error starting battle');
+            });
+        }
+        
+        function resetBattle() {
+            addLogEntry('🔄 Resetting battlefield...');
+            fetch('/api/reset_battle', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    addLogEntry('✅ Battle reset complete');
+                    document.getElementById('startBtn').disabled = false;
+                    location.reload();
+                } else {
+                    addLogEntry('❌ Failed to reset battle');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                addLogEntry('❌ Error resetting battle');
+            });
+        }
+        
+        function newBattle() {
+            addLogEntry('🆕 Creating new battle...');
+            fetch('/api/new_battle', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    addLogEntry('✅ New battle created');
+                    document.getElementById('startBtn').disabled = false;
+                    if (data.battle_state) {
+                        updateBattleDisplay(data.battle_state);
+                    }
+                } else {
+                    addLogEntry('❌ Failed to create new battle');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                addLogEntry('❌ Error creating new battle');
+            });
+        }
+        
+        // Display update functions
+        function updateBattleDisplay(data) {
+            try {
+                console.log('Updating battle display with data:', data);
+                gameState = data;
+                
+                // Update status display
+                document.getElementById('turnNumber').textContent = data.turn || 1;
+                document.getElementById('currentPhase').textContent = data.phase || 'Deployment';
+                document.getElementById('phaseIndicator').textContent = data.phase || 'DEPLOYMENT';
+                
+                console.log('Status displays updated');
+            
+                // Count units by faction
+                let empireCount = 0;
+                let orcCount = 0;
+                
+                if (data.units) {
+                    data.units.forEach(unit => {
+                        if (unit.faction === 'nuln' && unit.is_alive) empireCount++;
+                        if (unit.faction === 'orcs' && unit.is_alive) orcCount++;
+                    });
+                }
+                
+                document.getElementById('empireUnits').textContent = empireCount;
+                document.getElementById('orcUnits').textContent = orcCount;
+                
+                console.log('Unit counts updated:', empireCount, orcCount);
+                
+                // Update battle log
+                if (data.battle_log) {
+                    updateBattleLog(data.battle_log);
+                }
+                
+                // Update unit positions
+                updateUnitPositions(data.units || []);
+                
+                console.log('Unit positions updated');
+                
+                // Update battle state
+                if (data.battle_state === 'finished') {
+                    document.getElementById('startBtn').disabled = true;
+                    addLogEntry('🏁 Battle has concluded!');
+                }
+                
+                console.log('Battle display update complete');
+            } catch (error) {
+                console.error('Error updating battle display:', error);
+                addLogEntry(`❌ Display error: ${error.message}`);
+            }
+        }
+        
+        function updateUnitPositions(units) {
+            const battleField = document.getElementById('battleField');
+            
+            // Clear existing units
+            const existingUnits = battleField.querySelectorAll('.unit');
+            existingUnits.forEach(unit => unit.remove());
+            
+            // Add units to battlefield
+            units.forEach((unit, index) => {
+                const unitElement = createUnitElement(unit, index);
+                battleField.appendChild(unitElement);
+            });
+        }
+        
+        function createUnitElement(unit, index) {
+            const unitDiv = document.createElement('div');
+            unitDiv.className = `unit ${unit.faction}${unit.is_alive ? '' : ' dead'}`;
+            unitDiv.id = `unit-${index}`;
+            
+            // Position on battlefield (scale to fit)
+            const fieldRect = document.getElementById('battleField').getBoundingClientRect();
+            const x = (unit.position[0] / 500) * (fieldRect.width - 40);
+            const y = (unit.position[1] / 500) * (fieldRect.height - 30);
+            
+            unitDiv.style.left = Math.max(0, Math.min(x, fieldRect.width - 40)) + 'px';
+            unitDiv.style.top = Math.max(0, Math.min(y, fieldRect.height - 30)) + 'px';
+            
+            // Unit display text (show models count)
+            unitDiv.textContent = unit.models || '?';
+            
+            // Add hover tooltip
+            unitDiv.addEventListener('mouseenter', (e) => showUnitTooltip(e, unit));
+            unitDiv.addEventListener('mouseleave', hideUnitTooltip);
+            unitDiv.addEventListener('click', () => selectUnit(unit, index));
+            
+            return unitDiv;
+        }
+        
+        function showUnitTooltip(event, unit) {
+            const tooltip = document.getElementById('unitTooltip');
+            tooltip.innerHTML = `
+                <strong>${unit.name}</strong><br>
+                Faction: ${unit.faction}<br>
+                Models: ${unit.models}<br>
+                Type: ${unit.unit_type}<br>
+                Status: ${unit.is_alive ? 'Alive' : 'Destroyed'}
+            `;
+            tooltip.style.display = 'block';
+            tooltip.style.left = (event.pageX + 10) + 'px';
+            tooltip.style.top = (event.pageY - 10) + 'px';
+        }
+        
+        function hideUnitTooltip() {
+            document.getElementById('unitTooltip').style.display = 'none';
+        }
+        
+        function selectUnit(unit, index) {
+            selectedUnit = { unit, index };
+            addLogEntry(`👁️ Selected: ${unit.name}`);
+            
+            // Highlight selected unit
+            const unitElements = document.querySelectorAll('.unit');
+            unitElements.forEach(el => el.style.border = '2px solid');
+            document.getElementById(`unit-${index}`).style.border = '3px solid #ffd700';
+        }
+        
+        function updateBattleLog(logEntries) {
+            const logContent = document.getElementById('battleLog');
+            
+            // Add new entries (only show last few to avoid overwhelming)
+            const newEntries = logEntries.slice(-20);
+            logContent.innerHTML = '';
+            
+            newEntries.forEach(entry => {
+                addLogEntry(entry, false);
+            });
+            
+            // Auto-scroll to bottom
+            logContent.scrollTop = logContent.scrollHeight;
+        }
+        
+        function addLogEntry(message, shouldScroll = true) {
+            const logContent = document.getElementById('battleLog');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.textContent = message;
+            logContent.appendChild(entry);
+            
+            if (shouldScroll) {
+                logContent.scrollTop = logContent.scrollHeight;
+            }
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            addLogEntry('🏰 Battle interface initialized');
+            addLogEntry('📊 Loading battle state...');
+            
+            // Add debugging
+            console.log('DOM loaded, initializing...');
+            
+            // Fetch initial battle state
+            fetch('/api/battle_state')
+                .then(response => {
+                    console.log('API response status:', response.status);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Battle state received:', data);
+                    updateBattleDisplay(data);
+                    addLogEntry('✅ Battle state loaded');
+                })
+                .catch(error => {
+                    console.error('Error loading battle state:', error);
+                    addLogEntry(`❌ Error loading battle state: ${error.message}`);
+                });
+        });
+        
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (gameState.units) {
+                updateUnitPositions(gameState.units);
+            }
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,10 @@
+{
+  "faction": "Nuln Empire",
+  "strategies": {
+    "artillery_strike": 0.4,
+    "magic_assault": 0.2,
+    "flanking_maneuver": 0.2,
+    "defensive_formation": 0.1,
+    "psychological_warfare": 0.1
+  }
+}

@@ -1,0 +1,836 @@
+{
+  "battle_name": "The Ultimate AI Showdown: 600,000 Games of Experience Collide",
+  "empire_score": 7,
+  "orc_score": 5,
+  "turns": [
+    {
+      "turn": 1,
+      "empire_decision": {
+        "action": 0,
+        "q_value": 4.079390525817871,
+        "confidence": "0.709054",
+        "all_q_values": [
+          4.079390525817871,
+          2.4486746788024902,
+          2.859447717666626,
+          2.324331045150757,
+          2.067511796951294,
+          1.9551552534103394,
+          1.9417527914047241,
+          1.319717288017273,
+          3.0064876079559326,
+          3.155425786972046,
+          3.3703365325927734,
+          1.9891711473464966,
+          2.609875440597534,
+          2.0947821140289307,
+          0.5858036875724792
+        ],
+        "insight": {
+          "action_name": "Move North",
+          "confidence_level": "CAUTIOUSLY OPTIMISTIC",
+          "reasoning": "Mild learning suggests Move North might work",
+          "specialization": "",
+          "phase": "Opening Phase",
+          "q_value": "4.0793905"
+        },
+        "battle_analysis": "Moderate casualties taken, Steady battle rhythm"
+      },
+      "orc_decision": {
+        "action": 0,
+        "q_value": 18.029420852661133,
+        "confidence": "2.2977657",
+        "all_q_values": [
+          18.029420852661133,
+          10.691152572631836,
+          13.692956924438477,
+          9.857162475585938,
+          13.345394134521484,
+          10.980575561523438,
+          12.907238006591797,
+          12.06956958770752,
+          13.316702842712402,
+          12.362378120422363,
+          13.022245407104492,
+          10.055264472961426,
+          15.73165512084961,
+          7.076234817504883,
+          11.553342819213867
+        ],
+        "insight": {
+          "action_name": "Move North",
+          "confidence_level": "VERY CONFIDENT",
+          "reasoning": "Extensive learning shows Move North is highly effective here",
+          "specialization": "",
+          "phase": "Opening Phase",
+          "q_value": "18.02942"
+        },
+        "battle_analysis": "Moderate casualties taken, Steady battle rhythm"
+      },
+      "result": "\ud83d\udfe2 ORC BREAKTHROUGH",
+      "victor": "Orc",
+      "empire_score": 0,
+      "orc_score": 1
+    },
+    {
+      "turn": 2,
+      "empire_decision": {
+        "action": 10,
+        "q_value": -5.2697296142578125,
+        "confidence": "1.0958223",
+        "all_q_values": [
+          -7.64600944519043,
+          -7.005662441253662,
+          -6.365551948547363,
+          -8.327106475830078,
+          -9.053580284118652,
+          -10.362215995788574,
+          -8.841422080993652,
+          -10.39327335357666,
+          -8.17170238494873,
+          -8.02364444732666,
+          -5.2697296142578125,
+          -8.55403995513916,
+          -7.237846851348877,
+          -9.319380760192871,
+          -10.65481185913086
+        ],
+        "insight": {
+          "action_name": "Defensive Formation",
+          "confidence_level": "AVOIDING",
+          "reasoning": "300k games taught this AI to avoid Defensive Formation here",
+          "specialization": "",
+          "phase": "Opening Phase",
+          "q_value": "-5.2697296"
+        },
+        "battle_analysis": "Moderate casualties taken, Steady battle rhythm"
+      },
+      "orc_decision": {
+        "action": 0,
+        "q_value": 25.603866577148438,
+        "confidence": "0.33208847",
+        "all_q_values": [
+          25.603866577148438,
+          16.740131378173828,
+          21.627395629882812,
+          14.633484840393066,
+          22.373035430908203,
+          17.71535301208496,
+          20.993080139160156,
+          16.184898376464844,
+          21.43680763244629,
+          19.92487907409668,
+          19.306476593017578,
+          16.314666748046875,
+          25.271778106689453,
+          10.178638458251953,
+          16.80891990661621
+        ],
+        "insight": {
+          "action_name": "Move North",
+          "confidence_level": "SUPREMELY CONFIDENT",
+          "reasoning": "300k games taught this AI that Move North is devastating in this situation",
+          "specialization": "",
+          "phase": "Opening Phase",
+          "q_value": "25.603867"
+        },
+        "battle_analysis": "Moderate casualties taken, Steady battle rhythm"
+      },
+      "result": "\ud83d\udfe2 ORC BREAKTHROUGH",
+      "victor": "Orc",
+      "empire_score": 0,
+      "orc_score": 2
+    },
+    {
+      "turn": 3,
+      "empire_decision": {
+        "action": 9,
+        "q_value": 10.013887405395508,
+        "confidence": "0.6142874",
+        "all_q_values": [
+          9.345226287841797,
+          8.464619636535645,
+          8.681853294372559,
+          8.737360000610352,
+          8.979872703552246,
+          9.3996000289917,
+          8.556544303894043,
+          8.194795608520508,
+          9.357604026794434,
+          10.013887405395508,
+          8.768744468688965,
+          8.100425720214844,
+          8.823415756225586,
+          8.654912948608398,
+          7.175820350646973
+        ],
+        "insight": {
+          "action_name": "Artillery Strike",
+          "confidence_level": "VERY CONFIDENT",
+          "reasoning": "Extensive learning shows Artillery Strike is highly effective here",
+          "specialization": "",
+          "phase": "Mid Battle",
+          "q_value": "10.013887"
+        },
+        "battle_analysis": "Moderate casualties taken, Steady battle rhythm"
+      },
+      "orc_decision": {
+        "action": 12,
+        "q_value": 6.633703708648682,
+        "confidence": "0.31185913",
+        "all_q_values": [
+          6.321844577789307,
+          4.411666393280029,
+          5.873127460479736,
+          4.280773639678955,
+          6.146999359130859,
+          4.835033893585205,
+          5.3082122802734375,
+          4.1989240646362305,
+          5.92885160446167,
+          5.818978786468506,
+          5.2019548416137695,
+          4.417760848999023,
+          6.633703708648682,
+          3.2625439167022705,
+          4.588802337646484
+        ],
+        "insight": {
+          "action_name": "Mass Shooting",
+          "confidence_level": "CONFIDENT",
+          "reasoning": "Experience indicates Mass Shooting gives good results",
+          "specialization": "",
+          "phase": "Mid Battle",
+          "q_value": "6.6337037"
+        },
+        "battle_analysis": "Moderate casualties taken, Steady battle rhythm"
+      },
+      "result": "\ud83c\udfdb\ufe0f EMPIRE GAINS ADVANTAGE",
+      "victor": "Empire",
+      "empire_score": 1,
+      "orc_score": 2
+    },
+    {
+      "turn": 4,
+      "empire_decision": {
+        "action": 0,
+        "q_value": 10.71133804321289,
+        "confidence": "2.6098795",
+        "all_q_values": [
+          10.71133804321289,
+          6.533820629119873,
+          7.495594024658203,
+          7.189296722412109,
+          7.24709939956665,
+          6.500298976898193,
+          6.598312854766846,
+          5.494805812835693,
+          7.791010856628418,
+          8.101458549499512,
+          8.0184326171875,
+          5.336519718170166,
+          7.0522847175598145,
+          6.779501438140869,
+          3.854983329772949
+        ],
+        "insight": {
+          "action_name": "Move North",
+          "confidence_level": "VERY CONFIDENT",
+          "reasoning": "Extensive learning shows Move North is highly effective here",
+          "specialization": "",
+          "phase": "Mid Battle",
+          "q_value": "10.711338"
+        },
+        "battle_analysis": "Moderate casualties taken, Steady battle rhythm"
+      },
+      "orc_decision": {
+        "action": 12,
+        "q_value": 7.837751865386963,
+        "confidence": "0.32884073",
+        "all_q_values": [
+          6.791205883026123,
+          5.644676208496094,
+          6.921341896057129,
+          5.276097297668457,
+          7.5089111328125,
+          6.171703815460205,
+          6.9451069831848145,
+          4.615739345550537,
+          7.025418281555176,
+          7.04695463180542,
+          6.581314563751221,
+          5.175655364990234,
+          7.837751865386963,
+          3.8098459243774414,
+          5.390644073486328
+        ],
+        "insight": {
+          "action_name": "Mass Shooting",
+          "confidence_level": "CONFIDENT",
+          "reasoning": "Experience indicates Mass Shooting gives good results",
+          "specialization": "",
+          "phase": "Mid Battle",
+          "q_value": "7.837752"
+        },
+        "battle_analysis": "Moderate casualties taken, Steady battle rhythm"
+      },
+      "result": "\ud83c\udfdb\ufe0f EMPIRE GAINS ADVANTAGE",
+      "victor": "Empire",
+      "empire_score": 2,
+      "orc_score": 2
+    },
+    {
+      "turn": 5,
+      "empire_decision": {
+        "action": 0,
+        "q_value": 4.028021812438965,
+        "confidence": "0.7172036",
+        "all_q_values": [
+          4.028021812438965,
+          2.5759103298187256,
+          2.9288952350616455,
+          2.5144100189208984,
+          2.424858570098877,
+          2.1638240814208984,
+          2.231832265853882,
+          1.5706379413604736,
+          3.0235683917999268,
+          3.3108181953430176,
+          3.302050828933716,
+          2.1317951679229736,
+          2.8095338344573975,
+          2.2879512310028076,
+          0.8840371966362
+        ],
+        "insight": {
+          "action_name": "Move North",
+          "confidence_level": "CAUTIOUSLY OPTIMISTIC",
+          "reasoning": "Mild learning suggests Move North might work",
+          "specialization": "",
+          "phase": "Mid Battle",
+          "q_value": "4.028022"
+        },
+        "battle_analysis": "Moderate casualties taken, Steady battle rhythm"
+      },
+      "orc_decision": {
+        "action": 0,
+        "q_value": 23.526159286499023,
+        "confidence": "3.2885723",
+        "all_q_values": [
+          23.526159286499023,
+          14.044739723205566,
+          17.54615020751953,
+          12.508953094482422,
+          16.84263801574707,
+          14.276253700256348,
+          16.73024559020996,
+          15.304242134094238,
+          17.09164047241211,
+          15.646103858947754,
+          16.64900779724121,
+          12.832289695739746,
+          20.237586975097656,
+          8.809147834777832,
+          14.84766674041748
+        ],
+        "insight": {
+          "action_name": "Move North",
+          "confidence_level": "SUPREMELY CONFIDENT",
+          "reasoning": "300k games taught this AI that Move North is devastating in this situation",
+          "specialization": "",
+          "phase": "Mid Battle",
+          "q_value": "23.52616"
+        },
+        "battle_analysis": "Moderate casualties taken, Steady battle rhythm"
+      },
+      "result": "\ud83d\udfe2 ORC BREAKTHROUGH",
+      "victor": "Orc",
+      "empire_score": 2,
+      "orc_score": 3
+    },
+    {
+      "turn": 6,
+      "empire_decision": {
+        "action": 0,
+        "q_value": 11.146644592285156,
+        "confidence": "1.3667793",
+        "all_q_values": [
+          11.146644592285156,
+          7.967461585998535,
+          8.53191089630127,
+          8.86807918548584,
+          8.916701316833496,
+          8.899476051330566,
+          8.168084144592285,
+          8.031072616577148,
+          9.553804397583008,
+          9.779865264892578,
+          8.651246070861816,
+          7.970281600952148,
+          8.402307510375977,
+          8.624968528747559,
+          6.882730960845947
+        ],
+        "insight": {
+          "action_name": "Move North",
+          "confidence_level": "VERY CONFIDENT",
+          "reasoning": "Extensive learning shows Move North is highly effective here",
+          "specialization": "",
+          "phase": "Late Battle",
+          "q_value": "11.146645"
+        },
+        "battle_analysis": "Moderate casualties taken, Steady battle rhythm"
+      },
+      "orc_decision": {
+        "action": 12,
+        "q_value": 5.573784351348877,
+        "confidence": "0.27333593",
+        "all_q_values": [
+          5.177730083465576,
+          3.768079996109009,
+          4.9287567138671875,
+          3.758014678955078,
+          5.300448417663574,
+          4.1418256759643555,
+          4.448061466217041,
+          3.708390235900879,
+          4.950915813446045,
+          5.064694881439209,
+          4.698479175567627,
+          3.7557003498077393,
+          5.573784351348877,
+          2.8202362060546875,
+          3.977477550506592
+        ],
+        "insight": {
+          "action_name": "Mass Shooting",
+          "confidence_level": "CONFIDENT",
+          "reasoning": "Experience indicates Mass Shooting gives good results",
+          "specialization": "",
+          "phase": "Late Battle",
+          "q_value": "5.5737844"
+        },
+        "battle_analysis": "Moderate casualties taken, Steady battle rhythm"
+      },
+      "result": "\ud83c\udfdb\ufe0f EMPIRE GAINS ADVANTAGE",
+      "victor": "Empire",
+      "empire_score": 3,
+      "orc_score": 3
+    },
+    {
+      "turn": 7,
+      "empire_decision": {
+        "action": 0,
+        "q_value": 34.394309997558594,
+        "confidence": "5.6537476",
+        "all_q_values": [
+          34.394309997558594,
+          23.060422897338867,
+          25.789779663085938,
+          27.176042556762695,
+          27.13926887512207,
+          27.306743621826172,
+          24.326583862304688,
+          24.359756469726562,
+          28.740562438964844,
+          28.47018814086914,
+          25.520381927490234,
+          22.917644500732422,
+          24.354848861694336,
+          26.636762619018555,
+          21.268081665039062
+        ],
+        "insight": {
+          "action_name": "Move North",
+          "confidence_level": "SUPREMELY CONFIDENT",
+          "reasoning": "300k games taught this AI that Move North is devastating in this situation",
+          "specialization": "",
+          "phase": "Late Battle",
+          "q_value": "34.39431"
+        },
+        "battle_analysis": "Moderate casualties taken, Steady battle rhythm"
+      },
+      "orc_decision": {
+        "action": 4,
+        "q_value": -0.5574950575828552,
+        "confidence": "0.30768532",
+        "all_q_values": [
+          -2.020092487335205,
+          -0.8651803731918335,
+          -1.9789060354232788,
+          -1.1526360511779785,
+          -0.5574950575828552,
+          -0.9739316701889038,
+          -1.1448559761047363,
+          -2.8401577472686768,
+          -3.7622387409210205,
+          -1.1418797969818115,
+          -1.384771466255188,
+          -1.7275309562683105,
+          -1.6540411710739136,
+          -1.4733015298843384,
+          -2.0269601345062256
+        ],
+        "insight": {
+          "action_name": "Move NE",
+          "confidence_level": "UNCERTAIN",
+          "reasoning": "Mixed results from training on Move NE",
+          "specialization": "",
+          "phase": "Late Battle",
+          "q_value": "-0.55749506"
+        },
+        "battle_analysis": "Moderate casualties taken, Steady battle rhythm"
+      },
+      "result": "\ud83c\udfdb\ufe0f EMPIRE GAINS ADVANTAGE",
+      "victor": "Empire",
+      "empire_score": 4,
+      "orc_score": 3
+    },
+    {
+      "turn": 8,
+      "empire_decision": {
+        "action": 0,
+        "q_value": 24.521259307861328,
+        "confidence": "1.9019203",
+        "all_q_values": [
+          24.521259307861328,
+          18.201797485351562,
+          19.79198455810547,
+          20.950658798217773,
+          21.133140563964844,
+          21.962501525878906,
+          19.434009552001953,
+          19.41717529296875,
+          22.384607315063477,
+          22.619338989257812,
+          19.198633193969727,
+          18.751670837402344,
+          19.03653335571289,
+          20.90669822692871,
+          17.544322967529297
+        ],
+        "insight": {
+          "action_name": "Move North",
+          "confidence_level": "SUPREMELY CONFIDENT",
+          "reasoning": "300k games taught this AI that Move North is devastating in this situation",
+          "specialization": "",
+          "phase": "Late Battle",
+          "q_value": "24.52126"
+        },
+        "battle_analysis": "Moderate casualties taken, Steady battle rhythm"
+      },
+      "orc_decision": {
+        "action": 4,
+        "q_value": 1.733670949935913,
+        "confidence": "0.046547294",
+        "all_q_values": [
+          1.068651795387268,
+          1.3114656209945679,
+          1.3002698421478271,
+          1.288325548171997,
+          1.733670949935913,
+          1.329077959060669,
+          1.358788251876831,
+          1.0182489156723022,
+          1.541437029838562,
+          1.5265694856643677,
+          1.5968972444534302,
+          1.1274826526641846,
+          1.6871236562728882,
+          1.0828818082809448,
+          1.0180097818374634
+        ],
+        "insight": {
+          "action_name": "Move NE",
+          "confidence_level": "CAUTIOUSLY OPTIMISTIC",
+          "reasoning": "Mild learning suggests Move NE might work",
+          "specialization": "",
+          "phase": "Late Battle",
+          "q_value": "1.733671"
+        },
+        "battle_analysis": "Moderate casualties taken, Steady battle rhythm"
+      },
+      "result": "\ud83c\udfdb\ufe0f EMPIRE GAINS ADVANTAGE",
+      "victor": "Empire",
+      "empire_score": 5,
+      "orc_score": 3
+    },
+    {
+      "turn": 9,
+      "empire_decision": {
+        "action": 10,
+        "q_value": 4.583070278167725,
+        "confidence": "0.042562008",
+        "all_q_values": [
+          4.349321365356445,
+          3.4745001792907715,
+          3.9527781009674072,
+          3.0406405925750732,
+          3.282449722290039,
+          2.776331901550293,
+          3.0239336490631104,
+          1.7179714441299438,
+          3.8287370204925537,
+          4.540508270263672,
+          4.583070278167725,
+          2.7034568786621094,
+          3.7955124378204346,
+          2.782132863998413,
+          0.6261051297187805
+        ],
+        "insight": {
+          "action_name": "Defensive Formation",
+          "confidence_level": "CAUTIOUSLY OPTIMISTIC",
+          "reasoning": "Mild learning suggests Defensive Formation might work",
+          "specialization": "",
+          "phase": "Final Push",
+          "q_value": "4.5830703"
+        },
+        "battle_analysis": "Moderate casualties taken, Steady battle rhythm"
+      },
+      "orc_decision": {
+        "action": 12,
+        "q_value": 7.352057456970215,
+        "confidence": "0.35980034",
+        "all_q_values": [
+          5.839252948760986,
+          5.0481672286987305,
+          6.140150547027588,
+          4.674285411834717,
+          6.992257118225098,
+          5.2334699630737305,
+          6.269266605377197,
+          4.668003559112549,
+          6.3913960456848145,
+          6.252296447753906,
+          6.68213415145874,
+          4.605364799499512,
+          7.352057456970215,
+          3.257350444793701,
+          4.705837726593018
+        ],
+        "insight": {
+          "action_name": "Mass Shooting",
+          "confidence_level": "CONFIDENT",
+          "reasoning": "Experience indicates Mass Shooting gives good results",
+          "specialization": "",
+          "phase": "Final Push",
+          "q_value": "7.3520575"
+        },
+        "battle_analysis": "Moderate casualties taken, Steady battle rhythm"
+      },
+      "result": "\ud83d\udfe2 ORC BREAKTHROUGH",
+      "victor": "Orc",
+      "empire_score": 5,
+      "orc_score": 4
+    },
+    {
+      "turn": 10,
+      "empire_decision": {
+        "action": 9,
+        "q_value": 63.9736213684082,
+        "confidence": "0.5132561",
+        "all_q_values": [
+          61.25225067138672,
+          49.514434814453125,
+          53.914188385009766,
+          58.23443603515625,
+          60.863338470458984,
+          63.460365295410156,
+          55.93870162963867,
+          53.412349700927734,
+          63.10768127441406,
+          63.9736213684082,
+          50.76873016357422,
+          52.594261169433594,
+          51.42931365966797,
+          60.081260681152344,
+          49.863441467285156
+        ],
+        "insight": {
+          "action_name": "Artillery Strike",
+          "confidence_level": "SUPREMELY CONFIDENT",
+          "reasoning": "300k games taught this AI that Artillery Strike is devastating in this situation",
+          "specialization": " \ud83d\udc0e [CAVALRY MASTER]",
+          "phase": "Final Push",
+          "q_value": "63.97362"
+        },
+        "battle_analysis": "Heavy losses sustained, Steady battle rhythm"
+      },
+      "orc_decision": {
+        "action": 4,
+        "q_value": -35.08341598510742,
+        "confidence": "0.5647621",
+        "all_q_values": [
+          -44.9266357421875,
+          -37.51908874511719,
+          -40.960689544677734,
+          -35.64817810058594,
+          -35.08341598510742,
+          -37.41963577270508,
+          -37.356056213378906,
+          -44.03960418701172,
+          -61.53559494018555,
+          -44.93991470336914,
+          -43.722145080566406,
+          -38.43473815917969,
+          -41.01042175292969,
+          -35.672691345214844,
+          -45.00040817260742
+        ],
+        "insight": {
+          "action_name": "Move NE",
+          "confidence_level": "AVOIDING",
+          "reasoning": "300k games taught this AI to avoid Move NE here",
+          "specialization": "",
+          "phase": "Final Push",
+          "q_value": "-35.083416"
+        },
+        "battle_analysis": "Heavy losses sustained, Steady battle rhythm"
+      },
+      "result": "\ud83c\udfdb\ufe0f EMPIRE GAINS ADVANTAGE",
+      "victor": "Empire",
+      "empire_score": 6,
+      "orc_score": 4
+    },
+    {
+      "turn": 11,
+      "empire_decision": {
+        "action": 0,
+        "q_value": 11.54718017578125,
+        "confidence": "2.7422132",
+        "all_q_values": [
+          11.54718017578125,
+          7.0262675285339355,
+          8.10119342803955,
+          7.680692672729492,
+          7.877669811248779,
+          6.84926176071167,
+          7.029722690582275,
+          5.6962995529174805,
+          8.502338409423828,
+          8.802374839782715,
+          8.804966926574707,
+          5.698236465454102,
+          7.708813667297363,
+          7.426015377044678,
+          3.8368616104125977
+        ],
+        "insight": {
+          "action_name": "Move North",
+          "confidence_level": "VERY CONFIDENT",
+          "reasoning": "Extensive learning shows Move North is highly effective here",
+          "specialization": "",
+          "phase": "Final Push",
+          "q_value": "11.54718"
+        },
+        "battle_analysis": "Moderate casualties taken, Steady battle rhythm"
+      },
+      "orc_decision": {
+        "action": 12,
+        "q_value": 7.089838981628418,
+        "confidence": "0.23670006",
+        "all_q_values": [
+          5.933556079864502,
+          5.099390983581543,
+          6.171300888061523,
+          4.770256042480469,
+          6.8531389236450195,
+          5.557811737060547,
+          6.183878421783447,
+          4.006687164306641,
+          6.308694839477539,
+          6.331235408782959,
+          5.845343112945557,
+          4.732898235321045,
+          7.089838981628418,
+          3.46541166305542,
+          4.752023220062256
+        ],
+        "insight": {
+          "action_name": "Mass Shooting",
+          "confidence_level": "CONFIDENT",
+          "reasoning": "Experience indicates Mass Shooting gives good results",
+          "specialization": "",
+          "phase": "Final Push",
+          "q_value": "7.089839"
+        },
+        "battle_analysis": "Moderate casualties taken, Steady battle rhythm"
+      },
+      "result": "\ud83c\udfdb\ufe0f EMPIRE GAINS ADVANTAGE",
+      "victor": "Empire",
+      "empire_score": 7,
+      "orc_score": 4
+    },
+    {
+      "turn": 12,
+      "empire_decision": {
+        "action": 10,
+        "q_value": -9.016789436340332,
+        "confidence": "1.2691479",
+        "all_q_values": [
+          -10.627119064331055,
+          -10.867203712463379,
+          -10.285937309265137,
+          -12.531198501586914,
+          -13.663225173950195,
+          -15.26848316192627,
+          -12.79703426361084,
+          -15.112000465393066,
+          -12.681853294372559,
+          -12.051440238952637,
+          -9.016789436340332,
+          -12.70472240447998,
+          -10.977409362792969,
+          -13.650530815124512,
+          -15.17872428894043
+        ],
+        "insight": {
+          "action_name": "Defensive Formation",
+          "confidence_level": "AVOIDING",
+          "reasoning": "300k games taught this AI to avoid Defensive Formation here",
+          "specialization": "",
+          "phase": "Final Push",
+          "q_value": "-9.016789"
+        },
+        "battle_analysis": "Moderate casualties taken, Steady battle rhythm"
+      },
+      "orc_decision": {
+        "action": 12,
+        "q_value": 26.0200138092041,
+        "confidence": "1.539093",
+        "all_q_values": [
+          22.385211944580078,
+          17.161407470703125,
+          22.245529174804688,
+          14.721795082092285,
+          24.480920791625977,
+          18.57952308654785,
+          21.72976303100586,
+          13.345831871032715,
+          22.708938598632812,
+          21.7458553314209,
+          18.194583892822266,
+          17.512466430664062,
+          26.0200138092041,
+          10.940662384033203,
+          16.26087188720703
+        ],
+        "insight": {
+          "action_name": "Mass Shooting",
+          "confidence_level": "SUPREMELY CONFIDENT",
+          "reasoning": "300k games taught this AI that Mass Shooting is devastating in this situation",
+          "specialization": " \ud83c\udff9 [RANGED SPECIALIST]",
+          "phase": "Final Push",
+          "q_value": "26.020014"
+        },
+        "battle_analysis": "Moderate casualties taken, Steady battle rhythm"
+      },
+      "result": "\ud83d\udfe2 ORC BREAKTHROUGH",
+      "victor": "Orc",
+      "empire_score": 7,
+      "orc_score": 5
+    }
+  ],
+  "winner": "Empire"
+}

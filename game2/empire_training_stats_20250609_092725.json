@@ -1,0 +1,14 @@
+{
+  "faction": "empire",
+  "games_completed": 124,
+  "wins": 0,
+  "losses": 0,
+  "draws": 124,
+  "win_rate": 0.0,
+  "average_score": 280.0,
+  "best_score": 280,
+  "top_strategies": {},
+  "epsilon": 1.0,
+  "timestamp": "20250609_092725",
+  "training_time_hours": 0.025097334649827746
+}

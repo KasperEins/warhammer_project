@@ -1,0 +1,709 @@
+{
+  "timestamp": "2025-06-09T13:14:03.054773",
+  "battle_result": {
+    "winner": "Draw",
+    "final_score": {
+      "player1": 0,
+      "player2": 0
+    },
+    "turns_played": 4,
+    "narrative": [
+      "\n\ud83c\udff0 DEPLOYMENT PHASE\n=====================================\n\n**Nuln Regiment** (Empire): 635 points\nStrategy: Balanced line with combined arms support\n\n\u2022 1x Empire General: 150 pts\n\u2022 20x Empire State Troops: 260 pts\n\u2022 5x Empire Knights: 125 pts\n\u2022 3x Great Cannon: 100 pts\n\n**Grimjaw Tribe** (Orcs & Goblins): 610 points  \nStrategy: Balanced line with combined arms support\n\n\u2022 1x Orc Warboss: 120 pts\n\u2022 25x Orc Boys: 200 pts\n\u2022 5x Boar Boyz: 110 pts\n\u2022 3x River Trolls: 180 pts\n\n**Tactical Assessment:**\n- Empire Commander plans to Aggressive Assault\n- Orcs & Goblins Commander aims for Aggressive Assault\n- Key matchup: This will be decided by tactical flexibility\n",
+      "\n\u2694\ufe0f TURN 1 - PLAYER1\n======================================\n\n**Tactical Situation:**\nMomentum is building as units close for decisive combat\n\n**Command Decisions:**\n\u2022 Cautious advance: Early game - position units for coordinated assault\n\u2022 Shoot: Following Magic phase procedures\n\u2022 Magic: Opportunity fire at available targets\n\u2022 Defensive combat: Unfavorable position - fight defensively\n\n**Battle Results:**\nCasualties: Light, Momentum: Unchanged\n\n**Victory Points:** 0 - 0\n",
+      "\n\u2694\ufe0f TURN 1 - PLAYER2\n======================================\n\n**Tactical Situation:**\nCritical decisions must be made as casualties mount\n\n**Command Decisions:**\n\u2022 Cautious advance: Early game - position units for coordinated assault\n\u2022 Shoot: Following Magic phase procedures\n\u2022 Charge: Opportunity fire at available targets\n\u2022 Press advantage: Winning momentum - maintain pressure\n\n**Battle Results:**\nCasualties: Light, Momentum: Unchanged\n\n**Victory Points:** 0 - 0\n",
+      "\n\u2694\ufe0f TURN 2 - PLAYER1\n======================================\n\n**Tactical Situation:**\nThe battle hangs in the balance as both armies maneuver for advantage\n\n**Command Decisions:**\n\u2022 Cautious advance: Early game - position units for coordinated assault\n\u2022 Charge: Following Magic phase procedures\n\u2022 Shoot: Opportunity fire at available targets\n\u2022 Defensive combat: Unfavorable position - fight defensively\n\n**Battle Results:**\nCasualties: Light, Momentum: Unchanged\n\n**Victory Points:** 0 - 0\n",
+      "\n\u2694\ufe0f TURN 2 - PLAYER2\n======================================\n\n**Tactical Situation:**\nThe battle hangs in the balance as both armies maneuver for advantage\n\n**Command Decisions:**\n\u2022 Cautious advance: Early game - position units for coordinated assault\n\u2022 Charge: Following Magic phase procedures\n\u2022 Shoot: Opportunity fire at available targets\n\u2022 Press advantage: Winning momentum - maintain pressure\n\n**Battle Results:**\nCasualties: Light, Momentum: Unchanged\n\n**Victory Points:** 0 - 0\n",
+      "\n\u2694\ufe0f TURN 3 - PLAYER1\n======================================\n\n**Tactical Situation:**\nThe opening moves reveal each commander's strategic intent\n\n**Command Decisions:**\n\u2022 Coordinated assault: Turn 3 - execute battle plan\n\u2022 Magic: Following Magic phase procedures\n\u2022 Charge: Opportunity fire at available targets\n\u2022 Defensive combat: Unfavorable position - fight defensively\n\n**Battle Results:**\nCasualties: Light, Momentum: Unchanged\n\n**Victory Points:** 0 - 0\n",
+      "\n\u2694\ufe0f TURN 3 - PLAYER2\n======================================\n\n**Tactical Situation:**\nThe opening moves reveal each commander's strategic intent\n\n**Command Decisions:**\n\u2022 Coordinated assault: Turn 3 - execute battle plan\n\u2022 Magic: Following Magic phase procedures\n\u2022 Advance: Opportunity fire at available targets\n\u2022 Press advantage: Winning momentum - maintain pressure\n\n**Battle Results:**\nCasualties: Light, Momentum: Unchanged\n\n**Victory Points:** 0 - 0\n",
+      "\n\u2694\ufe0f TURN 4 - PLAYER1\n======================================\n\n**Tactical Situation:**\nThe battle hangs in the balance as both armies maneuver for advantage\n\n**Command Decisions:**\n\u2022 Coordinated assault: Turn 4 - execute battle plan\n\u2022 Shoot: Following Magic phase procedures\n\u2022 Advance: Opportunity fire at available targets\n\u2022 Defensive combat: Unfavorable position - fight defensively\n\n**Battle Results:**\nCasualties: Light, Momentum: Unchanged\n\n**Victory Points:** 0 - 0\n",
+      "\n\u2694\ufe0f TURN 4 - PLAYER2\n======================================\n\n**Tactical Situation:**\nThe battle hangs in the balance as both armies maneuver for advantage\n\n**Command Decisions:**\n\u2022 Coordinated assault: Turn 4 - execute battle plan\n\u2022 Advance: Following Magic phase procedures\n\u2022 Charge: Opportunity fire at available targets\n\u2022 Press advantage: Winning momentum - maintain pressure\n\n**Battle Results:**\nCasualties: Light, Momentum: Unchanged\n\n**Victory Points:** 0 - 0\n",
+      "\n\ud83c\udfc6 BATTLE CONCLUSION\n==========================================\n\n**Victory:** Draw\n**Final Score:** 0 - 0\n\n**Post-Battle Analysis:**\n\n**Empire Commander's Performance:**\n- Strategy: Aggressive Assault\n- Key Decisions: 16 tactical choices made\n- Lessons Learned: Artillery positioning was effective\n\n**Orcs & Goblins Commander's Performance:**  \n- Strategy: Aggressive Assault\n- Key Decisions: 16 tactical choices made\n- Lessons Learned: Coordination between units could be improved\n\n**Battle Summary:**\nA closely fought engagement that demonstrated the importance of tactical flexibility and combined arms coordination.\n\n**Tactical Notes:**\n\n"
+    ],
+    "ai_performance": {
+      "ai1_decisions": 0,
+      "ai2_decisions": 0
+    }
+  },
+  "ai1_decisions": [
+    {
+      "turn": 1,
+      "phase": "Movement",
+      "situation": {
+        "strength_ratio": 0.8611111111111112,
+        "turn": 1,
+        "phase": "Movement",
+        "casualties_taken": 0,
+        "enemy_casualties": 0,
+        "momentum": "losing"
+      },
+      "action": "Cautious advance",
+      "reasoning": "Early game - position units for coordinated assault",
+      "turn_plan": "Deploy defensively, prepare for enemy advance"
+    },
+    {
+      "turn": 1,
+      "phase": "Magic",
+      "situation": {
+        "strength_ratio": 0.8611111111111112,
+        "turn": 1,
+        "phase": "Magic",
+        "casualties_taken": 0,
+        "enemy_casualties": 0,
+        "momentum": "losing"
+      },
+      "action": "Shoot",
+      "reasoning": "Following Magic phase procedures",
+      "turn_plan": "Deploy defensively, prepare for enemy advance"
+    },
+    {
+      "turn": 1,
+      "phase": "Shooting",
+      "situation": {
+        "strength_ratio": 0.8611111111111112,
+        "turn": 1,
+        "phase": "Shooting",
+        "casualties_taken": 0,
+        "enemy_casualties": 0,
+        "momentum": "losing"
+      },
+      "action": "Magic",
+      "reasoning": "Opportunity fire at available targets",
+      "turn_plan": "Deploy defensively, prepare for enemy advance"
+    },
+    {
+      "turn": 1,
+      "phase": "Combat",
+      "situation": {
+        "strength_ratio": 0.8611111111111112,
+        "turn": 1,
+        "phase": "Combat",
+        "casualties_taken": 0,
+        "enemy_casualties": 0,
+        "momentum": "losing"
+      },
+      "action": "Defensive combat",
+      "reasoning": "Unfavorable position - fight defensively",
+      "turn_plan": "Deploy defensively, prepare for enemy advance"
+    },
+    {
+      "turn": 2,
+      "phase": "Movement",
+      "situation": {
+        "strength_ratio": 0.8611111111111112,
+        "turn": 2,
+        "phase": "Movement",
+        "casualties_taken": 0,
+        "enemy_casualties": 0,
+        "momentum": "losing"
+      },
+      "action": "Cautious advance",
+      "reasoning": "Early game - position units for coordinated assault",
+      "turn_plan": "Advance key units, begin artillery bombardment"
+    },
+    {
+      "turn": 2,
+      "phase": "Magic",
+      "situation": {
+        "strength_ratio": 0.8611111111111112,
+        "turn": 2,
+        "phase": "Magic",
+        "casualties_taken": 0,
+        "enemy_casualties": 0,
+        "momentum": "losing"
+      },
+      "action": "Charge",
+      "reasoning": "Following Magic phase procedures",
+      "turn_plan": "Advance key units, begin artillery bombardment"
+    },
+    {
+      "turn": 2,
+      "phase": "Shooting",
+      "situation": {
+        "strength_ratio": 0.8611111111111112,
+        "turn": 2,
+        "phase": "Shooting",
+        "casualties_taken": 0,
+        "enemy_casualties": 0,
+        "momentum": "losing"
+      },
+      "action": "Shoot",
+      "reasoning": "Opportunity fire at available targets",
+      "turn_plan": "Advance key units, begin artillery bombardment"
+    },
+    {
+      "turn": 2,
+      "phase": "Combat",
+      "situation": {
+        "strength_ratio": 0.8611111111111112,
+        "turn": 2,
+        "phase": "Combat",
+        "casualties_taken": 0,
+        "enemy_casualties": 0,
+        "momentum": "losing"
+      },
+      "action": "Defensive combat",
+      "reasoning": "Unfavorable position - fight defensively",
+      "turn_plan": "Advance key units, begin artillery bombardment"
+    },
+    {
+      "turn": 3,
+      "phase": "Movement",
+      "situation": {
+        "strength_ratio": 0.8611111111111112,
+        "turn": 3,
+        "phase": "Movement",
+        "casualties_taken": 0,
+        "enemy_casualties": 0,
+        "momentum": "losing"
+      },
+      "action": "Coordinated assault",
+      "reasoning": "Turn 3 - execute battle plan",
+      "turn_plan": "Engage enemy flanks, support with magic"
+    },
+    {
+      "turn": 3,
+      "phase": "Magic",
+      "situation": {
+        "strength_ratio": 0.8611111111111112,
+        "turn": 3,
+        "phase": "Magic",
+        "casualties_taken": 0,
+        "enemy_casualties": 0,
+        "momentum": "losing"
+      },
+      "action": "Magic",
+      "reasoning": "Following Magic phase procedures",
+      "turn_plan": "Engage enemy flanks, support with magic"
+    },
+    {
+      "turn": 3,
+      "phase": "Shooting",
+      "situation": {
+        "strength_ratio": 0.8611111111111112,
+        "turn": 3,
+        "phase": "Shooting",
+        "casualties_taken": 0,
+        "enemy_casualties": 0,
+        "momentum": "losing"
+      },
+      "action": "Charge",
+      "reasoning": "Opportunity fire at available targets",
+      "turn_plan": "Engage enemy flanks, support with magic"
+    },
+    {
+      "turn": 3,
+      "phase": "Combat",
+      "situation": {
+        "strength_ratio": 0.8611111111111112,
+        "turn": 3,
+        "phase": "Combat",
+        "casualties_taken": 0,
+        "enemy_casualties": 0,
+        "momentum": "losing"
+      },
+      "action": "Defensive combat",
+      "reasoning": "Unfavorable position - fight defensively",
+      "turn_plan": "Engage enemy flanks, support with magic"
+    },
+    {
+      "turn": 4,
+      "phase": "Movement",
+      "situation": {
+        "strength_ratio": 0.8611111111111112,
+        "turn": 4,
+        "phase": "Movement",
+        "casualties_taken": 0,
+        "enemy_casualties": 0,
+        "momentum": "losing"
+      },
+      "action": "Coordinated assault",
+      "reasoning": "Turn 4 - execute battle plan",
+      "turn_plan": "Execute main assault, coordinate charges"
+    },
+    {
+      "turn": 4,
+      "phase": "Magic",
+      "situation": {
+        "strength_ratio": 0.8611111111111112,
+        "turn": 4,
+        "phase": "Magic",
+        "casualties_taken": 0,
+        "enemy_casualties": 0,
+        "momentum": "losing"
+      },
+      "action": "Shoot",
+      "reasoning": "Following Magic phase procedures",
+      "turn_plan": "Execute main assault, coordinate charges"
+    },
+    {
+      "turn": 4,
+      "phase": "Shooting",
+      "situation": {
+        "strength_ratio": 0.8611111111111112,
+        "turn": 4,
+        "phase": "Shooting",
+        "casualties_taken": 0,
+        "enemy_casualties": 0,
+        "momentum": "losing"
+      },
+      "action": "Advance",
+      "reasoning": "Opportunity fire at available targets",
+      "turn_plan": "Execute main assault, coordinate charges"
+    },
+    {
+      "turn": 4,
+      "phase": "Combat",
+      "situation": {
+        "strength_ratio": 0.8611111111111112,
+        "turn": 4,
+        "phase": "Combat",
+        "casualties_taken": 0,
+        "enemy_casualties": 0,
+        "momentum": "losing"
+      },
+      "action": "Defensive combat",
+      "reasoning": "Unfavorable position - fight defensively",
+      "turn_plan": "Execute main assault, coordinate charges"
+    }
+  ],
+  "ai2_decisions": [
+    {
+      "turn": 1,
+      "phase": "Movement",
+      "situation": {
+        "strength_ratio": 1.1612903225806452,
+        "turn": 1,
+        "phase": "Movement",
+        "casualties_taken": 0,
+        "enemy_casualties": 0,
+        "momentum": "winning"
+      },
+      "action": "Cautious advance",
+      "reasoning": "Early game - position units for coordinated assault",
+      "turn_plan": "Deploy defensively, prepare for enemy advance"
+    },
+    {
+      "turn": 1,
+      "phase": "Magic",
+      "situation": {
+        "strength_ratio": 1.1612903225806452,
+        "turn": 1,
+        "phase": "Magic",
+        "casualties_taken": 0,
+        "enemy_casualties": 0,
+        "momentum": "winning"
+      },
+      "action": "Shoot",
+      "reasoning": "Following Magic phase procedures",
+      "turn_plan": "Deploy defensively, prepare for enemy advance"
+    },
+    {
+      "turn": 1,
+      "phase": "Shooting",
+      "situation": {
+        "strength_ratio": 1.1612903225806452,
+        "turn": 1,
+        "phase": "Shooting",
+        "casualties_taken": 0,
+        "enemy_casualties": 0,
+        "momentum": "winning"
+      },
+      "action": "Charge",
+      "reasoning": "Opportunity fire at available targets",
+      "turn_plan": "Deploy defensively, prepare for enemy advance"
+    },
+    {
+      "turn": 1,
+      "phase": "Combat",
+      "situation": {
+        "strength_ratio": 1.1612903225806452,
+        "turn": 1,
+        "phase": "Combat",
+        "casualties_taken": 0,
+        "enemy_casualties": 0,
+        "momentum": "winning"
+      },
+      "action": "Press advantage",
+      "reasoning": "Winning momentum - maintain pressure",
+      "turn_plan": "Deploy defensively, prepare for enemy advance"
+    },
+    {
+      "turn": 2,
+      "phase": "Movement",
+      "situation": {
+        "strength_ratio": 1.1612903225806452,
+        "turn": 2,
+        "phase": "Movement",
+        "casualties_taken": 0,
+        "enemy_casualties": 0,
+        "momentum": "winning"
+      },
+      "action": "Cautious advance",
+      "reasoning": "Early game - position units for coordinated assault",
+      "turn_plan": "Advance key units, begin artillery bombardment"
+    },
+    {
+      "turn": 2,
+      "phase": "Magic",
+      "situation": {
+        "strength_ratio": 1.1612903225806452,
+        "turn": 2,
+        "phase": "Magic",
+        "casualties_taken": 0,
+        "enemy_casualties": 0,
+        "momentum": "winning"
+      },
+      "action": "Charge",
+      "reasoning": "Following Magic phase procedures",
+      "turn_plan": "Advance key units, begin artillery bombardment"
+    },
+    {
+      "turn": 2,
+      "phase": "Shooting",
+      "situation": {
+        "strength_ratio": 1.1612903225806452,
+        "turn": 2,
+        "phase": "Shooting",
+        "casualties_taken": 0,
+        "enemy_casualties": 0,
+        "momentum": "winning"
+      },
+      "action": "Shoot",
+      "reasoning": "Opportunity fire at available targets",
+      "turn_plan": "Advance key units, begin artillery bombardment"
+    },
+    {
+      "turn": 2,
+      "phase": "Combat",
+      "situation": {
+        "strength_ratio": 1.1612903225806452,
+        "turn": 2,
+        "phase": "Combat",
+        "casualties_taken": 0,
+        "enemy_casualties": 0,
+        "momentum": "winning"
+      },
+      "action": "Press advantage",
+      "reasoning": "Winning momentum - maintain pressure",
+      "turn_plan": "Advance key units, begin artillery bombardment"
+    },
+    {
+      "turn": 3,
+      "phase": "Movement",
+      "situation": {
+        "strength_ratio": 1.1612903225806452,
+        "turn": 3,
+        "phase": "Movement",
+        "casualties_taken": 0,
+        "enemy_casualties": 0,
+        "momentum": "winning"
+      },
+      "action": "Coordinated assault",
+      "reasoning": "Turn 3 - execute battle plan",
+      "turn_plan": "Engage enemy flanks, support with magic"
+    },
+    {
+      "turn": 3,
+      "phase": "Magic",
+      "situation": {
+        "strength_ratio": 1.1612903225806452,
+        "turn": 3,
+        "phase": "Magic",
+        "casualties_taken": 0,
+        "enemy_casualties": 0,
+        "momentum": "winning"
+      },
+      "action": "Magic",
+      "reasoning": "Following Magic phase procedures",
+      "turn_plan": "Engage enemy flanks, support with magic"
+    },
+    {
+      "turn": 3,
+      "phase": "Shooting",
+      "situation": {
+        "strength_ratio": 1.1612903225806452,
+        "turn": 3,
+        "phase": "Shooting",
+        "casualties_taken": 0,
+        "enemy_casualties": 0,
+        "momentum": "winning"
+      },
+      "action": "Advance",
+      "reasoning": "Opportunity fire at available targets",
+      "turn_plan": "Engage enemy flanks, support with magic"
+    },
+    {
+      "turn": 3,
+      "phase": "Combat",
+      "situation": {
+        "strength_ratio": 1.1612903225806452,
+        "turn": 3,
+        "phase": "Combat",
+        "casualties_taken": 0,
+        "enemy_casualties": 0,
+        "momentum": "winning"
+      },
+      "action": "Press advantage",
+      "reasoning": "Winning momentum - maintain pressure",
+      "turn_plan": "Engage enemy flanks, support with magic"
+    },
+    {
+      "turn": 4,
+      "phase": "Movement",
+      "situation": {
+        "strength_ratio": 1.1612903225806452,
+        "turn": 4,
+        "phase": "Movement",
+        "casualties_taken": 0,
+        "enemy_casualties": 0,
+        "momentum": "winning"
+      },
+      "action": "Coordinated assault",
+      "reasoning": "Turn 4 - execute battle plan",
+      "turn_plan": "Execute main assault, coordinate charges"
+    },
+    {
+      "turn": 4,
+      "phase": "Magic",
+      "situation": {
+        "strength_ratio": 1.1612903225806452,
+        "turn": 4,
+        "phase": "Magic",
+        "casualties_taken": 0,
+        "enemy_casualties": 0,
+        "momentum": "winning"
+      },
+      "action": "Advance",
+      "reasoning": "Following Magic phase procedures",
+      "turn_plan": "Execute main assault, coordinate charges"
+    },
+    {
+      "turn": 4,
+      "phase": "Shooting",
+      "situation": {
+        "strength_ratio": 1.1612903225806452,
+        "turn": 4,
+        "phase": "Shooting",
+        "casualties_taken": 0,
+        "enemy_casualties": 0,
+        "momentum": "winning"
+      },
+      "action": "Charge",
+      "reasoning": "Opportunity fire at available targets",
+      "turn_plan": "Execute main assault, coordinate charges"
+    },
+    {
+      "turn": 4,
+      "phase": "Combat",
+      "situation": {
+        "strength_ratio": 1.1612903225806452,
+        "turn": 4,
+        "phase": "Combat",
+        "casualties_taken": 0,
+        "enemy_casualties": 0,
+        "momentum": "winning"
+      },
+      "action": "Press advantage",
+      "reasoning": "Winning momentum - maintain pressure",
+      "turn_plan": "Execute main assault, coordinate charges"
+    }
+  ],
+  "tactical_lessons": {
+    "winning_strategies": [
+      {
+        "situation": {
+          "strength_ratio": 1.1612903225806452,
+          "turn": 1,
+          "phase": "Movement",
+          "casualties_taken": 0,
+          "enemy_casualties": 0,
+          "momentum": "winning"
+        },
+        "successful_action": "Cautious advance",
+        "reasoning": "Early game - position units for coordinated assault"
+      },
+      {
+        "situation": {
+          "strength_ratio": 1.1612903225806452,
+          "turn": 1,
+          "phase": "Magic",
+          "casualties_taken": 0,
+          "enemy_casualties": 0,
+          "momentum": "winning"
+        },
+        "successful_action": "Shoot",
+        "reasoning": "Following Magic phase procedures"
+      },
+      {
+        "situation": {
+          "strength_ratio": 1.1612903225806452,
+          "turn": 1,
+          "phase": "Shooting",
+          "casualties_taken": 0,
+          "enemy_casualties": 0,
+          "momentum": "winning"
+        },
+        "successful_action": "Charge",
+        "reasoning": "Opportunity fire at available targets"
+      },
+      {
+        "situation": {
+          "strength_ratio": 1.1612903225806452,
+          "turn": 1,
+          "phase": "Combat",
+          "casualties_taken": 0,
+          "enemy_casualties": 0,
+          "momentum": "winning"
+        },
+        "successful_action": "Press advantage",
+        "reasoning": "Winning momentum - maintain pressure"
+      },
+      {
+        "situation": {
+          "strength_ratio": 1.1612903225806452,
+          "turn": 2,
+          "phase": "Movement",
+          "casualties_taken": 0,
+          "enemy_casualties": 0,
+          "momentum": "winning"
+        },
+        "successful_action": "Cautious advance",
+        "reasoning": "Early game - position units for coordinated assault"
+      },
+      {
+        "situation": {
+          "strength_ratio": 1.1612903225806452,
+          "turn": 2,
+          "phase": "Magic",
+          "casualties_taken": 0,
+          "enemy_casualties": 0,
+          "momentum": "winning"
+        },
+        "successful_action": "Charge",
+        "reasoning": "Following Magic phase procedures"
+      },
+      {
+        "situation": {
+          "strength_ratio": 1.1612903225806452,
+          "turn": 2,
+          "phase": "Shooting",
+          "casualties_taken": 0,
+          "enemy_casualties": 0,
+          "momentum": "winning"
+        },
+        "successful_action": "Shoot",
+        "reasoning": "Opportunity fire at available targets"
+      },
+      {
+        "situation": {
+          "strength_ratio": 1.1612903225806452,
+          "turn": 2,
+          "phase": "Combat",
+          "casualties_taken": 0,
+          "enemy_casualties": 0,
+          "momentum": "winning"
+        },
+        "successful_action": "Press advantage",
+        "reasoning": "Winning momentum - maintain pressure"
+      },
+      {
+        "situation": {
+          "strength_ratio": 1.1612903225806452,
+          "turn": 3,
+          "phase": "Movement",
+          "casualties_taken": 0,
+          "enemy_casualties": 0,
+          "momentum": "winning"
+        },
+        "successful_action": "Coordinated assault",
+        "reasoning": "Turn 3 - execute battle plan"
+      },
+      {
+        "situation": {
+          "strength_ratio": 1.1612903225806452,
+          "turn": 3,
+          "phase": "Magic",
+          "casualties_taken": 0,
+          "enemy_casualties": 0,
+          "momentum": "winning"
+        },
+        "successful_action": "Magic",
+        "reasoning": "Following Magic phase procedures"
+      },
+      {
+        "situation": {
+          "strength_ratio": 1.1612903225806452,
+          "turn": 3,
+          "phase": "Shooting",
+          "casualties_taken": 0,
+          "enemy_casualties": 0,
+          "momentum": "winning"
+        },
+        "successful_action": "Advance",
+        "reasoning": "Opportunity fire at available targets"
+      },
+      {
+        "situation": {
+          "strength_ratio": 1.1612903225806452,
+          "turn": 3,
+          "phase": "Combat",
+          "casualties_taken": 0,
+          "enemy_casualties": 0,
+          "momentum": "winning"
+        },
+        "successful_action": "Press advantage",
+        "reasoning": "Winning momentum - maintain pressure"
+      },
+      {
+        "situation": {
+          "strength_ratio": 1.1612903225806452,
+          "turn": 4,
+          "phase": "Movement",
+          "casualties_taken": 0,
+          "enemy_casualties": 0,
+          "momentum": "winning"
+        },
+        "successful_action": "Coordinated assault",
+        "reasoning": "Turn 4 - execute battle plan"
+      },
+      {
+        "situation": {
+          "strength_ratio": 1.1612903225806452,
+          "turn": 4,
+          "phase": "Magic",
+          "casualties_taken": 0,
+          "enemy_casualties": 0,
+          "momentum": "winning"
+        },
+        "successful_action": "Advance",
+        "reasoning": "Following Magic phase procedures"
+      },
+      {
+        "situation": {
+          "strength_ratio": 1.1612903225806452,
+          "turn": 4,
+          "phase": "Shooting",
+          "casualties_taken": 0,
+          "enemy_casualties": 0,
+          "momentum": "winning"
+        },
+        "successful_action": "Charge",
+        "reasoning": "Opportunity fire at available targets"
+      },
+      {
+        "situation": {
+          "strength_ratio": 1.1612903225806452,
+          "turn": 4,
+          "phase": "Combat",
+          "casualties_taken": 0,
+          "enemy_casualties": 0,
+          "momentum": "winning"
+        },
+        "successful_action": "Press advantage",
+        "reasoning": "Winning momentum - maintain pressure"
+      }
+    ],
+    "failed_tactics": [],
+    "key_decisions": []
+  }
+}

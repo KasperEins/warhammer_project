@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug - Warhammer Battle</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #1a1a2e; color: #d4af37; }
+        .debug-section { margin: 20px 0; padding: 15px; border: 1px solid #d4af37; }
+        .button { padding: 10px 20px; margin: 5px; background: #16213e; color: #d4af37; border: 1px solid #d4af37; cursor: pointer; }
+        .log { height: 200px; overflow-y: scroll; background: #0f0f0f; padding: 10px; border: 1px solid #333; }
+        .unit-list { height: 300px; overflow-y: scroll; background: #0f0f0f; padding: 10px; }
+        .unit-item { padding: 5px; margin: 2px 0; background: #1a1a2e; border: 1px solid #333; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Warhammer Battle Debug Interface</h1>
+    
+    <div class="debug-section">
+        <h3>Connection Status</h3>
+        <div id="connectionStatus">Connecting...</div>
+    </div>
+    
+    <div class="debug-section">
+        <h3>Battle Controls</h3>
+        <button class="button" onclick="testAPI()">🔍 Test API</button>
+        <button class="button" onclick="fetchBattleState()">📊 Get Battle State</button>
+        <button class="button" onclick="startBattle()">⚔️ Start Battle</button>
+        <button class="button" onclick="resetBattle()">🔄 Reset</button>
+    </div>
+    
+    <div class="grid">
+        <div class="debug-section">
+            <h3>Debug Log</h3>
+            <div class="log" id="debugLog"></div>
+        </div>
+        
+        <div class="debug-section">
+            <h3>Battle Info</h3>
+            <div id="battleInfo">
+                <div>Turn: <span id="turn">?</span></div>
+                <div>Phase: <span id="phase">?</span></div>
+                <div>State: <span id="state">?</span></div>
+                <div>Empire Units: <span id="empireCount">?</span></div>
+                <div>Orc Units: <span id="orcCount">?</span></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="debug-section">
+        <h3>Units List</h3>
+        <div class="unit-list" id="unitsList"></div>
+    </div>
+    
+    <div class="debug-section">
+        <h3>Raw JSON Data</h3>
+        <pre id="rawData" style="background: #0f0f0f; padding: 10px; overflow: auto; max-height: 200px;"></pre>
+    </div>
+
+    <script>
+        // Initialize Socket.IO
+        const socket = io();
+        
+        function log(message) {
+            const debugLog = document.getElementById('debugLog');
+            const entry = document.createElement('div');
+            entry.textContent = new Date().toLocaleTimeString() + ' - ' + message;
+            debugLog.appendChild(entry);
+            debugLog.scrollTop = debugLog.scrollHeight;
+        }
+        
+        // Socket events
+        socket.on('connect', function() {
+            document.getElementById('connectionStatus').textContent = '✅ Connected';
+            log('✅ Socket connected');
+        });
+        
+        socket.on('disconnect', function() {
+            document.getElementById('connectionStatus').textContent = '❌ Disconnected';
+            log('❌ Socket disconnected');
+        });
+        
+        socket.on('battle_update', function(data) {
+            log('📥 Received battle update');
+            updateDisplay(data);
+        });
+        
+        function testAPI() {
+            log('🔍 Testing API endpoints...');
+            fetch('/api/battle_state')
+                .then(response => {
+                    log(`📡 API Response status: ${response.status}`);
+                    return response.json();
+                })
+                .then(data => {
+                    log('✅ API test successful');
+                    updateDisplay(data);
+                })
+                .catch(error => {
+                    log(`❌ API test failed: ${error}`);
+                });
+        }
+        
+        function fetchBattleState() {
+            log('📊 Fetching battle state...');
+            fetch('/api/battle_state')
+                .then(response => response.json())
+                .then(data => {
+                    log('✅ Battle state received');
+                    updateDisplay(data);
+                })
+                .catch(error => {
+                    log(`❌ Failed to fetch state: ${error}`);
+                });
+        }
+        
+        function startBattle() {
+            log('⚔️ Starting battle...');
+            fetch('/api/start_battle', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    log(`✅ Start battle response: ${data.success ? 'Success' : 'Failed'}`);
+                })
+                .catch(error => {
+                    log(`❌ Start battle failed: ${error}`);
+                });
+        }
+        
+        function resetBattle() {
+            log('🔄 Resetting battle...');
+            fetch('/api/reset_battle', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    log(`✅ Reset response: ${data.success ? 'Success' : 'Failed'}`);
+                })
+                .catch(error => {
+                    log(`❌ Reset failed: ${error}`);
+                });
+        }
+        
+        function updateDisplay(data) {
+            try {
+                log('🖥️ Updating display...');
+                
+                // Update battle info
+                document.getElementById('turn').textContent = data.turn || '?';
+                document.getElementById('phase').textContent = data.phase || '?';
+                document.getElementById('state').textContent = data.battle_state || '?';
+                
+                // Count units
+                let empireCount = 0, orcCount = 0;
+                if (data.units) {
+                    data.units.forEach(unit => {
+                        if (unit.faction === 'nuln' && unit.is_alive) empireCount++;
+                        if (unit.faction === 'orcs' && unit.is_alive) orcCount++;
+                    });
+                }
+                document.getElementById('empireCount').textContent = empireCount;
+                document.getElementById('orcCount').textContent = orcCount;
+                
+                // Update units list
+                const unitsList = document.getElementById('unitsList');
+                unitsList.innerHTML = '';
+                if (data.units) {
+                    data.units.forEach((unit, index) => {
+                        const div = document.createElement('div');
+                        div.className = 'unit-item';
+                        div.innerHTML = `
+                            <strong>${unit.name}</strong> [${unit.faction}]<br>
+                            Models: ${unit.models} | Type: ${unit.unit_type}<br>
+                            Position: [${unit.position[0]}, ${unit.position[1]}]<br>
+                            Status: ${unit.is_alive ? '✅ Alive' : '💀 Dead'}
+                        `;
+                        unitsList.appendChild(div);
+                    });
+                } else {
+                    unitsList.innerHTML = '<div>No units data available</div>';
+                }
+                
+                // Show raw data
+                document.getElementById('rawData').textContent = JSON.stringify(data, null, 2);
+                
+                log('✅ Display updated successfully');
+            } catch (error) {
+                log(`❌ Display update error: ${error}`);
+            }
+        }
+        
+        // Auto-load on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            log('🏰 Debug interface loaded');
+            setTimeout(testAPI, 1000);
+        });
+    </script>
+</body>
+</html> 

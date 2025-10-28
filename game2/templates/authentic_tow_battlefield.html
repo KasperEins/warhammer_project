@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏛️ Authentic Warhammer: The Old World Battlefield</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Custom authentic TOW unit styling */
+        .battlefield {
+            background: 
+                radial-gradient(circle at 25% 25%, rgba(139, 69, 19, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(34, 139, 34, 0.2) 0%, transparent 50%),
+                linear-gradient(45deg, #2d5016 0%, #3a5f1a 50%, #2d5016 100%);
+            background-size: 100px 100px, 120px 120px, 100% 100%;
+        }
+        
+        .unit-block {
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+        }
+        
+        .unit-block:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.4));
+            z-index: 50;
+        }
+        
+        .unit-formation {
+            display: grid;
+            gap: 1px;
+            padding: 3px;
+            border-radius: 4px;
+            border: 2px solid;
+            background: rgba(0,0,0,0.2);
+            backdrop-filter: blur(2px);
+        }
+        
+        .model-square {
+            width: 6px;
+            height: 6px;
+            border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 1px;
+            transition: all 0.3s ease;
+        }
+        
+        /* Empire units - Imperial blue */
+        .empire .unit-formation {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.3);
+            box-shadow: 0 0 12px rgba(59, 130, 246, 0.3);
+        }
+        .empire .model-square {
+            background: linear-gradient(45deg, #3b82f6, #1d4ed8);
+            border-color: #1e40af;
+        }
+        
+        /* Orc units - Waaagh! green */
+        .orcs-goblins .unit-formation {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.3);
+            box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
+        }
+        .orcs-goblins .model-square {
+            background: linear-gradient(45deg, #10b981, #047857);
+            border-color: #065f46;
+        }
+        
+        .formation-indicator {
+            position: absolute;
+            top: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 8px;
+            font-weight: bold;
+            background: rgba(0,0,0,0.8);
+            color: #fbbf24;
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid #fbbf24;
+            white-space: nowrap;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+        }
+        
+        /* Unit type indicators */
+        .infantry .unit-formation { border-style: solid; }
+        .cavalry .unit-formation { 
+            border-style: double; 
+            border-width: 3px;
+            animation: pulse-glow 2s infinite;
+        }
+        .war-machine .unit-formation { 
+            border-style: dashed; 
+            border-width: 3px;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 12px rgba(59, 130, 246, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.6); }
+        }
+        
+        /* Status animations */
+        .unit-block.engaged {
+            animation: combat-pulse 1s infinite;
+        }
+        
+        .unit-block.fleeing {
+            opacity: 0.7;
+            animation: flee-shake 0.5s infinite;
+        }
+        
+        @keyframes combat-pulse {
+            0%, 100% { filter: drop-shadow(0 0 12px #ef4444); }
+            50% { filter: drop-shadow(0 0 24px #dc2626); }
+        }
+        
+        @keyframes flee-shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-2px); }
+            75% { transform: translateX(2px); }
+        }
+        
+        /* Hex grid overlay */
+        .hex-grid {
+            background-image: 
+                linear-gradient(30deg, rgba(255,255,255,0.05) 12%, transparent 12.5%, transparent 87%, rgba(255,255,255,0.05) 87.5%, rgba(255,255,255,0.05)),
+                linear-gradient(150deg, rgba(255,255,255,0.05) 12%, transparent 12.5%, transparent 87%, rgba(255,255,255,0.05) 87.5%, rgba(255,255,255,0.05)),
+                linear-gradient(30deg, rgba(255,255,255,0.05) 12%, transparent 12.5%, transparent 87%, rgba(255,255,255,0.05) 87.5%, rgba(255,255,255,0.05)),
+                linear-gradient(150deg, rgba(255,255,255,0.05) 12%, transparent 12.5%, transparent 87%, rgba(255,255,255,0.05) 87.5%, rgba(255,255,255,0.05));
+            background-size: 24px 42px;
+            background-position: 0 0, 0 0, 12px 21px, 12px 21px;
+        }
+        
+        /* Custom scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(31, 41, 55, 0.5);
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #fbbf24;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #f59e0b;
+        }
+        
+        /* Glassmorphism effect */
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Parchment texture for game log */
+        .parchment {
+            background: 
+                linear-gradient(45deg, rgba(245, 158, 11, 0.1) 0%, transparent 50%),
+                linear-gradient(-45deg, rgba(251, 191, 36, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at center, rgba(217, 119, 6, 0.05) 0%, transparent 70%);
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'tow-gold': '#fbbf24',
+                        'tow-bronze': '#d97706',
+                        'empire-blue': '#3b82f6',
+                        'orc-green': '#10b981',
+                        'battlefield': '#2d5016'
+                    },
+                    fontFamily: {
+                        'cinzel': ['Cinzel', 'serif'],
+                        'medieval': ['UnifrakturMaguntia', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-800 text-white font-sans overflow-x-auto">
+    <!-- Header Section -->
+    <div class="glass border-b border-tow-gold/30">
+        <div class="container mx-auto px-6 py-8">
+            <div class="text-center">
+                <h1 class="text-5xl font-bold text-tow-gold mb-2 tracking-wider">
+                    <i class="fas fa-chess-rook mr-3"></i>
+                    AUTHENTIC WARHAMMER: THE OLD WORLD
+                    <i class="fas fa-chess-rook ml-3"></i>
+                </h1>
+                <p class="text-xl text-gray-300 font-medium">
+                    ⚔️ Featuring Proper Unit Blocks, Formations & Authentic TOW Rules ⚔️
+                </p>
+                <div class="mt-4 text-sm text-tow-gold/80">
+                    <i class="fas fa-ruler-combined mr-2"></i>
+                    Standard 6' × 4' Battlefield (72" × 48")
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div class="container mx-auto px-6 py-6">
+        <!-- Status Panel -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <!-- Game Status -->
+            <div class="glass rounded-xl p-6 border border-tow-gold/30">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-bold text-tow-gold">
+                        <i class="fas fa-dice-d20 mr-2"></i>Game Status
+                    </h3>
+                </div>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-300">Turn:</span>
+                        <span id="current-turn" class="font-bold text-white">1</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-300">Active:</span>
+                        <span id="active-faction" class="font-bold text-empire-blue">Empire</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Army Status -->
+            <div class="glass rounded-xl p-6 border border-empire-blue/30">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-bold text-empire-blue">
+                        <i class="fas fa-shield-alt mr-2"></i>Empire Forces
+                    </h3>
+                </div>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-300">Units:</span>
+                        <span id="empire-units" class="font-bold text-white">0</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-300">Models:</span>
+                        <span id="empire-models" class="font-bold text-white">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orc Status -->
+            <div class="glass rounded-xl p-6 border border-orc-green/30">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-bold text-orc-green">
+                        <i class="fas fa-skull mr-2"></i>Orc Horde
+                    </h3>
+                </div>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-300">Units:</span>
+                        <span id="orc-units" class="font-bold text-white">0</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-300">Models:</span>
+                        <span id="orc-models" class="font-bold text-white">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Objectives -->
+            <div class="glass rounded-xl p-6 border border-tow-gold/30">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-bold text-tow-gold">
+                        <i class="fas fa-flag mr-2"></i>Objectives
+                    </h3>
+                </div>
+                <div id="objective-status" class="text-sm text-gray-300">
+                    No objectives
+                </div>
+            </div>
+        </div>
+
+        <!-- Control Panel -->
+        <div class="glass rounded-xl p-6 mb-8 border border-tow-gold/30">
+            <div class="flex flex-wrap justify-center gap-4">
+                <button id="start-battle" class="bg-gradient-to-r from-tow-gold to-tow-bronze hover:from-tow-bronze hover:to-amber-600 text-black font-bold py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
+                    <i class="fas fa-play mr-2"></i>Start Authentic TOW Battle
+                </button>
+                <button id="pause-battle" class="bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-orange-600 hover:to-red-600 text-white font-bold py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                    <i class="fas fa-pause mr-2"></i>Pause Battle
+                </button>
+                <button id="reset-battle" class="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
+                    <i class="fas fa-redo mr-2"></i>Reset Battle
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Battlefield Area -->
+        <div class="flex flex-col xl:flex-row gap-8">
+            <!-- Battlefield -->
+            <div class="flex-1">
+                <div class="glass rounded-xl p-6 border border-tow-gold/30">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-bold text-tow-gold">
+                            <i class="fas fa-map mr-2"></i>Battlefield
+                        </h3>
+                        <div class="text-sm text-gray-400">
+                            Standard TOW 6' × 4' Table
+                        </div>
+                    </div>
+                    <div class="relative overflow-auto max-h-[600px] rounded-lg border-2 border-amber-800">
+                        <div id="battlefield" class="battlefield hex-grid relative">
+                            <!-- Units will be dynamically added here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Side Panel -->
+            <div class="w-full xl:w-96">
+                <!-- Terrain Legend -->
+                <div class="glass rounded-xl p-6 mb-6 border border-tow-gold/30">
+                    <h3 class="text-lg font-bold text-tow-gold mb-4">
+                        <i class="fas fa-map-marked-alt mr-2"></i>Terrain Features
+                    </h3>
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-4 h-4 bg-green-700/60 border border-green-500 rounded flex items-center justify-center">
+                                🌲
+                            </div>
+                            <span class="text-gray-300">Woods</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-4 h-4 bg-amber-600/50 border border-amber-400 rounded flex items-center justify-center">
+                                ⛰️
+                            </div>
+                            <span class="text-gray-300">Hills</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-4 h-4 bg-gray-600/70 border border-gray-400 rounded flex items-center justify-center">
+                                🏛️
+                            </div>
+                            <span class="text-gray-300">Ruins</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-4 h-4 bg-stone-500/60 border border-stone-300 rounded flex items-center justify-center">
+                                🧱
+                            </div>
+                            <span class="text-gray-300">Walls</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-4 h-4 bg-blue-500/50 border border-blue-300 rounded flex items-center justify-center">
+                                💧
+                            </div>
+                            <span class="text-gray-300">Water</span>
+                        </div>
+                        <div class="text-xs text-gray-400 col-span-2 mt-2 italic">
+                            Placed following authentic TOW rules
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Unit Roster -->
+                <div class="glass rounded-xl p-6 mb-6 border border-tow-gold/30">
+                    <h3 class="text-lg font-bold text-tow-gold mb-4">
+                        <i class="fas fa-users mr-2"></i>Unit Roster
+                    </h3>
+                    <div id="unit-list" class="space-y-2 max-h-64 overflow-y-auto custom-scrollbar">
+                        <!-- Units will be listed here -->
+                    </div>
+                </div>
+
+                <!-- Battle Log -->
+                <div class="glass parchment rounded-xl p-6 border border-tow-gold/30">
+                    <h3 class="text-lg font-bold text-tow-gold mb-4">
+                        <i class="fas fa-scroll mr-2"></i>Battle Chronicle
+                    </h3>
+                    <div id="game-log" class="max-h-80 overflow-y-auto custom-scrollbar space-y-1">
+                        <div class="text-sm text-gray-300 p-2 bg-black/20 rounded border-l-2 border-tow-gold/50">
+                            ⚔️ Authentic TOW Battlefield prepared for glorious combat...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Unit Tooltip -->
+    <div id="unit-tooltip" class="fixed z-50 glass rounded-xl p-4 border border-tow-gold/50 min-w-72 pointer-events-none opacity-0 transition-all duration-300 transform scale-95">
+        <h4 id="tooltip-title" class="text-lg font-bold text-tow-gold mb-2">Unit Name</h4>
+        <div class="grid grid-cols-2 gap-2 text-sm mb-3">
+            <div><strong>Formation:</strong> <span id="tooltip-formation" class="text-gray-300">Close Order</span></div>
+            <div><strong>Models:</strong> <span id="tooltip-models" class="text-gray-300">20/20</span></div>
+            <div><strong>Organization:</strong> <span id="tooltip-organization" class="text-gray-300">4×5</span></div>
+            <div><strong>Status:</strong> <span id="tooltip-status" class="text-gray-300">Ready</span></div>
+        </div>
+        
+        <div class="grid grid-cols-5 gap-1 mb-3">
+            <div class="text-center p-1 bg-black/30 rounded">
+                <div class="text-xs text-gray-400">M</div>
+                <div id="tooltip-m" class="text-sm font-bold text-white">4</div>
+            </div>
+            <div class="text-center p-1 bg-black/30 rounded">
+                <div class="text-xs text-gray-400">WS</div>
+                <div id="tooltip-ws" class="text-sm font-bold text-white">3</div>
+            </div>
+            <div class="text-center p-1 bg-black/30 rounded">
+                <div class="text-xs text-gray-400">BS</div>
+                <div id="tooltip-bs" class="text-sm font-bold text-white">3</div>
+            </div>
+            <div class="text-center p-1 bg-black/30 rounded">
+                <div class="text-xs text-gray-400">S</div>
+                <div id="tooltip-s" class="text-sm font-bold text-white">3</div>
+            </div>
+            <div class="text-center p-1 bg-black/30 rounded">
+                <div class="text-xs text-gray-400">T</div>
+                <div id="tooltip-t" class="text-sm font-bold text-white">3</div>
+            </div>
+        </div>
+        
+        <div class="text-xs space-y-1">
+            <div><strong>Weapons:</strong> <span id="tooltip-weapons" class="text-gray-300">Hand Weapon</span></div>
+            <div><strong>Special Rules:</strong> <span id="tooltip-special" class="text-gray-300">None</span></div>
+        </div>
+    </div>
+
+    <script>
+        const socket = io();
+        let battlefieldState = null;
+        const tooltip = document.getElementById('unit-tooltip');
+        
+        // Correct TOW battlefield dimensions (6' x 4' = 72" x 48")
+        const BATTLEFIELD_WIDTH = 72;
+        const BATTLEFIELD_HEIGHT = 48;
+        const HEX_SIZE = 8;  // Smaller hex size for better fit
+
+        socket.on('connect', function() {
+            console.log('🏛️ Connected to Authentic TOW Battlefield');
+        });
+
+        socket.on('battlefield_update', function(data) {
+            battlefieldState = data;
+            updateBattlefield(data);
+        });
+
+        socket.on('battle_started', function(data) {
+            document.getElementById('start-battle').disabled = true;
+            document.getElementById('pause-battle').disabled = false;
+            addLogEntry('🏛️ Authentic TOW Battle Commenced!', 'empire');
+        });
+
+        socket.on('battle_ended', function(data) {
+            document.getElementById('start-battle').disabled = false;
+            document.getElementById('pause-battle').disabled = true;
+            addLogEntry(`🏆 VICTORY: ${data.winner} (${data.reason})`, 'victory');
+        });
+
+        function updateBattlefield(data) {
+            // Update status panels
+            document.getElementById('current-turn').textContent = data.battlefield.turn;
+            document.getElementById('active-faction').textContent = data.battlefield.active_faction;
+            
+            const empireUnits = data.units.filter(u => u.faction === 'Empire');
+            const orcUnits = data.units.filter(u => u.faction === 'Orcs & Goblins');
+            
+            document.getElementById('empire-units').textContent = empireUnits.length;
+            document.getElementById('orc-units').textContent = orcUnits.length;
+            document.getElementById('empire-models').textContent = empireUnits.reduce((sum, u) => sum + u.current_models, 0);
+            document.getElementById('orc-models').textContent = orcUnits.reduce((sum, u) => sum + u.current_models, 0);
+
+            // Render battlefield
+            renderBattlefield(data);
+            
+            // Update unit list
+            updateUnitList(data.units);
+            
+            // Update game log
+            if (data.game_log) {
+                data.game_log.forEach(entry => addLogEntry(entry));
+            }
+        }
+
+        function renderBattlefield(data) {
+            const battlefield = document.getElementById('battlefield');
+            
+            // Set correct TOW battlefield size
+            const width = BATTLEFIELD_WIDTH * HEX_SIZE;
+            const height = BATTLEFIELD_HEIGHT * HEX_SIZE;
+            battlefield.style.width = width + 'px';
+            battlefield.style.height = height + 'px';
+
+            // Clear existing units and terrain
+            const existingUnits = battlefield.querySelectorAll('.unit-block');
+            existingUnits.forEach(unit => unit.remove());
+            
+            const existingTerrain = battlefield.querySelectorAll('.terrain-feature');
+            existingTerrain.forEach(terrain => terrain.remove());
+
+            // Render terrain features first (under units)
+            if (data.terrain) {
+                data.terrain.forEach(terrain => renderTerrainFeature(battlefield, terrain));
+            }
+
+            // Render all units
+            data.units.forEach(unit => renderUnitBlock(battlefield, unit));
+        }
+
+        function renderTerrainFeature(container, terrain) {
+            // Create terrain overlay for each position
+            terrain.positions.forEach(pos => {
+                const terrainDiv = document.createElement('div');
+                terrainDiv.className = `terrain-feature absolute pointer-events-none`;
+                
+                // Position on hex grid
+                const x = pos[0] * HEX_SIZE;
+                const y = pos[1] * HEX_SIZE;
+                terrainDiv.style.left = x + 'px';
+                terrainDiv.style.top = y + 'px';
+                terrainDiv.style.width = HEX_SIZE + 'px';
+                terrainDiv.style.height = HEX_SIZE + 'px';
+                
+                // Terrain-specific styling
+                let terrainClass = '';
+                let terrainIcon = '';
+                let terrainColor = '';
+                
+                switch (terrain.type) {
+                    case 'Woods':
+                        terrainClass = 'bg-green-700/60 border-green-500';
+                        terrainIcon = '🌲';
+                        terrainColor = 'rgba(21, 128, 61, 0.6)';
+                        break;
+                    case 'Hills':
+                        terrainClass = 'bg-amber-600/50 border-amber-400';
+                        terrainIcon = '⛰️';
+                        terrainColor = 'rgba(217, 119, 6, 0.5)';
+                        break;
+                    case 'Buildings/Ruins':
+                        terrainClass = 'bg-gray-600/70 border-gray-400';
+                        terrainIcon = '🏛️';
+                        terrainColor = 'rgba(75, 85, 99, 0.7)';
+                        break;
+                    case 'Linear Obstacles':
+                        terrainClass = 'bg-stone-500/60 border-stone-300';
+                        terrainIcon = '🧱';
+                        terrainColor = 'rgba(120, 113, 108, 0.6)';
+                        break;
+                    case 'Water Features':
+                        terrainClass = 'bg-blue-500/50 border-blue-300';
+                        terrainIcon = '💧';
+                        terrainColor = 'rgba(59, 130, 246, 0.5)';
+                        break;
+                    default:
+                        terrainClass = 'bg-gray-500/40 border-gray-400';
+                        terrainIcon = '⬟';
+                        terrainColor = 'rgba(107, 114, 128, 0.4)';
+                }
+                
+                // Apply terrain styling
+                terrainDiv.className += ` ${terrainClass} border-2 rounded-lg flex items-center justify-center`;
+                terrainDiv.style.background = `
+                    radial-gradient(circle at center, ${terrainColor}, transparent 80%),
+                    ${terrainColor}
+                `;
+                terrainDiv.style.backdropFilter = 'blur(1px)';
+                terrainDiv.style.zIndex = '1';
+                
+                // Add terrain icon
+                const iconSpan = document.createElement('span');
+                iconSpan.textContent = terrainIcon;
+                iconSpan.style.fontSize = '12px';
+                iconSpan.style.filter = 'drop-shadow(0 1px 2px rgba(0,0,0,0.8))';
+                terrainDiv.appendChild(iconSpan);
+                
+                // Add terrain tooltip
+                terrainDiv.title = `${terrain.type}\nSpecial Rules: ${terrain.special_rules.join(', ')}`;
+                terrainDiv.classList.add('cursor-help');
+                terrainDiv.style.pointerEvents = 'auto';
+                
+                container.appendChild(terrainDiv);
+            });
+        }
+
+        function renderUnitBlock(container, unit) {
+            const unitDiv = document.createElement('div');
+            unitDiv.className = `unit-block ${unit.faction.toLowerCase().replace(' & ', '-')} ${unit.unit_type.toLowerCase()} absolute cursor-pointer z-10`;
+            unitDiv.id = `unit-${unit.id}`;
+            
+            // Add status classes
+            if (unit.status?.is_engaged) unitDiv.classList.add('engaged');
+            if (unit.status?.is_fleeing) unitDiv.classList.add('fleeing');
+
+            // Position the unit block
+            const x = unit.position.x * HEX_SIZE;
+            const y = unit.position.y * HEX_SIZE;
+            unitDiv.style.left = x + 'px';
+            unitDiv.style.top = y + 'px';
+
+            // Create formation grid
+            const formation = document.createElement('div');
+            formation.className = 'unit-formation';
+            formation.style.gridTemplateColumns = `repeat(${unit.files}, 1fr)`;
+            formation.style.gridTemplateRows = `repeat(${unit.ranks}, 1fr)`;
+
+            // Add model squares
+            for (let i = 0; i < unit.current_models; i++) {
+                const square = document.createElement('div');
+                square.className = 'model-square';
+                formation.appendChild(square);
+            }
+
+            // Add empty squares for missing models
+            const totalSlots = unit.ranks * unit.files;
+            for (let i = unit.current_models; i < totalSlots; i++) {
+                const emptySquare = document.createElement('div');
+                emptySquare.className = 'model-square opacity-30';
+                emptySquare.style.background = 'transparent';
+                formation.appendChild(emptySquare);
+            }
+
+            // Add formation indicator
+            const indicator = document.createElement('div');
+            indicator.className = 'formation-indicator';
+            indicator.textContent = unit.formation;
+
+            unitDiv.appendChild(formation);
+            unitDiv.appendChild(indicator);
+
+            // Add tooltip events
+            unitDiv.addEventListener('mouseenter', (e) => showUnitTooltip(e, unit));
+            unitDiv.addEventListener('mouseleave', hideUnitTooltip);
+            unitDiv.addEventListener('mousemove', updateTooltipPosition);
+
+            container.appendChild(unitDiv);
+        }
+
+        function updateUnitList(units) {
+            const unitList = document.getElementById('unit-list');
+            unitList.innerHTML = '';
+            
+            units.forEach(unit => {
+                const factionColor = unit.faction === 'Empire' ? 'border-empire-blue' : 'border-orc-green';
+                const unitEntry = document.createElement('div');
+                unitEntry.className = `glass rounded-lg p-3 border-l-4 ${factionColor} hover:bg-white/5 cursor-pointer transition-all duration-300 transform hover:scale-102`;
+                
+                unitEntry.innerHTML = `
+                    <div class="font-bold text-sm text-white">${unit.name}</div>
+                    <div class="text-xs text-gray-400 mt-1">
+                        ${unit.formation} | ${unit.current_models} models | ${unit.ranks}×${unit.files}
+                    </div>
+                `;
+                
+                unitEntry.addEventListener('click', () => {
+                    const unitElement = document.getElementById(`unit-${unit.id}`);
+                    if (unitElement) {
+                        unitElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        unitElement.style.animation = 'none';
+                        setTimeout(() => {
+                            unitElement.style.animation = 'combat-pulse 1s 3';
+                        }, 100);
+                    }
+                });
+                
+                unitList.appendChild(unitEntry);
+            });
+        }
+
+        function showUnitTooltip(event, unit) {
+            // Populate tooltip
+            document.getElementById('tooltip-title').textContent = unit.name;
+            document.getElementById('tooltip-formation').textContent = unit.formation;
+            document.getElementById('tooltip-models').textContent = `${unit.current_models}/${unit.max_models || unit.current_models}`;
+            document.getElementById('tooltip-organization').textContent = `${unit.ranks}×${unit.files}`;
+            
+            // Stats
+            if (unit.stats) {
+                document.getElementById('tooltip-m').textContent = unit.stats.M;
+                document.getElementById('tooltip-ws').textContent = unit.stats.WS;
+                document.getElementById('tooltip-bs').textContent = unit.stats.BS;
+                document.getElementById('tooltip-s').textContent = unit.stats.S;
+                document.getElementById('tooltip-t').textContent = unit.stats.T;
+            }
+            
+            document.getElementById('tooltip-weapons').textContent = unit.weapons?.join(', ') || 'None';
+            document.getElementById('tooltip-special').textContent = unit.special_rules?.join(', ') || 'None';
+            
+            // Status
+            const statusParts = [];
+            if (unit.status?.has_moved) statusParts.push('Moved');
+            if (unit.status?.has_charged) statusParts.push('Charged');
+            if (unit.status?.is_engaged) statusParts.push('Engaged');
+            if (unit.status?.is_fleeing) statusParts.push('Fleeing');
+            if (unit.status?.is_steadfast) statusParts.push('Steadfast');
+            document.getElementById('tooltip-status').textContent = statusParts.length ? statusParts.join(', ') : 'Ready';
+            
+            tooltip.classList.remove('opacity-0', 'scale-95');
+            tooltip.classList.add('opacity-100', 'scale-100');
+            updateTooltipPosition(event);
+        }
+
+        function hideUnitTooltip() {
+            tooltip.classList.remove('opacity-100', 'scale-100');
+            tooltip.classList.add('opacity-0', 'scale-95');
+        }
+
+        function updateTooltipPosition(event) {
+            const rect = tooltip.getBoundingClientRect();
+            let x = event.pageX + 15;
+            let y = event.pageY - rect.height / 2;
+            
+            // Keep tooltip on screen
+            if (x + rect.width > window.innerWidth) {
+                x = event.pageX - rect.width - 15;
+            }
+            if (y < 0) y = 10;
+            if (y + rect.height > window.innerHeight) y = window.innerHeight - rect.height - 10;
+            
+            tooltip.style.left = x + 'px';
+            tooltip.style.top = y + 'px';
+        }
+
+        function addLogEntry(message, type = 'default') {
+            const logContainer = document.getElementById('game-log');
+            const entry = document.createElement('div');
+            
+            let colorClass = 'border-gray-500/50';
+            if (type === 'empire') colorClass = 'border-empire-blue/50';
+            else if (type === 'orc') colorClass = 'border-orc-green/50';
+            else if (type === 'victory') colorClass = 'border-tow-gold/50';
+            
+            entry.className = `text-sm text-gray-300 p-2 bg-black/20 rounded border-l-2 ${colorClass}`;
+            entry.textContent = message;
+            
+            logContainer.appendChild(entry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+            
+            // Keep only last 50 entries
+            while (logContainer.children.length > 50) {
+                logContainer.removeChild(logContainer.firstChild);
+            }
+        }
+
+        // Event listeners
+        document.getElementById('start-battle').addEventListener('click', () => {
+            socket.emit('start_battle');
+        });
+
+        document.getElementById('reset-battle').addEventListener('click', () => {
+            location.reload();
+        });
+
+        // Initialize
+        window.addEventListener('load', () => {
+            addLogEntry('🏛️ Authentic TOW Battlefield initialized (72" × 48")', 'empire');
+            addLogEntry('⚔️ Proper unit blocks with authentic formations ready', 'default');
+            addLogEntry('🎯 Click "Start Authentic TOW Battle" to begin!', 'default');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏛️ Warhammer AI Battle Visualizer</title>
+    <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: linear-gradient(90deg, #654321, #b8860b);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .controls {
+            background: rgba(0,0,0,0.4);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid #444;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            margin: 0 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        }
+
+        .btn.start {
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+        }
+
+        .btn.stop {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+        }
+
+        .btn.reset {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+        }
+
+        .main-container {
+            display: flex;
+            height: calc(100vh - 200px);
+        }
+
+        .battlefield-container {
+            flex: 1;
+            background: linear-gradient(135deg, #2c5530, #3e7b3e);
+            border: 3px solid #8b4513;
+            margin: 20px;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.3);
+        }
+
+        .battlefield {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(139, 69, 19, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(34, 139, 34, 0.2) 0%, transparent 50%);
+        }
+
+        .grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.2;
+        }
+
+        .hex {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border: 1px solid #555;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .unit {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            z-index: 10;
+        }
+
+        .unit:hover {
+            transform: scale(1.2);
+            z-index: 20;
+        }
+
+        .empire-unit {
+            background: linear-gradient(45deg, #4169e1, #1e90ff);
+            border-color: #ffd700;
+            color: #fff;
+        }
+
+        .orc-unit {
+            background: linear-gradient(45deg, #228b22, #32cd32);
+            border-color: #8b4513;
+            color: #fff;
+        }
+
+        .unit.infantry::before {
+            content: "🛡️";
+            font-size: 20px;
+        }
+
+        .unit.cavalry::before {
+            content: "🐎";
+            font-size: 20px;
+        }
+
+        .unit.artillery::before {
+            content: "🎯";
+            font-size: 20px;
+        }
+
+        .unit.engaged {
+            animation: combat-pulse 1s infinite;
+        }
+
+        @keyframes combat-pulse {
+            0%, 100% { box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4); }
+            50% { box-shadow: 0 4px 25px rgba(255, 0, 0, 0.8); }
+        }
+
+        .sidebar {
+            width: 400px;
+            background: linear-gradient(180deg, #2c3e50, #34495e);
+            border-left: 3px solid #444;
+            overflow-y: auto;
+        }
+
+        .panel {
+            margin: 20px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid #555;
+        }
+
+        .panel h3 {
+            color: #ecf0f1;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+        }
+
+        .turn-info {
+            background: linear-gradient(45deg, #8e44ad, #9b59b6);
+            color: white;
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .army-status {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+
+        .empire-status, .orc-status {
+            flex: 1;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .empire-status {
+            background: linear-gradient(45deg, #4169e1, #1e90ff);
+            margin-right: 10px;
+        }
+
+        .orc-status {
+            background: linear-gradient(45deg, #228b22, #32cd32);
+            margin-left: 10px;
+        }
+
+        .unit-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .unit-item {
+            background: rgba(255,255,255,0.1);
+            margin: 8px 0;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+        }
+
+        .unit-item:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateX(5px);
+        }
+
+        .unit-item.empire {
+            border-left-color: #4169e1;
+        }
+
+        .unit-item.orc {
+            border-left-color: #228b22;
+        }
+
+        .health-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 5px 0;
+        }
+
+        .health-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #e74c3c, #f39c12, #27ae60);
+            transition: width 0.5s ease;
+            border-radius: 4px;
+        }
+
+        .battle-log {
+            max-height: 400px;
+            overflow-y: auto;
+            background: rgba(0,0,0,0.5);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+
+        .log-entry {
+            margin: 5px 0;
+            padding: 8px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.05);
+            border-left: 3px solid #3498db;
+        }
+
+        .log-entry.empire {
+            border-left-color: #4169e1;
+        }
+
+        .log-entry.orc {
+            border-left-color: #228b22;
+        }
+
+        .log-entry.combat {
+            border-left-color: #e74c3c;
+            background: rgba(231, 76, 60, 0.1);
+        }
+
+        .ai-decision {
+            background: rgba(52, 152, 219, 0.1);
+            border: 1px solid #3498db;
+            border-radius: 6px;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        .q-value {
+            font-weight: bold;
+            color: #f39c12;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2em;
+            color: #bdc3c7;
+        }
+
+        .status-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            z-index: 1000;
+        }
+
+        .status-indicator.running {
+            background: #27ae60;
+            color: white;
+        }
+
+        .status-indicator.stopped {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(0,0,0,0.9);
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .tooltip.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏛️ Warhammer AI Battle Visualizer</h1>
+        <p>Watch 300k-trained AIs command armies in real-time tactical warfare</p>
+    </div>
+
+    <div class="controls">
+        <button class="btn start" onclick="startBattle()">⚔️ Start Battle</button>
+        <button class="btn stop" onclick="stopBattle()">🛑 Stop Battle</button>
+        <button class="btn reset" onclick="resetBattle()">🔄 Reset Battle</button>
+    </div>
+
+    <div class="status-indicator" id="status">⚪ Ready</div>
+
+    <div class="main-container">
+        <div class="battlefield-container">
+            <div class="battlefield" id="battlefield">
+                <div class="loading">🎯 Initialize battle to begin visualization</div>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <div class="panel turn-info">
+                <div>Turn <span id="turn-number">0</span></div>
+            </div>
+
+            <div class="panel">
+                <h3>📊 Army Status</h3>
+                <div class="army-status">
+                    <div class="empire-status">
+                        <div>🏛️ Empire</div>
+                        <div id="empire-count">0 units</div>
+                    </div>
+                    <div class="orc-status">
+                        <div>🧌 Orcs</div>
+                        <div id="orc-count">0 units</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3>🎖️ Units</h3>
+                <div class="unit-list" id="unit-list">
+                    <div class="loading">No battle active</div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3>🧠 AI Decisions</h3>
+                <div id="ai-decisions">
+                    <div class="loading">Waiting for AI decisions...</div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3>📜 Battle Log</h3>
+                <div class="battle-log" id="battle-log">
+                    <div class="loading">Battle log will appear here...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+        const socket = io();
+        let currentBattle = null;
+        let battleRunning = false;
+
+        // Initialize grid
+        function initializeGrid() {
+            const grid = document.getElementById('grid');
+            grid.innerHTML = '';
+            for (let y = 0; y < 16; y++) {
+                for (let x = 0; x < 24; x++) {
+                    const hex = document.createElement('div');
+                    hex.className = 'hex';
+                    hex.style.left = `${x * 35 + 10}px`;
+                    hex.style.top = `${y * 35 + 10}px`;
+                    grid.appendChild(hex);
+                }
+            }
+        }
+
+        // Update battlefield visualization
+        function updateBattlefield(state) {
+            const battlefield = document.getElementById('battlefield');
+            const existingUnits = battlefield.querySelectorAll('.unit');
+            existingUnits.forEach(unit => unit.remove());
+
+            // Add Empire units
+            state.empire_units.forEach(unit => {
+                const unitElement = createUnitElement(unit, 'empire');
+                battlefield.appendChild(unitElement);
+            });
+
+            // Add Orc units
+            state.orc_units.forEach(unit => {
+                const unitElement = createUnitElement(unit, 'orc');
+                battlefield.appendChild(unitElement);
+            });
+
+            // Update turn counter
+            document.getElementById('turn-number').textContent = state.turn;
+
+            // Update army counts
+            document.getElementById('empire-count').textContent = `${state.empire_units.length} units`;
+            document.getElementById('orc-count').textContent = `${state.orc_units.length} units`;
+
+            // Update unit list
+            updateUnitList(state);
+        }
+
+        function createUnitElement(unit, faction) {
+            const unitEl = document.createElement('div');
+            unitEl.className = `unit ${faction}-unit ${unit.type.toLowerCase()}`;
+            unitEl.id = `unit-${unit.id}`;
+            
+            if (unit.is_engaged) {
+                unitEl.classList.add('engaged');
+            }
+
+            unitEl.style.left = `${unit.position.x * 35 + 10}px`;
+            unitEl.style.top = `${unit.position.y * 35 + 10}px`;
+            
+            unitEl.textContent = unit.models;
+            
+            // Add tooltip
+            unitEl.addEventListener('mouseenter', (e) => showTooltip(e, unit));
+            unitEl.addEventListener('mouseleave', hideTooltip);
+
+            return unitEl;
+        }
+
+        function updateUnitList(state) {
+            const unitList = document.getElementById('unit-list');
+            unitList.innerHTML = '';
+
+            // Empire units
+            state.empire_units.forEach(unit => {
+                const item = document.createElement('div');
+                item.className = 'unit-item empire';
+                item.innerHTML = `
+                    <strong>${unit.name}</strong> (${unit.models}/${unit.max_models})
+                    <div class="health-bar">
+                        <div class="health-fill" style="width: ${unit.health_percent * 100}%"></div>
+                    </div>
+                    <small>Position: (${unit.position.x}, ${unit.position.y})</small>
+                `;
+                unitList.appendChild(item);
+            });
+
+            // Orc units
+            state.orc_units.forEach(unit => {
+                const item = document.createElement('div');
+                item.className = 'unit-item orc';
+                item.innerHTML = `
+                    <strong>${unit.name}</strong> (${unit.models}/${unit.max_models})
+                    <div class="health-bar">
+                        <div class="health-fill" style="width: ${unit.health_percent * 100}%"></div>
+                    </div>
+                    <small>Position: (${unit.position.x}, ${unit.position.y})</small>
+                `;
+                unitList.appendChild(item);
+            });
+        }
+
+        function updateAIDecisions(turnLog) {
+            const decisionsDiv = document.getElementById('ai-decisions');
+            decisionsDiv.innerHTML = `
+                <div class="ai-decision">
+                    <strong>🏛️ Empire AI:</strong> ${turnLog.empire_decision.action_name}<br>
+                    <span class="q-value">Q-Value: ${turnLog.empire_decision.q_value.toFixed(3)}</span><br>
+                    <small>Commands: ${turnLog.empire_decision.commands}</small>
+                </div>
+                <div class="ai-decision">
+                    <strong>🧌 Orc AI:</strong> ${turnLog.orc_decision.action_name}<br>
+                    <span class="q-value">Q-Value: ${turnLog.orc_decision.q_value.toFixed(3)}</span><br>
+                    <small>Commands: ${turnLog.orc_decision.commands}</small>
+                </div>
+            `;
+        }
+
+        function updateBattleLog(turnLog) {
+            const logDiv = document.getElementById('battle-log');
+            
+            // Add turn header
+            const turnEntry = document.createElement('div');
+            turnEntry.className = 'log-entry';
+            turnEntry.innerHTML = `<strong>TURN ${turnLog.turn}</strong>`;
+            logDiv.appendChild(turnEntry);
+
+            // Add events
+            turnLog.events.forEach(event => {
+                const entry = document.createElement('div');
+                entry.className = `log-entry ${event.type.includes('SHOOTING') || event.type.includes('CHARGE') ? 'combat' : ''}`;
+                
+                let message = '';
+                switch (event.type) {
+                    case 'MOVE':
+                        message = `${event.unit} moves from (${event.from[0]},${event.from[1]}) to (${event.to[0]},${event.to[1]})`;
+                        break;
+                    case 'SHOOTING_HIT':
+                        message = `${event.shooter} hits ${event.target}! ${event.killed} model(s) killed`;
+                        break;
+                    case 'SHOOTING_MISS':
+                        message = `${event.shooter} shoots at ${event.target} but misses`;
+                        break;
+                    case 'SHOOTING_SAVED':
+                        message = `${event.target} saves against ${event.shooter}'s attack`;
+                        break;
+                    case 'CHARGE_SUCCESS':
+                        message = `${event.charger} successfully charges ${event.target}!`;
+                        break;
+                    case 'CHARGE_FAILED':
+                        message = `${event.charger} fails to charge ${event.target} (distance: ${event.distance})`;
+                        break;
+                    default:
+                        message = JSON.stringify(event);
+                }
+                
+                entry.textContent = message;
+                logDiv.appendChild(entry);
+            });
+
+            // Auto-scroll to bottom
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function showTooltip(e, unit) {
+            const tooltip = document.getElementById('tooltip');
+            tooltip.innerHTML = `
+                <strong>${unit.name}</strong><br>
+                Type: ${unit.type}<br>
+                Models: ${unit.models}/${unit.max_models}<br>
+                Health: ${(unit.health_percent * 100).toFixed(1)}%<br>
+                Position: (${unit.position.x}, ${unit.position.y})<br>
+                Can Move: ${unit.can_move ? 'Yes' : 'No'}<br>
+                Can Shoot: ${unit.can_shoot ? 'Yes' : 'No'}
+            `;
+            tooltip.style.left = `${e.pageX + 10}px`;
+            tooltip.style.top = `${e.pageY + 10}px`;
+            tooltip.classList.add('show');
+        }
+
+        function hideTooltip() {
+            const tooltip = document.getElementById('tooltip');
+            tooltip.classList.remove('show');
+        }
+
+        function updateStatus(text, className = '') {
+            const status = document.getElementById('status');
+            status.textContent = text;
+            status.className = `status-indicator ${className}`;
+        }
+
+        // Battle control functions
+        function startBattle() {
+            socket.emit('start_battle');
+            updateStatus('🔄 Starting Battle...', 'running');
+        }
+
+        function stopBattle() {
+            socket.emit('stop_battle');
+            updateStatus('⏹️ Battle Stopped', 'stopped');
+        }
+
+        function resetBattle() {
+            socket.emit('reset_battle');
+            updateStatus('🔄 Resetting...', '');
+        }
+
+        // Socket event handlers
+        socket.on('battle_started', (data) => {
+            battleRunning = true;
+            updateStatus('⚔️ Battle Active', 'running');
+            console.log(data.message);
+        });
+
+        socket.on('battle_update', (data) => {
+            updateBattlefield(data.state);
+            updateAIDecisions(data.turn_log);
+            updateBattleLog(data.turn_log);
+        });
+
+        socket.on('battle_ended', (data) => {
+            battleRunning = false;
+            updateStatus('🏁 Battle Ended', 'stopped');
+            updateBattlefield(data.final_state);
+            console.log(`Battle ended after ${data.total_turns} turns`);
+        });
+
+        socket.on('battle_stopped', (data) => {
+            battleRunning = false;
+            updateStatus('⏹️ Battle Stopped', 'stopped');
+            console.log(data.message);
+        });
+
+        socket.on('battle_reset', (data) => {
+            updateBattlefield(data.state);
+            updateStatus('⚪ Ready', '');
+            document.getElementById('battle-log').innerHTML = '<div class="loading">Battle log will appear here...</div>';
+            document.getElementById('ai-decisions').innerHTML = '<div class="loading">Waiting for AI decisions...</div>';
+            console.log(data.message);
+        });
+
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            initializeGrid();
+            updateStatus('⚪ Ready', '');
+        });
+    </script>
+</body>
+</html> 

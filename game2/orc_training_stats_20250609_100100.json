@@ -1,0 +1,25 @@
+{
+  "faction": "orc",
+  "games_completed": 1000,
+  "wins": 172,
+  "losses": 828,
+  "draws": 0,
+  "win_rate": 0.172,
+  "average_score": 167.216,
+  "best_score": 198,
+  "top_strategies": {
+    "11": 172,
+    "12": 129,
+    "0": 97,
+    "7": 97,
+    "8": 97,
+    "6": 97,
+    "4": 74,
+    "10": 74,
+    "5": 42,
+    "13": 42
+  },
+  "epsilon": 0.9950373424397556,
+  "timestamp": "20250609_100100",
+  "training_time_hours": 0
+}

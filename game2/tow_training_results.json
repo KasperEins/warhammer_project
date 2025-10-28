@@ -1,0 +1,78 @@
+{
+  "orc_preferences": {
+    "Orc Big Boss": 0.0,
+    "Orc Boyz": 0.0,
+    "Night Goblins": 0.0,
+    "Orc Arrer Boyz": 0.0,
+    "Wolf Riders": 0.0,
+    "Trolls": 0.0
+  },
+  "nuln_preferences": {
+    "Engineer": 1.0,
+    "Handgunners": 1.0,
+    "Crossbowmen": 1.0,
+    "Swordsmen": 1.0,
+    "Great Cannon": 1.0,
+    "Outriders": 1.0
+  },
+  "orc_best_armies": [],
+  "nuln_best_armies": [
+    [
+      {
+        "Engineer": 6,
+        "Handgunners": 4,
+        "Crossbowmen": 5,
+        "Swordsmen": 5,
+        "Great Cannon": 7,
+        "Outriders": 4
+      },
+      0.9612197309417041
+    ],
+    [
+      {
+        "Engineer": 6,
+        "Handgunners": 4,
+        "Crossbowmen": 5,
+        "Swordsmen": 5,
+        "Great Cannon": 7,
+        "Outriders": 4
+      },
+      0.9602552415679125
+    ],
+    [
+      {
+        "Engineer": 6,
+        "Handgunners": 4,
+        "Crossbowmen": 5,
+        "Swordsmen": 7,
+        "Great Cannon": 7,
+        "Outriders": 5
+      },
+      0.9599657827202737
+    ],
+    [
+      {
+        "Engineer": 6,
+        "Handgunners": 4,
+        "Crossbowmen": 5,
+        "Swordsmen": 5,
+        "Great Cannon": 7,
+        "Outriders": 5
+      },
+      0.9590837004405286
+    ],
+    [
+      {
+        "Engineer": 6,
+        "Handgunners": 4,
+        "Crossbowmen": 5,
+        "Swordsmen": 5,
+        "Great Cannon": 7,
+        "Outriders": 5
+      },
+      0.9590837004405286
+    ]
+  ],
+  "orc_win_rate": 0.0,
+  "nuln_win_rate": 1.0
+}

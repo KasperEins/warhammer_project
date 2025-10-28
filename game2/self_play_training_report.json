@@ -1,0 +1,611 @@
+{
+  "total_battles": 10000,
+  "final_empire_wins": 4095,
+  "final_orc_wins": 0,
+  "final_draws": 0,
+  "final_empire_win_rate": 40.949999999999996,
+  "final_orc_win_rate": 0.0,
+  "win_rate_evolution": [
+    {
+      "battle": 100,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 200,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 300,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 400,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 500,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 600,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 700,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 800,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 900,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 1000,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 1100,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 1200,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 1300,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 1400,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 1500,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 1600,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 1700,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 1800,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 1900,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 2000,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 2100,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 2200,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 2300,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 2400,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 2500,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 2600,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 2700,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 2800,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 2900,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 3000,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 3100,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 3200,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 3300,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 3400,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 3500,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 3600,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 3700,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 3800,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 3900,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 4000,
+      "empire_wins": 100.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 4100,
+      "empire_wins": 99.8780487804878,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 4200,
+      "empire_wins": 97.5,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 4300,
+      "empire_wins": 95.23255813953489,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 4400,
+      "empire_wins": 93.06818181818181,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 4500,
+      "empire_wins": 91.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 4600,
+      "empire_wins": 89.02173913043478,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 4700,
+      "empire_wins": 87.12765957446808,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 4800,
+      "empire_wins": 85.3125,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 4900,
+      "empire_wins": 83.57142857142857,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 5000,
+      "empire_wins": 81.89999999999999,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 5100,
+      "empire_wins": 80.29411764705883,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 5200,
+      "empire_wins": 78.75,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 5300,
+      "empire_wins": 77.26415094339623,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 5400,
+      "empire_wins": 75.83333333333333,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 5500,
+      "empire_wins": 74.45454545454545,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 5600,
+      "empire_wins": 73.125,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 5700,
+      "empire_wins": 71.84210526315789,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 5800,
+      "empire_wins": 70.60344827586206,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 5900,
+      "empire_wins": 69.40677966101696,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 6000,
+      "empire_wins": 68.25,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 6100,
+      "empire_wins": 67.1311475409836,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 6200,
+      "empire_wins": 66.04838709677419,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 6300,
+      "empire_wins": 65.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 6400,
+      "empire_wins": 63.98437500000001,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 6500,
+      "empire_wins": 63.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 6600,
+      "empire_wins": 62.04545454545455,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 6700,
+      "empire_wins": 61.11940298507462,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 6800,
+      "empire_wins": 60.220588235294116,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 6900,
+      "empire_wins": 59.34782608695652,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 7000,
+      "empire_wins": 58.5,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 7100,
+      "empire_wins": 57.67605633802817,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 7200,
+      "empire_wins": 56.875,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 7300,
+      "empire_wins": 56.0958904109589,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 7400,
+      "empire_wins": 55.33783783783783,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 7500,
+      "empire_wins": 54.6,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 7600,
+      "empire_wins": 53.881578947368425,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 7700,
+      "empire_wins": 53.18181818181819,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 7800,
+      "empire_wins": 52.5,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 7900,
+      "empire_wins": 51.835443037974684,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 8000,
+      "empire_wins": 51.1875,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 8100,
+      "empire_wins": 50.55555555555556,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 8200,
+      "empire_wins": 49.9390243902439,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 8300,
+      "empire_wins": 49.337349397590366,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 8400,
+      "empire_wins": 48.75,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 8500,
+      "empire_wins": 48.17647058823529,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 8600,
+      "empire_wins": 47.616279069767444,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 8700,
+      "empire_wins": 47.06896551724138,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 8800,
+      "empire_wins": 46.53409090909091,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 8900,
+      "empire_wins": 46.01123595505618,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 9000,
+      "empire_wins": 45.5,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 9100,
+      "empire_wins": 45.0,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 9200,
+      "empire_wins": 44.51086956521739,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 9300,
+      "empire_wins": 44.03225806451613,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 9400,
+      "empire_wins": 43.56382978723404,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 9500,
+      "empire_wins": 43.10526315789473,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 9600,
+      "empire_wins": 42.65625,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 9700,
+      "empire_wins": 42.21649484536083,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 9800,
+      "empire_wins": 41.785714285714285,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 9900,
+      "empire_wins": 41.36363636363637,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    },
+    {
+      "battle": 10000,
+      "empire_wins": 40.949999999999996,
+      "orc_wins": 0.0,
+      "draws": 0.0
+    }
+  ],
+  "training_completed": "2025-06-08T12:55:47.997221"
+}

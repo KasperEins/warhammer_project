@@ -1,0 +1,7 @@
+{
+  "total_battles": 100000,
+  "orc_win_rate": 0.28334,
+  "training_time": 1.085852861404419,
+  "final_alpha": 0.5,
+  "final_exploration": 0.4
+}

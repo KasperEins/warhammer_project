@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚔️ Warhammer: The Old World - Epic Battle System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cinzel', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #f4f4f4;
+            overflow-x: hidden;
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(90deg, #8b0000, #ffd700, #8b0000);
+            border-bottom: 3px solid #ffd700;
+            box-shadow: 0 4px 20px rgba(255, 215, 0, 0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            color: #f0f0f0;
+            font-style: italic;
+        }
+
+        .game-container {
+            display: flex;
+            height: calc(100vh - 140px);
+            gap: 10px;
+            padding: 10px;
+        }
+
+        .battlefield-container {
+            flex: 3;
+            background: linear-gradient(45deg, #2a4d1a, #1a3d0a);
+            border: 3px solid #8b7355;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
+        }
+
+        #battlefield {
+            width: 100%;
+            height: 100%;
+            cursor: crosshair;
+        }
+
+        .controls-panel {
+            flex: 1;
+            background: linear-gradient(135deg, #2c1810, #4a2c20);
+            border: 2px solid #8b4513;
+            border-radius: 10px;
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .panel-section {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: rgba(139, 69, 19, 0.2);
+            border-radius: 8px;
+            border: 1px solid #8b4513;
+        }
+
+        .panel-section h3 {
+            color: #ffd700;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+
+        .army-display {
+            margin-bottom: 15px;
+        }
+
+        .army-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 5px;
+        }
+
+        .empire-army {
+            background: rgba(0, 100, 200, 0.3);
+            border-left: 4px solid #0064c8;
+            color: #87ceeb;
+        }
+
+        .orc-army {
+            background: rgba(200, 0, 0, 0.3);
+            border-left: 4px solid #c80000;
+            color: #ffb6c1;
+        }
+
+        .unit-card {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid #555;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 8px 0;
+            transition: all 0.3s ease;
+        }
+
+        .unit-card:hover {
+            background: rgba(255,215,0,0.1);
+            border-color: #ffd700;
+            transform: translateX(5px);
+        }
+
+        .unit-name {
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 5px;
+        }
+
+        .unit-stats {
+            font-size: 0.9em;
+            color: #ccc;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px;
+        }
+
+        .phase-indicator {
+            text-align: center;
+            padding: 15px;
+            font-size: 1.4em;
+            font-weight: bold;
+            background: linear-gradient(90deg, #8b0000, #ffd700);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            animation: phaseGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes phaseGlow {
+            from { box-shadow: 0 0 10px rgba(255,215,0,0.5); }
+            to { box-shadow: 0 0 25px rgba(255,215,0,0.8); }
+        }
+
+        .battle-log {
+            background: rgba(0,0,0,0.6);
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 15px;
+            height: 200px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .log-entry {
+            margin: 5px 0;
+            padding: 3px 8px;
+            border-radius: 3px;
+        }
+
+        .log-movement { background: rgba(0,100,0,0.3); }
+        .log-shooting { background: rgba(255,165,0,0.3); }
+        .log-charge { background: rgba(255,0,0,0.3); }
+        .log-combat { background: rgba(128,0,128,0.3); }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px;
+            background: linear-gradient(45deg, #8b4513, #a0522d);
+            border: 2px solid #ffd700;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background: linear-gradient(45deg, #a0522d, #8b4513);
+            box-shadow: 0 0 15px rgba(255,215,0,0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .terrain-legend {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            font-size: 0.8em;
+        }
+
+        .terrain-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .terrain-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+            border: 1px solid #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>⚔️ WARHAMMER: THE OLD WORLD ⚔️</h1>
+        <p>Epic Battles in the Age of Three Emperors</p>
+    </div>
+
+    <div class="game-container">
+        <div class="battlefield-container">
+            <canvas id="battlefield" width="1200" height="800"></canvas>
+        </div>
+
+        <div class="controls-panel">
+            <div class="panel-section">
+                <div id="phaseIndicator" class="phase-indicator">
+                    TURN 1 - EMPIRE MOVEMENT
+                </div>
+            </div>
+
+            <div class="panel-section">
+                <h3>🔵 EMPIRE FORCES</h3>
+                <div id="empireArmy" class="army-display"></div>
+            </div>
+
+            <div class="panel-section">
+                <h3>🔴 ORC WARBAND</h3>
+                <div id="orcArmy" class="army-display"></div>
+            </div>
+
+            <div class="panel-section">
+                <h3>📜 BATTLE CHRONICLE</h3>
+                <div id="battleLog" class="battle-log"></div>
+            </div>
+
+            <div class="panel-section">
+                <h3>🗺️ TERRAIN GUIDE</h3>
+                <div class="terrain-legend">
+                    <div class="terrain-item">
+                        <div class="terrain-color" style="background: #0d3300;"></div>
+                        <span>Forest</span>
+                    </div>
+                    <div class="terrain-item">
+                        <div class="terrain-color" style="background: #8b4513;"></div>
+                        <span>Hills</span>
+                    </div>
+                    <div class="terrain-item">
+                        <div class="terrain-color" style="background: #8b7355;"></div>
+                        <span>Roads</span>
+                    </div>
+                    <div class="terrain-item">
+                        <div class="terrain-color" style="background: #696969;"></div>
+                        <span>Ruins</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn" onclick="nextPhase()">Next Phase</button>
+                <button class="btn" onclick="autoPlay()">Auto Play</button>
+                <button class="btn" onclick="resetBattle()">New Battle</button>
+                <button class="btn" onclick="pauseBattle()">Pause</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+                 // Game State
+         let gameState = {
+             turn: 1,
+             currentPlayer: 1, // 1 = Empire, 2 = Orcs
+             phase: 'movement', // movement, magic, shooting, charges, combat, rally
+             units: [],
+             battleLog: [],
+             isAutoPaused: false,
+             selectedUnit: null,
+             victoryPoints: {1: 0, 2: 0},
+             armyBreakPoints: {1: 0, 2: 0},
+             battleScenario: 'Pitched Battle'
+         };
+
+        // Canvas setup
+        const canvas = document.getElementById('battlefield');
+        const ctx = canvas.getContext('2d');
+
+        // Combat Tables
+        const TO_HIT_TABLE = {
+            // [AttackerWS][DefenderWS] = target number
+            1: [4,4,5,5,5,5,5,5,5,5],
+            2: [3,4,4,5,5,5,5,5,5,5],
+            3: [3,3,4,4,5,5,5,5,5,5],
+            4: [3,3,3,4,4,5,5,5,5,5],
+            5: [3,3,3,3,4,4,5,5,5,5],
+            6: [3,3,3,3,3,4,4,5,5,5],
+            7: [3,3,3,3,3,3,4,4,5,5],
+            8: [3,3,3,3,3,3,3,4,4,5],
+            9: [3,3,3,3,3,3,3,3,4,4],
+            10: [3,3,3,3,3,3,3,3,3,4]
+        };
+
+        const WOUND_TABLE = {
+            // Strength vs Toughness wound target numbers
+            getWoundTarget: (str, tough) => {
+                const diff = str - tough;
+                if (diff >= 2) return 2;
+                if (diff === 1) return 3;
+                if (diff === 0) return 4;
+                if (diff === -1) return 5;
+                return 6;
+            }
+        };
+
+        // Psychology Rules
+        const PSYCHOLOGY = {
+            FEAR: 'fear',
+            TERROR: 'terror',
+            FRENZY: 'frenzy',
+            HATRED: 'hatred',
+            STUBBORN: 'stubborn',
+            IMMUNE_TO_PSYCHOLOGY: 'immune'
+        };
+
+        // Unit Classes
+        class OldWorldUnit {
+            constructor(config) {
+                Object.assign(this, config);
+                this.id = Math.random().toString(36).substr(2, 9);
+                this.currentModels = this.maxModels;
+                this.hasCharged = false;
+                this.isFleeing = false;
+                this.isShaken = false;
+                this.formation = this.formation || 'deep';
+                                 this.psychology = this.psychology || [];
+                 this.specialRules = this.specialRules || [];
+                 this.armorPiercing = this.armorPiercing || 0;
+                 this.multipleWounds = this.multipleWounds || 1;
+                 this.pointValue = this.pointValue || 100;
+                 this.flankBonus = 0;
+                 this.rearBonus = 0;
+                 this.inCombatWith = null;
+                 this.rallyAttempts = 0;
+                 this.updateFormation();
+            }
+
+            updateFormation() {
+                if (this.currentModels <= 0) {
+                    this.width = 0;
+                    this.depth = 0;
+                    return;
+                }
+
+                switch(this.formation) {
+                    case 'deep':
+                        this.width = Math.min(5, this.currentModels);
+                        this.depth = Math.ceil(this.currentModels / this.width);
+                        break;
+                    case 'wide':
+                        this.width = Math.min(10, this.currentModels);
+                        this.depth = Math.ceil(this.currentModels / this.width);
+                        break;
+                    case 'skirmish':
+                        this.width = Math.min(6, this.currentModels);
+                        this.depth = Math.ceil(this.currentModels / this.width);
+                        break;
+                }
+            }
+
+            isAlive() {
+                return this.currentModels > 0 && !this.isFleeing;
+            }
+
+            getFormationPoints() {
+                if (!this.isAlive()) return [];
+                
+                const frontWidth = this.width * 20; // 20px per model
+                const depthSize = this.depth * 20;
+                
+                const angle = this.facing * Math.PI / 180;
+                const cos = Math.cos(angle);
+                const sin = Math.sin(angle);
+                
+                const corners = [
+                    [-frontWidth/2, -depthSize/2],
+                    [frontWidth/2, -depthSize/2],
+                    [frontWidth/2, depthSize/2],
+                    [-frontWidth/2, depthSize/2]
+                ];
+                
+                return corners.map(([x, y]) => [
+                    x * cos - y * sin + this.x,
+                    x * sin + y * cos + this.y
+                ]);
+            }
+        }
+
+        // Initialize Armies
+        function createArmies() {
+            gameState.units = [
+                                 // EMPIRE FORCES
+                 new OldWorldUnit({
+                     name: "Empire Halberdiers",
+                     x: 200, y: 300, facing: 90,
+                     maxModels: 20, unitType: 'infantry',
+                     formation: 'deep',
+                     movement: 4, weaponSkill: 3, ballisticSkill: 3,
+                     strength: 3, toughness: 3, wounds: 1,
+                     attacks: 1, leadership: 7, armor: 5,
+                     player: 1, color: '#0064c8', weaponRange: 0,
+                     specialRules: ['Standard', 'Musician'],
+                     psychology: []
+                 }),
+                new OldWorldUnit({
+                    name: "Handgunners",
+                    x: 150, y: 200, facing: 90,
+                    maxModels: 15, unitType: 'infantry',
+                    formation: 'wide',
+                    movement: 4, weaponSkill: 3, ballisticSkill: 4,
+                    strength: 3, toughness: 3, wounds: 1,
+                    attacks: 1, leadership: 7, armor: 5,
+                    player: 1, color: '#87ceeb', weaponRange: 24
+                }),
+                                 new OldWorldUnit({
+                     name: "Great Cannon",
+                     x: 100, y: 250, facing: 90,
+                     maxModels: 3, unitType: 'artillery',
+                     formation: 'skirmish',
+                     movement: 0, weaponSkill: 0, ballisticSkill: 4,
+                     strength: 10, toughness: 7, wounds: 3,
+                     attacks: 0, leadership: 7, armor: 6,
+                     player: 1, color: '#000080', weaponRange: 48,
+                     armorPiercing: 3, multipleWounds: 3,
+                     specialRules: ['Artillery', 'Crew'],
+                     psychology: []
+                 }),
+                                 new OldWorldUnit({
+                     name: "Empire Knights",
+                     x: 250, y: 150, facing: 90,
+                     maxModels: 6, unitType: 'cavalry',
+                     formation: 'wide',
+                     movement: 8, weaponSkill: 4, ballisticSkill: 3,
+                     strength: 3, toughness: 3, wounds: 1,
+                     attacks: 1, leadership: 8, armor: 3,
+                     player: 1, color: '#800080', weaponRange: 0,
+                     specialRules: ['Heavy Cavalry', 'Lance'],
+                     psychology: []
+                 }),
+                 new OldWorldUnit({
+                     name: "Empire Wizard",
+                     x: 120, y: 180, facing: 90,
+                     maxModels: 1, unitType: 'wizard',
+                     formation: 'skirmish',
+                     movement: 4, weaponSkill: 3, ballisticSkill: 3,
+                     strength: 3, toughness: 3, wounds: 2,
+                     attacks: 1, leadership: 8, armor: 7,
+                     player: 1, color: '#4169e1', weaponRange: 0,
+                     magicLevel: 2, magicLore: 'Fire',
+                     specialRules: ['Wizard', 'Magic Resistance'],
+                     psychology: []
+                 }),
+
+                // ORC FORCES
+                new OldWorldUnit({
+                    name: "Orc Boyz",
+                    x: 900, y: 300, facing: 270,
+                    maxModels: 25, unitType: 'infantry',
+                    formation: 'deep',
+                    movement: 4, weaponSkill: 3, ballisticSkill: 3,
+                    strength: 3, toughness: 4, wounds: 1,
+                    attacks: 1, leadership: 7, armor: 6,
+                    player: 2, color: '#c80000', weaponRange: 0
+                }),
+                new OldWorldUnit({
+                    name: "Orc Archers",
+                    x: 950, y: 200, facing: 270,
+                    maxModels: 15, unitType: 'infantry',
+                    formation: 'wide',
+                    movement: 4, weaponSkill: 3, ballisticSkill: 3,
+                    strength: 3, toughness: 4, wounds: 1,
+                    attacks: 1, leadership: 6, armor: 7,
+                    player: 2, color: '#8b0000', weaponRange: 18
+                }),
+                                 new OldWorldUnit({
+                     name: "Wolf Riders",
+                     x: 1000, y: 150, facing: 270,
+                     maxModels: 6, unitType: 'cavalry',
+                     formation: 'wide',
+                     movement: 9, weaponSkill: 3, ballisticSkill: 3,
+                     strength: 3, toughness: 3, wounds: 1,
+                     attacks: 1, leadership: 6, armor: 6,
+                     player: 2, color: '#ff8c00', weaponRange: 0,
+                     specialRules: ['Fast Cavalry', 'Vanguard'],
+                     psychology: []
+                 }),
+                 new OldWorldUnit({
+                     name: "Orc Warboss",
+                     x: 950, y: 350, facing: 270,
+                     maxModels: 1, unitType: 'character',
+                     formation: 'skirmish',
+                     movement: 4, weaponSkill: 6, ballisticSkill: 3,
+                     strength: 5, toughness: 5, wounds: 3,
+                     attacks: 4, leadership: 9, armor: 3,
+                     player: 2, color: '#8b0000', weaponRange: 0,
+                     specialRules: ['Leader', 'Immune to Psychology', 'Causes Fear'],
+                     psychology: [PSYCHOLOGY.IMMUNE_TO_PSYCHOLOGY, PSYCHOLOGY.FEAR],
+                     pointValue: 200
+                 }),
+                 new OldWorldUnit({
+                     name: "Giant Spider",
+                     x: 1050, y: 400, facing: 270,
+                     maxModels: 1, unitType: 'monster',
+                     formation: 'skirmish',
+                     movement: 6, weaponSkill: 4, ballisticSkill: 0,
+                     strength: 5, toughness: 5, wounds: 4,
+                     attacks: 3, leadership: 8, armor: 4,
+                     player: 2, color: '#2f4f2f', weaponRange: 0,
+                     specialRules: ['Large Target', 'Causes Terror', 'Poisoned Attacks'],
+                     psychology: [PSYCHOLOGY.TERROR],
+                     pointValue: 250
+                 }),
+                 new OldWorldUnit({
+                     name: "Orc Shaman",
+                     x: 980, y: 250, facing: 270,
+                     maxModels: 1, unitType: 'wizard',
+                     formation: 'skirmish',
+                     movement: 4, weaponSkill: 4, ballisticSkill: 3,
+                     strength: 4, toughness: 4, wounds: 2,
+                     attacks: 2, leadership: 8, armor: 6,
+                     player: 2, color: '#2f4f2f', weaponRange: 0,
+                     magicLevel: 1, magicLore: 'Waaagh',
+                     specialRules: ['Wizard', 'Frenzy'],
+                     psychology: [PSYCHOLOGY.FRENZY]
+                 })
+            ];
+        }
+
+        // Drawing Functions
+        function drawBattlefield() {
+            // Clear canvas
+            ctx.fillStyle = '#2a4d1a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw measurement grid
+            ctx.strokeStyle = 'rgba(139, 115, 85, 0.3)';
+            ctx.lineWidth = 1;
+            for (let x = 0; x < canvas.width; x += 60) { // 6" grid
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            for (let y = 0; y < canvas.height; y += 60) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+
+            // Draw terrain
+            drawTerrain();
+            
+            // Draw units
+            gameState.units.forEach(unit => drawUnit(unit));
+        }
+
+                 // Terrain System
+         const TERRAIN = {
+             forest: {x: 200, y: 100, width: 250, height: 150, type: 'difficult', cover: 5, movement: 0.5},
+             hill: {x: 680, y: 270, width: 240, height: 160, type: 'elevated', cover: 4, movement: 0.75},
+             road: {x: 0, y: 280, width: canvas.width, height: 40, type: 'open', cover: 0, movement: 1.5},
+             ruins: {x: 100, y: 450, width: 60, height: 80, type: 'hard_cover', cover: 3, movement: 0.5},
+             river: {x: 500, y: 0, width: 80, height: canvas.height, type: 'impassable', cover: 0, movement: 0}
+         };
+
+         function getTerrainAt(x, y) {
+             for (const [name, terrain] of Object.entries(TERRAIN)) {
+                 if (x >= terrain.x && x <= terrain.x + terrain.width &&
+                     y >= terrain.y && y <= terrain.y + terrain.height) {
+                     return terrain;
+                 }
+             }
+             return {type: 'open', cover: 0, movement: 1};
+         }
+
+         function drawTerrain() {
+             // Ancient Forest
+             ctx.fillStyle = '#0d3300';
+             ctx.fillRect(TERRAIN.forest.x, TERRAIN.forest.y, TERRAIN.forest.width, TERRAIN.forest.height);
+             
+             // Individual trees
+             ctx.fillStyle = '#228b22';
+             [[230, 130], [280, 170], [320, 120], [380, 180], [350, 150]].forEach(([x, y]) => {
+                 ctx.beginPath();
+                 ctx.arc(x, y, 15, 0, 2 * Math.PI);
+                 ctx.fill();
+             });
+
+             // Hill
+             ctx.fillStyle = '#8b4513';
+             ctx.beginPath();
+             ctx.ellipse(TERRAIN.hill.x + TERRAIN.hill.width/2, TERRAIN.hill.y + TERRAIN.hill.height/2, 
+                        TERRAIN.hill.width/2, TERRAIN.hill.height/2, 0, 0, 2 * Math.PI);
+             ctx.fill();
+
+             // Road
+             ctx.fillStyle = '#8b7355';
+             ctx.fillRect(TERRAIN.road.x, TERRAIN.road.y, TERRAIN.road.width, TERRAIN.road.height);
+
+             // Ruins
+             ctx.fillStyle = '#696969';
+             ctx.fillRect(TERRAIN.ruins.x, TERRAIN.ruins.y, TERRAIN.ruins.width, TERRAIN.ruins.height);
+             
+             // River
+             ctx.fillStyle = '#4169e1';
+             ctx.fillRect(TERRAIN.river.x, TERRAIN.river.y, TERRAIN.river.width, TERRAIN.river.height);
+
+             // Add terrain labels
+             ctx.fillStyle = '#ffffff';
+             ctx.font = 'bold 14px serif';
+             ctx.textAlign = 'center';
+             ctx.fillText('DARKWOOD FOREST', 325, 175);
+             ctx.fillText('BLOODSTONE HILL', 800, 355);
+             ctx.fillText('THE OLD ROAD', 600, 305);
+             ctx.fillText('RUINS', 130, 495);
+             ctx.fillText('RIVER REIK', 540, 400);
+         }
+
+        function drawUnit(unit) {
+            if (!unit.isAlive()) return;
+
+            const corners = unit.getFormationPoints();
+            if (corners.length === 0) return;
+
+            // Draw formation rectangle
+            ctx.fillStyle = unit.color + '80'; // Semi-transparent
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(corners[0][0], corners[0][1]);
+            corners.forEach(([x, y]) => ctx.lineTo(x, y));
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+
+            // Draw individual models
+            ctx.fillStyle = unit.color;
+            let modelsDrawn = 0;
+            for (let rank = 0; rank < unit.depth && modelsDrawn < unit.currentModels; rank++) {
+                for (let file = 0; file < unit.width && modelsDrawn < unit.currentModels; file++) {
+                    const localX = (file - unit.width/2 + 0.5) * 20;
+                    const localY = (rank - unit.depth/2 + 0.5) * 20;
+                    
+                    const angle = unit.facing * Math.PI / 180;
+                    const modelX = localX * Math.cos(angle) - localY * Math.sin(angle) + unit.x;
+                    const modelY = localX * Math.sin(angle) + localY * Math.cos(angle) + unit.y;
+                    
+                    ctx.beginPath();
+                    if (unit.unitType === 'cavalry') {
+                        ctx.rect(modelX - 4, modelY - 4, 8, 8);
+                    } else {
+                        ctx.arc(modelX, modelY, 3, 0, 2 * Math.PI);
+                    }
+                    ctx.fill();
+                    
+                    // White outline
+                    ctx.strokeStyle = '#ffffff';
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                    
+                    modelsDrawn++;
+                }
+            }
+
+            // Draw facing arrow
+            const arrowLength = Math.max(unit.width, unit.depth) * 10 + 20;
+            const angle = unit.facing * Math.PI / 180;
+            const arrowX = unit.x + arrowLength * Math.cos(angle);
+            const arrowY = unit.y + arrowLength * Math.sin(angle);
+            
+            ctx.strokeStyle = '#ffff00';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(unit.x, unit.y);
+            ctx.lineTo(arrowX, arrowY);
+            ctx.stroke();
+
+            // Arrow head
+            const headAngle1 = angle + Math.PI * 0.8;
+            const headAngle2 = angle - Math.PI * 0.8;
+            ctx.beginPath();
+            ctx.moveTo(arrowX, arrowY);
+            ctx.lineTo(arrowX + 10 * Math.cos(headAngle1), arrowY + 10 * Math.sin(headAngle1));
+            ctx.moveTo(arrowX, arrowY);
+            ctx.lineTo(arrowX + 10 * Math.cos(headAngle2), arrowY + 10 * Math.sin(headAngle2));
+            ctx.stroke();
+
+            // Unit label
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 12px serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(`${unit.name}`, unit.x, unit.y - unit.depth * 10 - 30);
+            ctx.font = '10px serif';
+            ctx.fillText(`${unit.currentModels}/${unit.maxModels}`, unit.x, unit.y - unit.depth * 10 - 15);
+
+            // Range circle for ranged units
+            if (unit.weaponRange > 0) {
+                ctx.strokeStyle = unit.color + '40';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([5, 5]);
+                ctx.beginPath();
+                ctx.arc(unit.x, unit.y, unit.weaponRange * 10, 0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+        }
+
+        // Game Logic
+        function updateArmyDisplays() {
+            updateArmyDisplay('empireArmy', 1);
+            updateArmyDisplay('orcArmy', 2);
+        }
+
+        function updateArmyDisplay(elementId, player) {
+            const element = document.getElementById(elementId);
+            const units = gameState.units.filter(u => u.player === player);
+            
+            element.innerHTML = units.map(unit => `
+                <div class="unit-card" onclick="selectUnit('${unit.id}')">
+                    <div class="unit-name">${unit.name}</div>
+                                         <div class="unit-stats">
+                         <span>Models: ${unit.currentModels}/${unit.maxModels}</span>
+                         <span>Formation: ${unit.formation}</span>
+                         <span>WS: ${unit.weaponSkill}</span>
+                         <span>BS: ${unit.ballisticSkill}</span>
+                         <span>S: ${unit.strength}</span>
+                         <span>T: ${unit.toughness}</span>
+                         <span>A: ${unit.attacks}</span>
+                         <span>Ld: ${unit.leadership}</span>
+                         ${unit.magicLevel ? `<span>Magic: ${unit.magicLevel} (${unit.magicLore})</span>` : ''}
+                         ${unit.specialRules.length > 0 ? `<span>Rules: ${unit.specialRules.join(', ')}</span>` : ''}
+                         ${unit.isFleeing ? '<span style="color: red;">FLEEING</span>' : ''}
+                     </div>
+                </div>
+            `).join('');
+        }
+
+        function selectUnit(unitId) {
+            const unit = gameState.units.find(u => u.id === unitId);
+            if (unit) {
+                gameState.selectedUnit = unit;
+                addBattleLog(`Selected: ${unit.name}`, 'log-movement');
+            }
+        }
+
+        function addBattleLog(message, className = '') {
+            gameState.battleLog.push({message, className, time: new Date().toLocaleTimeString()});
+            
+            const logElement = document.getElementById('battleLog');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${className}`;
+            entry.textContent = `[${gameState.battleLog[gameState.battleLog.length-1].time}] ${message}`;
+            logElement.appendChild(entry);
+            logElement.scrollTop = logElement.scrollHeight;
+            
+            // Keep only last 50 entries
+            if (gameState.battleLog.length > 50) {
+                gameState.battleLog.shift();
+                logElement.removeChild(logElement.firstChild);
+            }
+        }
+
+                 function executeRally() {
+             const fleeingUnits = gameState.units.filter(u => 
+                 u.player === gameState.currentPlayer && u.isFleeing && u.isAlive());
+             
+             fleeingUnits.forEach(unit => {
+                 // Can only attempt rally if not too close to enemies
+                 const enemies = gameState.units.filter(u => 
+                     u.player !== unit.player && u.isAlive());
+                 const tooClose = enemies.some(e => distance(unit, e) < 60);
+                 
+                 if (!tooClose && unit.rallyAttempts < 3) {
+                     unit.rallyAttempts++;
+                     
+                     let rallyModifier = 0;
+                     // Penalty for multiple attempts
+                     if (unit.rallyAttempts > 1) rallyModifier = -(unit.rallyAttempts - 1);
+                     
+                     if (performLeadershipTest(unit, rallyModifier)) {
+                         unit.isFleeing = false;
+                         unit.rallyAttempts = 0;
+                         addBattleLog(`${unit.name} rallies and returns to the fight!`, 'log-movement');
+                     } else {
+                         addBattleLog(`${unit.name} fails to rally (attempt ${unit.rallyAttempts}/3)`, 'log-movement');
+                     }
+                 } else if (tooClose) {
+                     addBattleLog(`${unit.name} cannot rally - enemies too close!`, 'log-movement');
+                 }
+             });
+         }
+
+         function updatePhaseIndicator() {
+             const phases = {
+                 movement: '📍 MOVEMENT',
+                 magic: '🔮 MAGIC',
+                 shooting: '🏹 SHOOTING', 
+                 charges: '⚡ CHARGES',
+                 combat: '⚔️ COMBAT',
+                 rally: '🏃 RALLY'
+             };
+            
+            const playerName = gameState.currentPlayer === 1 ? 'EMPIRE' : 'ORCS';
+            const phaseText = `TURN ${gameState.turn} - ${playerName} ${phases[gameState.phase]}`;
+            
+            document.getElementById('phaseIndicator').textContent = phaseText;
+        }
+
+                 // Magic System
+         const SPELLS = {
+             Fire: [
+                 {name: "Fireball", difficulty: 5, damage: 3, range: 24},
+                 {name: "Burning Head", difficulty: 7, damage: 2, range: 18},
+                 {name: "Conflagration", difficulty: 10, damage: 4, range: 30}
+             ],
+             Waaagh: [
+                 {name: "Gork'll Fix It", difficulty: 6, healing: 2, range: 12},
+                 {name: "Brain Bursta", difficulty: 8, damage: 3, range: 18},
+                 {name: "Ere We Go", difficulty: 10, buff: "movement", range: 24}
+             ]
+         };
+
+         function executeMagic() {
+             const wizards = gameState.units.filter(u => 
+                 u.player === gameState.currentPlayer && u.isAlive() && u.unitType === 'wizard');
+             
+             wizards.forEach(wizard => {
+                 if (wizard.magicLevel > 0) {
+                     // Generate power dice
+                     const powerDice = wizard.magicLevel + 1;
+                     const castingRoll = Math.floor(Math.random() * 6) + 1 + Math.floor(Math.random() * 6) + 1;
+                     
+                     // Select random spell
+                     const spells = SPELLS[wizard.magicLore] || [];
+                     if (spells.length > 0) {
+                         const spell = spells[Math.floor(Math.random() * spells.length)];
+                         
+                         if (castingRoll >= spell.difficulty) {
+                             castSpell(wizard, spell);
+                         } else {
+                             addBattleLog(`${wizard.name} fails to cast ${spell.name}`, 'log-combat');
+                         }
+                     }
+                 }
+             });
+         }
+
+         function castSpell(wizard, spell) {
+             const enemies = gameState.units.filter(u => 
+                 u.player !== wizard.player && u.isAlive());
+             
+             if (enemies.length === 0) return;
+             
+             const target = enemies.reduce((closest, enemy) => 
+                 distance(wizard, enemy) < distance(wizard, closest) ? enemy : closest);
+             
+             if (distance(wizard, target) <= spell.range * 10) {
+                 if (spell.damage) {
+                     // Damage spell
+                     const wounds = Math.floor(Math.random() * spell.damage) + 1;
+                     target.currentModels = Math.max(0, target.currentModels - wounds);
+                     target.updateFormation();
+                     
+                     // Visual effect
+                     drawMagicEffect(wizard, target);
+                     
+                     addBattleLog(`${wizard.name} casts ${spell.name}! ${wounds} casualties on ${target.name}`, 'log-combat');
+                 } else if (spell.healing) {
+                     // Find friendly unit to heal
+                     const friendlies = gameState.units.filter(u => 
+                         u.player === wizard.player && u.isAlive() && u.currentModels < u.maxModels);
+                     
+                     if (friendlies.length > 0) {
+                         const healTarget = friendlies[0];
+                         const healed = Math.min(spell.healing, healTarget.maxModels - healTarget.currentModels);
+                         healTarget.currentModels += healed;
+                         healTarget.updateFormation();
+                         
+                         addBattleLog(`${wizard.name} heals ${healed} models in ${healTarget.name}`, 'log-combat');
+                     }
+                 }
+             }
+         }
+
+         function drawMagicEffect(wizard, target) {
+             // Create magical energy effect
+             ctx.strokeStyle = '#ff69b4';
+             ctx.lineWidth = 4;
+             ctx.setLineDash([10, 5]);
+             ctx.beginPath();
+             ctx.moveTo(wizard.x, wizard.y);
+             ctx.lineTo(target.x, target.y);
+             ctx.stroke();
+             ctx.setLineDash([]);
+             
+             // Magic explosion at target
+             ctx.fillStyle = 'rgba(255, 105, 180, 0.7)';
+             ctx.beginPath();
+             ctx.arc(target.x, target.y, 30, 0, 2 * Math.PI);
+             ctx.fill();
+             
+             setTimeout(() => drawBattlefield(), 800);
+         }
+
+         // Phase Execution
+         function executeMovement() {
+            const activeUnits = gameState.units.filter(u => 
+                u.player === gameState.currentPlayer && u.isAlive());
+            
+            activeUnits.forEach(unit => {
+                // Simple AI movement
+                if (unit.unitType === 'cavalry') {
+                    // Cavalry seeks flanks
+                    const enemies = gameState.units.filter(u => u.player !== gameState.currentPlayer && u.isAlive());
+                    if (enemies.length > 0) {
+                        const target = enemies.reduce((closest, enemy) => 
+                            distance(unit, enemy) < distance(unit, closest) ? enemy : closest);
+                        
+                        if (gameState.currentPlayer === 1) {
+                            unit.x = Math.min(unit.x + unit.movement * 10, target.x - 60);
+                        } else {
+                            unit.x = Math.max(unit.x - unit.movement * 10, target.x + 60);
+                        }
+                    }
+                } else if (unit.weaponRange > 0) {
+                    // Ranged units seek firing positions
+                    if (gameState.currentPlayer === 1) {
+                        unit.x = Math.max(50, unit.x - 20);
+                    } else {
+                        unit.x = Math.min(canvas.width - 50, unit.x + 20);
+                    }
+                } else {
+                    // Infantry advances
+                    if (gameState.currentPlayer === 1) {
+                        unit.x = unit.x + 30;
+                    } else {
+                        unit.x = unit.x - 30;
+                    }
+                }
+                
+                unit.updateFormation();
+                addBattleLog(`${unit.name} moves`, 'log-movement');
+            });
+        }
+
+        function executeShooting() {
+            const shooters = gameState.units.filter(u => 
+                u.player === gameState.currentPlayer && u.isAlive() && u.weaponRange > 0);
+            
+            shooters.forEach(shooter => {
+                const enemies = gameState.units.filter(u => 
+                    u.player !== gameState.currentPlayer && u.isAlive());
+                
+                if (enemies.length === 0) return;
+                
+                const inRange = enemies.filter(e => 
+                    distance(shooter, e) <= shooter.weaponRange * 10);
+                
+                if (inRange.length === 0) return;
+                
+                const target = inRange.reduce((closest, enemy) => 
+                    distance(shooter, enemy) < distance(shooter, closest) ? enemy : closest);
+                
+                                 // Calculate damage with authentic Old World mechanics
+                 const shots = shooter.unitType === 'artillery' ? 1 : shooter.currentModels;
+                 let wounds = 0;
+                 
+                 for (let i = 0; i < shots; i++) {
+                     // To Hit roll (using BS)
+                     const hitRoll = Math.floor(Math.random() * 6) + 1;
+                     const toHit = 7 - shooter.ballisticSkill;
+                     
+                     if (hitRoll >= toHit) {
+                         // To Wound roll (using S vs T table)
+                         const woundRoll = Math.floor(Math.random() * 6) + 1;
+                         const toWound = WOUND_TABLE.getWoundTarget(shooter.strength, target.toughness);
+                         
+                         if (woundRoll >= toWound) {
+                             // Armor Save (modified by AP)
+                             const saveRoll = Math.floor(Math.random() * 6) + 1;
+                             const modifiedSave = target.armor + shooter.armorPiercing;
+                             
+                             if (saveRoll < modifiedSave) {
+                                 wounds += shooter.multipleWounds;
+                             }
+                         }
+                     }
+                 }
+                
+                if (wounds > 0) {
+                    target.currentModels = Math.max(0, target.currentModels - wounds);
+                    target.updateFormation();
+                    
+                    // Visual effect
+                    drawShootingEffect(shooter, target);
+                    
+                    addBattleLog(`${shooter.name} → ${target.name}: ${wounds} casualties`, 'log-shooting');
+                }
+            });
+        }
+
+        function executeCharges() {
+            const chargers = gameState.units.filter(u => 
+                u.player === gameState.currentPlayer && u.isAlive() && u.unitType === 'cavalry');
+            
+            chargers.forEach(charger => {
+                const enemies = gameState.units.filter(u => 
+                    u.player !== gameState.currentPlayer && u.isAlive());
+                
+                if (enemies.length === 0) return;
+                
+                const chargeRange = charger.movement * 20;
+                const inRange = enemies.filter(e => distance(charger, e) <= chargeRange);
+                
+                if (inRange.length > 0) {
+                    const target = inRange.reduce((closest, enemy) => 
+                        distance(charger, enemy) < distance(charger, closest) ? enemy : closest);
+                    
+                    // Move into contact
+                    charger.x = target.x;
+                    charger.y = target.y - 30;
+                    charger.hasCharged = true;
+                    
+                    // Visual effect
+                    drawChargeEffect(charger, target);
+                    
+                    addBattleLog(`${charger.name} charges ${target.name}!`, 'log-charge');
+                }
+            });
+        }
+
+                 function calculateFlankingBonus(attacker, defender) {
+             // Calculate angle between units
+             const angle = Math.atan2(defender.y - attacker.y, defender.x - attacker.x);
+             const defenderFacing = defender.facing * Math.PI / 180;
+             
+             let angleDiff = Math.abs(angle - defenderFacing);
+             if (angleDiff > Math.PI) angleDiff = 2 * Math.PI - angleDiff;
+             
+             // Front arc: ±45 degrees (no bonus)
+             if (angleDiff <= Math.PI / 4) return {flank: 0, rear: 0};
+             
+             // Rear arc: ±45 degrees behind (rear charge)
+             if (angleDiff >= 3 * Math.PI / 4) return {flank: 0, rear: 2};
+             
+             // Side arcs: flanking
+             return {flank: 1, rear: 0};
+         }
+
+         function executeCombat() {
+             const combatPairs = [];
+             const processed = [];
+             
+             gameState.units.forEach(unit => {
+                 if (!unit.isAlive() || processed.includes(unit)) return;
+                 
+                 const enemies = gameState.units.filter(u => 
+                     u.player !== unit.player && u.isAlive() && distance(unit, u) <= 30);
+                 
+                 enemies.forEach(enemy => {
+                     if (!processed.includes(enemy)) {
+                         // Calculate flanking bonuses
+                         const bonus1 = calculateFlankingBonus(unit, enemy);
+                         const bonus2 = calculateFlankingBonus(enemy, unit);
+                         
+                         unit.flankBonus = bonus1.flank;
+                         unit.rearBonus = bonus1.rear;
+                         enemy.flankBonus = bonus2.flank;
+                         enemy.rearBonus = bonus2.rear;
+                         
+                         combatPairs.push([unit, enemy]);
+                         processed.push(unit, enemy);
+                         return;
+                     }
+                 });
+             });
+            
+            combatPairs.forEach(([unit1, unit2]) => {
+                const attacks1 = unit1.attacks * Math.min(unit1.currentModels, unit1.width);
+                const attacks2 = unit2.attacks * Math.min(unit2.currentModels, unit2.width);
+                
+                let casualties1 = 0;
+                let casualties2 = 0;
+                
+                                 // Resolve attacks with authentic combat mechanics
+                 casualties1 = resolveCombatAttacks(unit2, unit1, attacks2);
+                 casualties2 = resolveCombatAttacks(unit1, unit2, attacks1);
+                 
+                 // Apply combat results
+                 const totalCasualties1 = Math.min(casualties1, unit1.currentModels);
+                 const totalCasualties2 = Math.min(casualties2, unit2.currentModels);
+                
+                                 unit1.currentModels = Math.max(0, unit1.currentModels - totalCasualties1);
+                 unit2.currentModels = Math.max(0, unit2.currentModels - totalCasualties2);
+                 
+                 // Check for panic from casualties
+                 checkPanic(unit1, totalCasualties1);
+                 checkPanic(unit2, totalCasualties2);
+                 
+                 // Resolve break test
+                 if (!unit1.isFleeing && !unit2.isFleeing) {
+                     resolveBreakTest(unit1, unit2, totalCasualties1, totalCasualties2);
+                 }
+                 
+                 unit1.updateFormation();
+                 unit2.updateFormation();
+                 
+                 // Reset charge status
+                 unit1.hasCharged = false;
+                 unit2.hasCharged = false;
+                 
+                 if (totalCasualties1 > 0 || totalCasualties2 > 0) {
+                     addBattleLog(`Combat: ${unit1.name} -${totalCasualties1}, ${unit2.name} -${totalCasualties2}`, 'log-combat');
+                 }
+            });
+        }
+
+                 // Combat Resolution Functions
+         function resolveCombatAttacks(attacker, defender, attacks) {
+             let casualties = 0;
+             
+             for (let i = 0; i < attacks; i++) {
+                 // To Hit using WS vs WS table
+                 const hitRoll = Math.floor(Math.random() * 6) + 1;
+                 const attackerWS = Math.min(10, Math.max(1, attacker.weaponSkill));
+                 const defenderWS = Math.min(10, Math.max(1, defender.weaponSkill));
+                 const toHit = TO_HIT_TABLE[attackerWS][defenderWS - 1];
+                 
+                 if (hitRoll >= toHit) {
+                     // To Wound using S vs T table
+                     const woundRoll = Math.floor(Math.random() * 6) + 1;
+                     const toWound = WOUND_TABLE.getWoundTarget(attacker.strength, defender.toughness);
+                     
+                     if (woundRoll >= toWound) {
+                         // Armor Save
+                         const saveRoll = Math.floor(Math.random() * 6) + 1;
+                         const modifiedSave = defender.armor + (attacker.armorPiercing || 0);
+                         
+                         if (saveRoll < modifiedSave) {
+                             casualties += attacker.multipleWounds || 1;
+                         }
+                     }
+                 }
+             }
+             
+             return casualties;
+         }
+
+         function performLeadershipTest(unit, modifier = 0) {
+             const leadershipRoll = Math.floor(Math.random() * 6) + 1 + Math.floor(Math.random() * 6) + 1;
+             const testValue = unit.leadership + modifier;
+             
+             if (unit.psychology.includes(PSYCHOLOGY.STUBBORN)) {
+                 // Stubborn units use unmodified Leadership
+                 return leadershipRoll <= unit.leadership;
+             }
+             
+             return leadershipRoll <= testValue;
+         }
+
+         function checkPanic(unit, casualties) {
+             if (unit.psychology.includes(PSYCHOLOGY.IMMUNE_TO_PSYCHOLOGY)) return false;
+             
+             if (casualties >= unit.currentModels * 0.25) {
+                 if (!performLeadershipTest(unit, -casualties)) {
+                     unit.isFleeing = true;
+                     addBattleLog(`${unit.name} panics and flees!`, 'log-combat');
+                     return true;
+                 }
+             }
+             return false;
+         }
+
+         function resolveBreakTest(unit1, unit2, casualties1, casualties2) {
+             // Calculate combat resolution
+             let resolution1 = casualties2;
+             let resolution2 = casualties1;
+             
+             // Add rank bonus (max +3)
+             if (unit1.depth > 1) resolution1 += Math.min(3, unit1.depth - 1);
+             if (unit2.depth > 1) resolution2 += Math.min(3, unit2.depth - 1);
+             
+             // Add standard bearer bonus
+             if (unit1.specialRules.includes('Standard')) resolution1 += 1;
+             if (unit2.specialRules.includes('Standard')) resolution2 += 1;
+             
+             // Add musician bonus (re-roll failed break tests)
+             const musician1 = unit1.specialRules.includes('Musician');
+             const musician2 = unit2.specialRules.includes('Musician');
+             
+             // Add charge bonus
+             if (unit1.hasCharged) resolution1 += 1;
+             if (unit2.hasCharged) resolution2 += 1;
+             
+             // Add flanking/rear bonuses
+             resolution1 += unit1.flankBonus + unit1.rearBonus;
+             resolution2 += unit2.flankBonus + unit2.rearBonus;
+             
+             // Add terrain bonuses
+             const terrain1 = getTerrainAt(unit1.x, unit1.y);
+             const terrain2 = getTerrainAt(unit2.x, unit2.y);
+             if (terrain1.type === 'elevated') resolution1 += 1;
+             if (terrain2.type === 'elevated') resolution2 += 1;
+             
+             // Determine winner
+             const difference = resolution1 - resolution2;
+             
+             if (difference > 0) {
+                 // Unit2 loses
+                 let breakTestModifier = -Math.abs(difference);
+                 let testPassed = performLeadershipTest(unit2, breakTestModifier);
+                 
+                 // Musician allows re-roll
+                 if (!testPassed && musician2) {
+                     addBattleLog(`${unit2.name} musician allows break test re-roll!`, 'log-combat');
+                     testPassed = performLeadershipTest(unit2, breakTestModifier);
+                 }
+                 
+                 if (!testPassed) {
+                     unit2.isFleeing = true;
+                     gameState.victoryPoints[unit1.player] += unit2.pointValue;
+                     addBattleLog(`${unit2.name} breaks and flees! (+${unit2.pointValue} VP)`, 'log-combat');
+                 }
+             } else if (difference < 0) {
+                 // Unit1 loses
+                 let breakTestModifier = -Math.abs(difference);
+                 let testPassed = performLeadershipTest(unit1, breakTestModifier);
+                 
+                 // Musician allows re-roll
+                 if (!testPassed && musician1) {
+                     addBattleLog(`${unit1.name} musician allows break test re-roll!`, 'log-combat');
+                     testPassed = performLeadershipTest(unit1, breakTestModifier);
+                 }
+                 
+                 if (!testPassed) {
+                     unit1.isFleeing = true;
+                     gameState.victoryPoints[unit2.player] += unit1.pointValue;
+                     addBattleLog(`${unit1.name} breaks and flees! (+${unit1.pointValue} VP)`, 'log-combat');
+                 }
+             }
+         }
+
+         // Visual Effects
+         function drawShootingEffect(shooter, target) {
+            ctx.strokeStyle = '#ffa500';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(shooter.x, shooter.y);
+            ctx.lineTo(target.x, target.y);
+            ctx.stroke();
+            
+            setTimeout(() => drawBattlefield(), 500);
+        }
+
+        function drawChargeEffect(charger, target) {
+            ctx.strokeStyle = '#ff0000';
+            ctx.lineWidth = 5;
+            ctx.beginPath();
+            ctx.moveTo(charger.x, charger.y);
+            ctx.lineTo(target.x, target.y);
+            ctx.stroke();
+            
+            setTimeout(() => drawBattlefield(), 500);
+        }
+
+        // Utility Functions
+        function distance(unit1, unit2) {
+            return Math.sqrt((unit1.x - unit2.x) ** 2 + (unit1.y - unit2.y) ** 2);
+        }
+
+        function checkVictory() {
+            const empireAlive = gameState.units.some(u => u.player === 1 && u.isAlive());
+            const orcAlive = gameState.units.some(u => u.player === 2 && u.isAlive());
+            
+            if (!empireAlive) {
+                addBattleLog('🏆 ORC VICTORY!', 'log-combat');
+                return true;
+            } else if (!orcAlive) {
+                addBattleLog('🏆 EMPIRE VICTORY!', 'log-combat');
+                return true;
+            } else if (gameState.turn > 6) {
+                addBattleLog('🤝 STALEMATE!', 'log-combat');
+                return true;
+            }
+            
+            return false;
+        }
+
+        // Control Functions
+                 function nextPhase() {
+             const phases = ['movement', 'magic', 'shooting', 'charges', 'combat'];
+             const currentIndex = phases.indexOf(gameState.phase);
+             
+             // Execute current phase
+             switch(gameState.phase) {
+                 case 'movement': executeMovement(); break;
+                 case 'magic': executeMagic(); break;
+                 case 'shooting': executeShooting(); break;
+                 case 'charges': executeCharges(); break;
+                 case 'combat': executeCombat(); break;
+             }
+            
+            // Advance to next phase
+            if (currentIndex === phases.length - 1) {
+                // End of turn
+                if (gameState.currentPlayer === 1) {
+                    gameState.currentPlayer = 2;
+                } else {
+                    gameState.currentPlayer = 1;
+                    gameState.turn++;
+                }
+                gameState.phase = 'movement';
+            } else {
+                gameState.phase = phases[currentIndex + 1];
+            }
+            
+            updatePhaseIndicator();
+            updateArmyDisplays();
+            drawBattlefield();
+            
+            if (checkVictory()) {
+                gameState.isAutoPaused = true;
+            }
+        }
+
+        let autoPlayInterval;
+        function autoPlay() {
+            if (autoPlayInterval) {
+                clearInterval(autoPlayInterval);
+                autoPlayInterval = null;
+            } else {
+                autoPlayInterval = setInterval(() => {
+                    if (!gameState.isAutoPaused) {
+                        nextPhase();
+                    } else {
+                        clearInterval(autoPlayInterval);
+                        autoPlayInterval = null;
+                    }
+                }, 2000);
+            }
+        }
+
+        function pauseBattle() {
+            gameState.isAutoPaused = !gameState.isAutoPaused;
+        }
+
+        function resetBattle() {
+            if (autoPlayInterval) {
+                clearInterval(autoPlayInterval);
+                autoPlayInterval = null;
+            }
+            
+            gameState = {
+                turn: 1,
+                currentPlayer: 1,
+                phase: 'movement',
+                units: [],
+                battleLog: [],
+                isAutoPaused: false,
+                selectedUnit: null
+            };
+            
+            document.getElementById('battleLog').innerHTML = '';
+            createArmies();
+            updatePhaseIndicator();
+            updateArmyDisplays();
+            drawBattlefield();
+            addBattleLog('⚔️ NEW BATTLE BEGINS!', 'log-movement');
+        }
+
+        // Mouse interaction
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            // Check if clicked on a unit
+            gameState.units.forEach(unit => {
+                if (distance({x, y}, unit) < 30) {
+                    selectUnit(unit.id);
+                }
+            });
+        });
+
+        // Initialize game
+        window.onload = function() {
+            createArmies();
+            updatePhaseIndicator();
+            updateArmyDisplays();
+            drawBattlefield();
+            addBattleLog('⚔️ WARHAMMER: THE OLD WORLD BATTLE BEGINS!', 'log-movement');
+        };
+    </script>
+</body>
+</html>
